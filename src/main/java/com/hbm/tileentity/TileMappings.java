@@ -250,7 +250,7 @@ public class TileMappings {
 
 		put(TileEntityCargoElevator.class, "tileentity_cargo_elevator");
 		put(TileEntityDoorGeneric.class, "tileentity_ntm_door");
-		
+
 		put(TileEntityCharger.class, "tileentity_ntm_charger");
 		put(TileEntityRefueler.class, "tileentity_ntm_refueler");
 
@@ -272,6 +272,8 @@ public class TileMappings {
 
 		put(TileEntityBlockPWR.class, "tileentity_block_pwr");
 		put(TileEntityPWRController.class, "tileentity_pwr_controller");
+
+		put(TileEntityMachineKrusty.class, "tileentity_krusty");
 
 		put(TileEntityAtmosphereEditor.class, "tileentity_atmosphere_editor");
 

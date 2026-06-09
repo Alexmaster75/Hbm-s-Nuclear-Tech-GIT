@@ -264,6 +264,10 @@ public class ResourceManager {
 	public static final IModelCustom reactor_small_base = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/reactors/reactor_small_base.obj"));
 	public static final IModelCustom reactor_small_rods = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/reactors/reactor_small_rods.obj"));
 
+	//Kilopower Reactor
+	public static final IModelCustom reactor_krusty_base = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/reactors/reactor_krusty_base.obj"));
+	public static final IModelCustom reactor_krusty_rod = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/reactors/reactor_krusty_rod.obj"));
+	
 	//Breeder
 	public static final IModelCustom breeder = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/reactors/breeder.obj"));
 
@@ -773,6 +777,10 @@ public class ResourceManager {
 	public static final ResourceLocation reactor_small_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/reactor_small_base.png");
 	public static final ResourceLocation reactor_small_rods_tex = new ResourceLocation(RefStrings.MODID, "textures/models/reactor_small_rods.png");
 
+	//Kilopower Reactor
+	public static final ResourceLocation reactor_krusty_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/reactor_krusty_base.png");
+	public static final ResourceLocation reactor_krusty_rod_tex = new ResourceLocation(RefStrings.MODID, "textures/models/reactor_krusty_rod.png");
+	
 	//Breeder
 	public static final ResourceLocation breeder_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/breeder.png");
 

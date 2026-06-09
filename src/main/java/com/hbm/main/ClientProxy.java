@@ -418,6 +418,8 @@ public class ClientProxy extends ServerProxy {
 		//ZIRNOX
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityReactorZirnox.class, new RenderZirnox());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityZirnoxDestroyed.class, new RenderZirnoxDestroyed());
+		//KILOPOWER
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineKrusty.class, new RenderKrusty());
 		//DFC
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoreEmitter.class, new RenderCoreComponent());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCoreReceiver.class, new RenderCoreComponent());
