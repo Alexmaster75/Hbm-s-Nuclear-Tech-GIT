@@ -187,6 +187,7 @@ public class Mats {
 	public static final NTMMaterial MAT_RUBBER		= makeNonSmeltable(_ES + 03, 		RUBBER,			0x817F75, 0x0F0D03, 0x4B4A3F).setAutogen(FRAGMENT, DUST, PIPE, GRIP).n();
 	public static final NTMMaterial MAT_HARDPLASTIC	= makeNonSmeltable(_ES + 04, 		PC,				0xEDE7C4, 0x908A67, 0xE1DBB8).setAutogen(STOCK, GRIP).n();
 	public static final NTMMaterial MAT_PVC			= makeNonSmeltable(_ES + 05, 		PVC,			0xFCFCFC, 0x9F9F9F, 0xF0F0F0).setAutogen(FRAGMENT, DUST, STOCK, GRIP).n();
+	public static final NTMMaterial MAT_CATSMILIUM  = makeSmeltable(_ES + 06,            CATSMILIUM,    0xFFF947, 0xC2BD3A, 0xFFFC99).m();
 
 	public static NTMMaterial makeSmeltable(int id, DictFrame dict, int color) { return makeSmeltable(id, dict, color, color, color); }
 
@@ -276,6 +277,44 @@ public class Mats {
 		public MaterialStack copy() {
 			return new MaterialStack(material, amount);
 		}
+	}
+
+	// only used for Moxer machine stuff, just adds the percentage value to the MaterialStack class
+	public static class MoxerStack {
+		//final fields to prevent accidental changing
+		public final NTMMaterial material;
+		public int amount;
+		public int percentage;
+
+		public MoxerStack(NTMMaterial material, int amount, int percentage) {
+			this.material = material;
+			this.amount = amount;
+			this.percentage = percentage;
+		}
+
+		public MoxerStack copy() {
+			return new MoxerStack(material, amount, percentage);
+		}
+	}
+
+	public static List<MoxerStack> getMoxerMaterialsFromItem(ItemStack stack) {
+		List<MaterialStack> input = getMaterialsFromItem(stack);
+		List<MoxerStack> output = new ArrayList();
+		for (MaterialStack mat : input) {
+			output.add(new MoxerStack(mat.material, mat.amount, 0));
+		}
+
+		return output;
+	}
+
+	public static List<MoxerStack> getMoxerSmeltingMaterialsFromItem(ItemStack stack) {
+		List<MaterialStack> input = getSmeltingMaterialsFromItem(stack);
+		List<MoxerStack> output = new ArrayList();
+		for (MaterialStack mat : input) {
+			output.add(new MoxerStack(mat.material, mat.amount, 0));
+		}
+
+		return output;
 	}
 
 	public static String formatAmount(int amount, boolean showInMb) {

@@ -60,42 +60,42 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 	public double level;
 	public double lastLevel;
 	public double speed = 0.05D;
-	
+
 	public double totalFlux = 0;
 	public double[] slotFlux = new double[4];
 	public int heat;
-	public final int maxHeat = 50000;
+	public final int maxHeat = 100000;
 	public int heatRemoved;
 	public boolean pulse = false;
 	public final double pulseAmount = 50.0D;
-	
+
 	public static long maxPower = 5_000_000;
 	public long power;
-	
+
 	public final int maxTimer = 70;
 	public int timer = 0;
 	public boolean explosion = false;
-	
+
 	public FluidTank[] tanks;
-	
+
 	private static final int[] slot_io = new int[] { 0, 1, 2, 3 };
-	
+
 	public TileEntityMachineKrusty() {
 		super(6);
 		this.tanks = new FluidTank[1];
 		this.tanks[0] = new FluidTank(Fluids.SODIUM, 16_000);
 		this.tanks[0].setFill(0);
 	}
-	
+
 	private static final HashMap<ComparableStack, ItemStack> fuelMap = new HashMap<ComparableStack, ItemStack>();
 	static {
 		fuelMap.put(new ComparableStack(ModItems.slice_fuel_u235), new ItemStack(ModItems.waste_slice_u235, 1, 1));
 	}
-	
+
 	public String getName() {
 		return "container.machineKrusty";
 	}
-	
+
 	@Override
     public boolean isItemValidForSlot(int i, ItemStack itemStack) {
         if(i >= 0 && i < 4) {
@@ -105,7 +105,7 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
         if(i == 4) return FluidContainerRegistry.getFluidContent(itemStack, tanks[0].getTankType()) > 0;
         return false;
     }
-	
+
 	@Override
 	public void readFromNBT(NBTTagCompound nbt) {
 		super.readFromNBT(nbt);
@@ -131,12 +131,12 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 		nbt.setLong("power", power);
 		nbt.setBoolean("pulse", pulse);
 	}
-	
+
 	@Override
 	public int[] getAccessibleSlotsFromSide(int side) {
 		return slot_io;
 	}
-	
+
 	@Override
 	public boolean canExtractItem(int i, ItemStack stack, int j) {
 		if(i < 4 && i >= 0)
@@ -144,17 +144,17 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 				return true;
 		return false;
 	}
-	
+
 	@Override
 	public void updateEntity() {
-		
+
 		rodControl();
-		
+
 		if(!worldObj.isRemote) {
 			totalFlux = 0.0D;
-			
+
 			this.tanks[0].loadTank(4, 5, slots);
-			
+
 			// neutron pulse
 			if (pulse) {
 				pulse = false;
@@ -162,22 +162,19 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 					slotFlux[i] += pulseAmount;
 				}
 			}
-			
+
 			reaction();
-			
+
 			if (heat < 0)
 				heat = 0;
-			
+
 			if (heat > 0) {
-				heatRemoved = (int) (heat * 0.4D * this.tanks[0].getFill() / this.tanks[0].getMaxFill());
+				heatRemoved = (int) (heat * 0.1D * this.tanks[0].getFill() / this.tanks[0].getMaxFill());
 				heat = heatRemoved < heat ? heat - heatRemoved : 0;
-				
+
 				this.power += heatRemoved;
-				
-				if (power > maxPower)
-					power = maxPower;
 			}
-			
+
 			// you wanted a more powerful rtg, might as well expect a more powerful danger
 			if (heat > maxHeat) {
 				if (!explosion) {
@@ -188,7 +185,7 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 				timer = 0;
 				explosion = false;
 			}
-			
+
 			if (explosion)
 				timer++;
 			if (timer > maxTimer) {
@@ -196,13 +193,18 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 				worldObj.setBlock(xCoord, yCoord, zCoord, ModBlocks.corium_block);
 				ExplosionLarge.spawnShrapnels(worldObj, xCoord, yCoord, zCoord, 15);
 			}
-			
+
 			this.sendPower();
-			
+			//NBTTagCompound data = new NBTTagCompound();
+			//data.setLong("power", Math.min(power, maxPower));
+
+			if (power > maxPower)
+				power = maxPower;
+
 			this.networkPackNT(150);
 		}
 	}
-	
+
 	private void sendPower() {
 		for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
 			TileEntity te = worldObj.getTileEntity(xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ);
@@ -217,7 +219,7 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 			}
 		}
 	}
-	
+
 	@Override
 	public void serialize(ByteBuf buf) {
 		super.serialize(buf);
@@ -247,7 +249,7 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 		this.power = buf.readLong();
 		this.pulse = buf.readBoolean();
 	}
-	
+
 	private int[] getNeighboringSlots(int id) {
 		switch(id) {
 		case 0:
@@ -261,29 +263,29 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 		}
 		return null;
 	}
-	
+
 	private void reaction() {
 		for(byte i = 0; i < 4; i++) {
 			if(slots[i] == null) {
 				slotFlux[i] = 0;
 				continue;
 			}
-			
+
 			if(slots[i].getItem() instanceof ItemSliceFuel) {
 				ItemSliceFuel rod = (ItemSliceFuel) slots[i].getItem();
-				
+
 				//slotFlux[i] = slotFlux[i] <= 0.0D ? 30.0D : slotFlux[i]; // neutron source
 				double outFlux = rod.react(worldObj, slots[i], slotFlux[i]);
-				this.heat += outFlux * 5.0D;
+				this.heat += outFlux * 10.0D;
 				slotFlux[i] = 0.1875D * outFlux;
 				totalFlux += outFlux;
-				
+
 				int[] neighborSlots = getNeighboringSlots(i);
-				
+
 				if(ItemSliceFuel.getLifeTime(slots[i]) > rod.lifeTime) {
 					slots[i] = fuelMap.get(new ComparableStack(slots[i])).copy();
 				}
-				
+
 				for(byte j = 0; j < neighborSlots.length; j++) {
 					slotFlux[neighborSlots[j]] += outFlux * level * 0.375D; // every neighbor
 					if (j != 3 - i) // 3 stands for 4-1, the number of fuel slots
@@ -299,22 +301,22 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 	public boolean hasPermission(EntityPlayer player) {
 		return Vec3.createVectorHelper(xCoord - player.posX, yCoord - player.posY, zCoord - player.posZ).lengthVector() < 20;
 	}
-	
+
 	@Override
 	public void receiveControl(NBTTagCompound data) {
 		if(data.hasKey("level"))
 			this.setTarget(data.getDouble("level"));
-		
+
 		if (data.hasKey("pulse"))
 			pulse = data.getBoolean("pulse");
-			
+
 		this.markDirty();
 	}
-	
+
 	public void setTarget(double target) {
 		this.targetLevel = target;
 	}
-	
+
 	public void rodControl() {
 		if(worldObj.isRemote) {
 			this.lastLevel = this.level;
@@ -331,14 +333,14 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 			}
 		}
 	}
-	
+
 	public int[] getDisplayData() {
 		int[] data = new int[2];
 		data[0] = (int) this.totalFlux;
 		data[1] = (int) Math.round((this.heat) * 0.00002 * 980 + 20);
 		return data;
 	}
-	
+
 	@Override
 	public AxisAlignedBB getRenderBoundingBox() {
 		return TileEntity.INFINITE_EXTENT_AABB;
@@ -349,7 +351,7 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 	public double getMaxRenderDistanceSquared() {
 		return 65536.0D;
 	}
-	
+
 	@Override
 	public Container provideContainer(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new ContainerMachineKrusty(player.inventory, this);
@@ -360,17 +362,17 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 	public Object provideGUI(int ID, EntityPlayer player, World world, int x, int y, int z) {
 		return new GUIMachineKrusty(player.inventory, this);
 	}
-	
+
 	@Override
 	public FluidTank[] getAllTanks() {
 		return tanks;
 	}
-	
+
 	@Override
 	public FluidTank[] getSendingTanks() {
 		return null;
 	}
-	
+
 	@Override
 	public FluidTank[] getReceivingTanks() {
 		return tanks;
@@ -381,7 +383,7 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 		data.setDouble(CompatEnergyControl.D_HEAT_C, Math.round(heat * 2.0E-5D * 980.0D + 20.0D));
 		data.setDouble(CompatEnergyControl.I_FLUX, totalFlux);
 	}
-	
+
 	@Override
 	@Optional.Method(modid = "OpenComputers")
 	public String getComponentName() {
@@ -411,13 +413,13 @@ public class TileEntityMachineKrusty extends TileEntityMachineBase implements IC
 	public Object[] getCoolantInfo(Context context, Arguments args) {
 		return new Object[] {tanks[0].getFill(), tanks[0].getMaxFill()};
 	}
-	
+
 	@Callback(direct = true)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] getPower(Context context, Arguments args) {
 		return new Object[] {power, maxPower};
 	}
-	
+
 	@Callback(direct = true)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] getInfo(Context context, Arguments args) {

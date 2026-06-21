@@ -17,9 +17,10 @@ import com.hbm.items.machine.ItemWatzPellet.EnumWatzType;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
+import scala.tools.nsc.transform.patmat.Logic;
 
 public class PUREXRecipes extends GenericRecipes<PUREXRecipe> {
-	
+
 	public static final PUREXRecipes INSTANCE = new PUREXRecipes();
 
 	@Override public int inputItemLimit() { return 3; }
@@ -39,13 +40,13 @@ public class PUREXRecipes extends GenericRecipes<PUREXRecipe> {
 		long pwrPower = 2_500;
 		long watzPower = 10_000;
 		long vitrification = 1_000;
-		
+
 		this.register((PUREXRecipe) new PUREXRecipe("purex.uzh").setup(600, 1_000)
 				.inputItems(new ComparableStack(ModItems.billet_uranium_fuel),
 						new OreDictStack(ZR.billet(), 3))
 				.inputFluids(new FluidStack(Fluids.NITRIC_ACID, 1000), new FluidStack(Fluids.HYDROGEN, 4000))
 				.outputItems(new ItemStack(ModItems.billet_uzh, 4)));
-		
+
 		//CP-1
 		String autoPile = "autoswitch.pile";
 		this.register((PUREXRecipe) new PUREXRecipe("purex.pilepu").setup(40, pilePower).setNameWrapper("purex.recycle").setGroup(autoPile, this)
@@ -489,12 +490,12 @@ public class PUREXRecipes extends GenericRecipes<PUREXRecipe> {
 				.inputItems(new ComparableStack(ModBlocks.sand_mix, 1, EnumSandType.LEAD))
 				.inputFluids(new FluidStack(Fluids.WASTEFLUID, 1_000))
 				.outputItems(new ItemStack(ModItems.nuclear_waste_vitrified)));
-		
+
 		this.register((PUREXRecipe) new PUREXRecipe("purex.vitgaseous").setup(100, vitrification)
 				.inputItems(new ComparableStack(ModBlocks.sand_mix, 1, EnumSandType.LEAD))
 				.inputFluids(new FluidStack(Fluids.WASTEGAS, 1_000))
 				.outputItems(new ItemStack(ModItems.nuclear_waste_vitrified)));
-		
+
 		this.register((PUREXRecipe) new PUREXRecipe("purex.vitsolid").setup(300, vitrification)
 				.inputItems(new ComparableStack(ModBlocks.sand_mix, 1, EnumSandType.LEAD), new ComparableStack(ModItems.nuclear_waste, 4))
 				.outputItems(new ItemStack(ModItems.nuclear_waste_vitrified, 4)));

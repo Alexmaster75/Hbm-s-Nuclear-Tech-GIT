@@ -446,6 +446,8 @@ public class ModItems {
 
 	public static Item undefined;
 
+	public static Item ingot_catsmilium;
+
 	public static Item ball_resin;
 	public static Item ingot_dura_steel;
 	public static Item ingot_polymer;
@@ -1129,7 +1131,7 @@ public class ModItems {
 	public static Item waste_plate_sa326;
 	public static Item waste_plate_ra226be;
 	public static Item waste_plate_pu238be;
-	
+
 	public static Item waste_slice_u235;
 
 	public static Item pile_rod_uranium;
@@ -1147,7 +1149,7 @@ public class ModItems {
 	public static Item plate_fuel_sa326;
 	public static Item plate_fuel_ra226be;
 	public static Item plate_fuel_pu238be;
-	
+
 	public static Item slice_fuel_u235;
 
 	public static Item pwr_fuel;
@@ -1237,6 +1239,8 @@ public class ModItems {
 
 	public static Item watz_pellet;
 	public static Item watz_pellet_depleted;
+
+	public static Item custom_fuel;
 
 	public static Item icf_pellet_empty;
 	public static Item icf_pellet;
@@ -1548,6 +1552,8 @@ public class ModItems {
 	public static Item sat_designator;
 	public static Item sat_relay;
 
+	public static Item horizon_spawn;
+
 	public static ItemEnumMulti ammo_misc;
 	public static ItemEnumMulti ammo_shell;
 	public static ItemEnumMulti ammo_fireext;
@@ -1653,7 +1659,7 @@ public class ModItems {
 	public static Item grenade_fuze;
 	public static Item grenade_extra;
 	public static Item grenade_universal;
-	
+
 	public static Item ullapool_caber;
 
 	public static Item weaponized_starblaster_cell;
@@ -1737,7 +1743,7 @@ public class ModItems {
 	public static Item custom_dirty;
 	public static Item custom_schrab;
 	public static Item custom_fall;
-	
+
 	public static Item battery_pack;
 	public static Item battery_creative;
 	public static Item cube_power;
@@ -2449,6 +2455,8 @@ public class ModItems {
 		divine_shard = new Item().setUnlocalizedName("divine_shard").setCreativeTab(null).setTextureName(RefStrings.MODID + ":divine_shard");
 
 		undefined = new ItemCustomLore().setUnlocalizedName("undefined").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":undefined");
+
+		ingot_catsmilium = new Item().setUnlocalizedName("ingot_catsmilium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ingot_catsmilium");
 
 		billet_uranium = new Item().setUnlocalizedName("billet_uranium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":billet_uranium");
 		billet_u233 = new Item().setUnlocalizedName("billet_u233").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":billet_u233");
@@ -3375,7 +3383,7 @@ public class ModItems {
 		waste_plate_pu238be = new ItemDepletedFuel().setUnlocalizedName("waste_plate_pu238be").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_plate_pu238be");
 
 		waste_slice_u235 = new ItemDepletedFuel().setUnlocalizedName("waste_slice_u235").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":waste_slice_u235");
-		
+
 		pile_rod_uranium = new ItemPileRod().setUnlocalizedName("pile_rod_uranium").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":pile_rod_uranium");
 		pile_rod_pu239 = new ItemPileRod().setUnlocalizedName("pile_rod_pu239").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":pile_rod_pu239");
 		pile_rod_plutonium = new ItemPileRod().setUnlocalizedName("pile_rod_plutonium").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":pile_rod_plutonium");
@@ -3393,7 +3401,7 @@ public class ModItems {
 		plate_fuel_pu238be = new ItemPlateFuel(1000000).setFunction(FunctionEnum.PASSIVE, 50).setUnlocalizedName("plate_fuel_pu238be").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":plate_fuel_pu238be");
 
 		slice_fuel_u235 = new ItemSliceFuel(5000000).setFunction(FunctionSEnum.SQUARE_ROOT, 40.0D).setUnlocalizedName("slice_fuel_u235").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":slice_fuel_u235");
-		
+
 		pwr_fuel = new ItemPWRFuel().setUnlocalizedName("pwr_fuel").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":pwr_fuel");
 		pwr_fuel_hot = new ItemEnumMulti(EnumPWRFuel.class, true, false).setUnlocalizedName("pwr_fuel_hot").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":pwr_fuel_hot");
 		pwr_fuel_depleted = new ItemEnumMulti(EnumPWRFuel.class, true, false).setUnlocalizedName("pwr_fuel_depleted").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":pwr_fuel_depleted");
@@ -3456,7 +3464,7 @@ public class ModItems {
 		int tintFlashlead = 0x7B7B87;
 		int tintBalefire = 0xB2FF1B;
 		int tintDRX = 0xD77276;
-		
+
 		rbmk_fuel_empty = new Item().setUnlocalizedName("rbmk_fuel_empty").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":rbmk_fuel_empty");
 		rbmk_fuel_ueu = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_ueu)
 				.setYield(100_000_000D)
@@ -3562,7 +3570,7 @@ public class ModItems {
 				.setFunction(EnumBurnFunc.LINEAR)
 				.setHeat(2D)
 				.setMeltingPoint(2386)
-				.setTint(tintAmericium).setUnlocalizedName("rbmk_fuel_hea242").setTextureName(RefStrings.MODID + ":rbmk_fuel_hea242");				
+				.setTint(tintAmericium).setUnlocalizedName("rbmk_fuel_hea242").setTextureName(RefStrings.MODID + ":rbmk_fuel_hea242");
 		rbmk_fuel_bk247 = (ItemRBMKRod) new ItemRBMKRod(rbmk_pellet_bk247)
 				.setYield(100000000D)
 				.setStats(50)
@@ -3751,6 +3759,8 @@ public class ModItems {
 		watz_pellet = new ItemWatzPellet().setUnlocalizedName("watz_pellet").setTextureName(RefStrings.MODID + ":watz_pellet");
 		watz_pellet_depleted = new ItemWatzPellet().setUnlocalizedName("watz_pellet_depleted").setTextureName(RefStrings.MODID + ":watz_pellet");
 
+		custom_fuel = new ItemCustomFuel().setUnlocalizedName("custom_fuel").setTextureName(RefStrings.MODID + ":custom_fuel");
+
 		icf_pellet_empty = new Item().setUnlocalizedName("icf_pellet_empty").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":icf_pellet_empty");
 		icf_pellet = new ItemICFPellet().setUnlocalizedName("icf_pellet").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":icf_pellet");
 		icf_pellet_depleted = new Item().setUnlocalizedName("icf_pellet_depleted").setCreativeTab(MainRegistry.controlTab).setMaxStackSize(1).setTextureName(RefStrings.MODID + ":icf_pellet_depleted");
@@ -3866,6 +3876,8 @@ public class ModItems {
 		sat_designator = new ItemSatDesignator().setUnlocalizedName("sat_designator").setFull3D().setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_designator");
 		sat_relay = new ItemSatInterface().setUnlocalizedName("sat_relay").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_relay");
 																														//in kg
+		horizon_spawn = new ItemHorizonSpawn().setUnlocalizedName("horizon_spawn").setMaxStackSize(1).setCreativeTab(MainRegistry.missileTab).setTextureName(RefStrings.MODID + ":sat_designator");
+
 		mp_thruster_10_kerosene = new ItemCustomMissilePart().makeThruster(FuelType.KEROSENE, 1F, 1_500, PartSize.SIZE_10, 16_000, 180, 308).setHealth(10F)					.setUnlocalizedName("mp_thruster_10_kerosene");
 		mp_thruster_10_solid = new ItemCustomMissilePart().makeThruster(FuelType.SOLID, 1F, 1_500, PartSize.SIZE_10, 60_000, 400, 195).setHealth(15F)						.setUnlocalizedName("mp_thruster_10_solid");
 		mp_thruster_10_xenon = new ItemCustomMissilePart().makeThruster(FuelType.XENON, 1F, 1_500, PartSize.SIZE_10, 2_000, 200, 4200).setHealth(5F)							.setUnlocalizedName("mp_thruster_10_xenon");
@@ -4141,7 +4153,7 @@ public class ModItems {
 
 		battery_spark = new Item().setUnlocalizedName("battery_spark").setMaxStackSize(1).setCreativeTab(MainRegistry.nukeTab).setTextureName(RefStrings.MODID + ":battery_spark");
 		battery_trixite = new Item().setUnlocalizedName("battery_trixite").setMaxStackSize(1).setCreativeTab(MainRegistry.nukeTab).setTextureName(RefStrings.MODID + ":battery_trixite");
-		
+
 		battery_pack = new ItemBatteryPack().setUnlocalizedName("battery_pack").setTextureName(RefStrings.MODID + ":battery_creative_new");
 		battery_creative = new ItemBatteryCreative().setUnlocalizedName("battery_creative").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":battery_creative_new");
 		cube_power = new ItemBattery(1000000000000000000L, 1000000000000000L, 1000000000000000L).setUnlocalizedName("cube_power").setMaxStackSize(1).setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":cube_power");
@@ -4352,7 +4364,7 @@ public class ModItems {
 	}
 
 	public static void initializeItem2() {
-		
+
 		ModItemsArmor.init();
 
 		chainsaw = new ItemChainsaw(25, -0.05, MainRegistry.tMatChainsaw, EnumToolType.AXE, 5000, 1, 250,
@@ -4409,7 +4421,7 @@ public class ModItems {
 				.addAbility(IWeaponAbility.BEHEADER, 0).setUnlocalizedName("titanium_axe").setTextureName(RefStrings.MODID + ":titanium_axe");
 		titanium_shovel = new ItemToolAbility(3.5F, 0, MainRegistry.tMatTitan, EnumToolType.SHOVEL).setUnlocalizedName("titanium_shovel").setTextureName(RefStrings.MODID + ":titanium_shovel");
 		titanium_hoe = new ModHoe(MainRegistry.tMatTitan).setUnlocalizedName("titanium_hoe").setTextureName(RefStrings.MODID + ":titanium_hoe");
-		
+
 		steel_sword = new ItemSwordAbility(6F, 0, MainRegistry.tMatSteel)
 				.addAbility(IWeaponAbility.STUN, 0).setUnlocalizedName("steel_sword").setTextureName(RefStrings.MODID + ":steel_sword");
 		steel_pickaxe = new ItemToolAbility(4F, 0, MainRegistry.tMatSteel, EnumToolType.PICKAXE)
@@ -5753,7 +5765,7 @@ public class ModItems {
 		//Batteries
 		GameRegistry.registerItem(battery_spark, battery_spark.getUnlocalizedName());
 		GameRegistry.registerItem(battery_trixite, battery_trixite.getUnlocalizedName());
-		
+
 		GameRegistry.registerItem(battery_pack, battery_pack.getUnlocalizedName());
 		GameRegistry.registerItem(battery_sc, battery_sc.getUnlocalizedName());
 		GameRegistry.registerItem(battery_creative, battery_creative.getUnlocalizedName());
@@ -5971,7 +5983,7 @@ public class ModItems {
 		GameRegistry.registerItem(waste_plate_ra226be, waste_plate_ra226be.getUnlocalizedName());
 		GameRegistry.registerItem(waste_plate_sa326, waste_plate_sa326.getUnlocalizedName());
 		GameRegistry.registerItem(waste_plate_pu238be, waste_plate_pu238be.getUnlocalizedName());
-		
+
 		GameRegistry.registerItem(waste_slice_u235, waste_slice_u235.getUnlocalizedName());
 
 		//Pile parts
@@ -5991,7 +6003,7 @@ public class ModItems {
 		GameRegistry.registerItem(plate_fuel_sa326, plate_fuel_sa326.getUnlocalizedName());
 		GameRegistry.registerItem(plate_fuel_ra226be, plate_fuel_ra226be.getUnlocalizedName());
 		GameRegistry.registerItem(plate_fuel_pu238be, plate_fuel_pu238be.getUnlocalizedName());
-		
+
 		// Slice Fuels
 		GameRegistry.registerItem(slice_fuel_u235, slice_fuel_u235.getUnlocalizedName());
 
@@ -6083,6 +6095,8 @@ public class ModItems {
 		GameRegistry.registerItem(watz_pellet, watz_pellet.getUnlocalizedName());
 		GameRegistry.registerItem(watz_pellet_depleted, watz_pellet_depleted.getUnlocalizedName());
 
+		GameRegistry.registerItem(custom_fuel, custom_fuel.getUnlocalizedName());
+
 		GameRegistry.registerItem(icf_pellet_empty, icf_pellet_empty.getUnlocalizedName());
 		GameRegistry.registerItem(icf_pellet, icf_pellet.getUnlocalizedName());
 		GameRegistry.registerItem(icf_pellet_depleted, icf_pellet_depleted.getUnlocalizedName());
@@ -6095,6 +6109,8 @@ public class ModItems {
 		GameRegistry.registerItem(debris_shrapnel, debris_shrapnel.getUnlocalizedName());
 		GameRegistry.registerItem(debris_element, debris_element.getUnlocalizedName());
 		GameRegistry.registerItem(undefined, undefined.getUnlocalizedName());
+
+		GameRegistry.registerItem(ingot_catsmilium, ingot_catsmilium.getUnlocalizedName());
 
 		GameRegistry.registerItem(scrap_plastic, scrap_plastic.getUnlocalizedName());
 		GameRegistry.registerItem(scrap, scrap.getUnlocalizedName());
@@ -6372,6 +6388,8 @@ public class ModItems {
 		GameRegistry.registerItem(sat_designator, sat_designator.getUnlocalizedName());
 		GameRegistry.registerItem(sat_relay, sat_relay.getUnlocalizedName());
 		GameRegistry.registerItem(sat_war, sat_war.getUnlocalizedName());
+
+		GameRegistry.registerItem(horizon_spawn, horizon_spawn.getUnlocalizedName());
 
 		//Guns
 		GameRegistry.registerItem(gun_b92, gun_b92.getUnlocalizedName());

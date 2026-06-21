@@ -67,8 +67,10 @@ public class Calculator {
 			case '-': return y - x;
 			case '*': return y * x;
 			case '/': return y / x;
+			case 'm': return (int) y % (int) x; // why the fuck does java allow floating point modulo smh
 
 			case '^': return Math.pow(y, x); // should not happen here, but oh well
+			case 'E': return y * Math.pow(10, x);
 		}
 		return 0;
 	}

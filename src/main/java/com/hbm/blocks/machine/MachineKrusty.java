@@ -11,7 +11,6 @@ import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.interfaces.IMultiblock;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.TileEntityProxyCombo;
-import com.hbm.tileentity.machine.TileEntityMachineCombustionEngine;
 import com.hbm.tileentity.machine.TileEntityMachineKrusty;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.i18n.I18nUtil;
@@ -52,7 +51,7 @@ public class MachineKrusty extends BlockDummyable implements IMultiblock, ILookO
 	public int getOffset() {
 		return 0;
 	}
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
 		if(world.isRemote) {
@@ -86,10 +85,10 @@ public class MachineKrusty extends BlockDummyable implements IMultiblock, ILookO
 			return;
 		TileEntity te = world.getTileEntity(pos[0], pos[1], pos[2]);
 		if(!(te instanceof TileEntityMachineKrusty)) return;
-		
+
 		TileEntityMachineKrusty krusty = (TileEntityMachineKrusty) te;
 		List<String> text = new ArrayList();
-		
+
 		int flux = (int) krusty.totalFlux;
 		int heat = krusty.heat;
 		int maxHeat = krusty.maxHeat;
@@ -100,19 +99,19 @@ public class MachineKrusty extends BlockDummyable implements IMultiblock, ILookO
 		int level = (int) (krusty.level * 100);
 		int timer = krusty.timer;
 		int maxTimer = krusty.maxTimer;
-		
+
 		text.add(EnumChatFormatting.YELLOW + "Flux: " + EnumChatFormatting.RESET + String.format(Locale.US, "%,d", flux));
 		text.add(EnumChatFormatting.RED + "Heat: " + EnumChatFormatting.RESET + String.format(Locale.US, "%,.2f", heat * 0.00002 * 980 + 20) + "C");
 		text.add(EnumChatFormatting.BLUE + "Coolant: " + EnumChatFormatting.RESET + String.format(Locale.US, "%,d", coolant) + "/" + String.format(Locale.US, "%,d", maxCoolant) + "mB");
 		text.add(EnumChatFormatting.GREEN + "Rod Level: " + EnumChatFormatting.RESET + level + "%");
 		text.add(EnumChatFormatting.GOLD + "Energy: " + EnumChatFormatting.RESET + BobMathUtil.getShortNumber(power) + "/" + BobMathUtil.getShortNumber(maxPower) + "HE");
-		
+
 		if (heat > maxHeat * 0.8)
 			text.add("&[" + (BobMathUtil.getBlink() ? 0xff0000 : 0xffff00) + "&]! ! ! EXTREME HEAT ! ! !");
-		
+
 		if (heat > maxHeat)
 			text.add(EnumChatFormatting.YELLOW + "MELTDOWN: " + EnumChatFormatting.RESET + (int) (100 * timer / (float) (maxTimer)) + "%");
-		
+
 		ILookOverlay.printGeneric(event, I18nUtil.resolveKey(getUnlocalizedName() + ".name"), 0xff0000, 0x400000, text);
 	}
 }

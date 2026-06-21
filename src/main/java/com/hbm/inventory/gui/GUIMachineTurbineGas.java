@@ -3,6 +3,7 @@ package com.hbm.inventory.gui;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hbm.inventory.gui.element.GUIElements;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerMachineTurbineGas;
@@ -184,8 +185,9 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 		int power = (int) (turbinegas.power * 142 / turbinegas.maxPower); //power storage
 		drawTexturedModalRect(guiLeft + 26, guiTop + 109, 0, 223, power, 16);
 
-		drawRPMGauge(turbinegas.rpm);
+		GUIElements.drawSmoothTextureModalCircle(guiLeft + 64, guiTop + 16, this.zLevel, 176, 64, 48, 48, (double) turbinegas.rpm / 100);
 		drawThermometer(turbinegas.temp);
+		GUIElements.drawSmoothLinearGauge(guiLeft + 134, guiTop + 92, this.zLevel, (double) turbinegas.temp / 800, 2, 3, 1, 64, 90, 0x7F0000);
 
 		this.drawInfoPanel(guiLeft - 16, guiTop + 34, 16, 16, 3); //info
 		this.drawInfoPanel(guiLeft - 16, guiTop + 34 + 16, 16, 16, 2); //fuels

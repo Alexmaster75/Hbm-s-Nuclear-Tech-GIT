@@ -933,6 +933,16 @@ public class ItemRenderLibrary {
 				GL11.glShadeModel(GL11.GL_FLAT);
 			}});
 
+		renderers.put(Item.getItemFromBlock(ModBlocks.machine_krusty), new ItemRenderBase() {
+			public void renderInventory() {
+				GL11.glTranslated(0, -4, 0);
+				GL11.glScaled(4, 4, 4);
+			}
+			public void renderCommon() {
+				bindTexture(ResourceManager.reactor_krusty_base_tex); ResourceManager.reactor_krusty_base.renderAll();
+				bindTexture(ResourceManager.reactor_krusty_rod_tex); ResourceManager.reactor_krusty_rod.renderAll();
+			}});
+
 		renderers.put(Item.getItemFromBlock(ModBlocks.machine_catalytic_cracker), new ItemRenderBase( ) {
 			public void renderInventory() {
 				GL11.glTranslated(0, -3.5, 0);

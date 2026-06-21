@@ -765,6 +765,8 @@ public class ModBlocks {
 	public static Block machine_boiler;
 	public static Block machine_industrial_boiler;
 
+	public static Block machine_moxer;
+
 	public static Block foundry_mold;
 	public static Block foundry_basin;
 	public static Block foundry_channel;
@@ -1148,6 +1150,7 @@ public class ModBlocks {
 	public static Block machine_radgen;
 
 	public static Block machine_satlinker;
+	public static Block machine_satremote;
 	public static Block machine_keyforge;
 
 	public static Block machine_armor_table;
@@ -2030,6 +2033,8 @@ public class ModBlocks {
 		machine_boiler = new MachineHeatBoiler().setBlockName("machine_boiler").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_copper");
 		machine_industrial_boiler = new MachineHeatBoilerIndustrial().setBlockName("machine_industrial_boiler").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 
+		machine_moxer = new MachineMoxer().setBlockName("machine_moxer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":brick_fire");
+
 		foundry_mold = new FoundryMold().setBlockName("foundry_mold").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":brick_fire");
 		foundry_basin = new FoundryBasin().setBlockName("foundry_basin").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":brick_fire");
 		foundry_channel = new FoundryChannel().setBlockName("foundry_channel").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":brick_fire");
@@ -2221,6 +2226,7 @@ public class ModBlocks {
 		machine_krusty = new MachineKrusty(Material.iron).setBlockName("machine_krusty").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":machine_krusty");
 
 		machine_satlinker = new MachineSatLinker(Material.iron).setBlockName("machine_satlinker").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab).setBlockTextureName(RefStrings.MODID + ":machine_satlinker_side");
+		machine_satremote = new MachineSatGroundRemote(Material.iron).setBlockName("machine_satremote").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.missileTab).setBlockTextureName(RefStrings.MODID + ":machine_satlinker_side");
 		machine_keyforge = new MachineKeyForge(Material.iron).setBlockName("machine_keyforge").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab).setBlockTextureName(RefStrings.MODID + ":machine_keyforge_side");
 		machine_armor_table = new BlockArmorTable(Material.iron).setBlockName("machine_armor_table").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab);
 		machine_weapon_table = new BlockWeaponTable().setBlockName("machine_weapon_table").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.consumableTab);
@@ -3499,6 +3505,7 @@ public class ModBlocks {
 		register(machine_strand_caster);
 		register(machine_boiler);
 		register(machine_industrial_boiler);
+		register(machine_moxer);
 		register(foundry_mold);
 		register(foundry_basin);
 		register(foundry_channel);
@@ -3785,6 +3792,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(field_disturber, field_disturber.getUnlocalizedName());
 		GameRegistry.registerBlock(troll_disturber, troll_disturber.getUnlocalizedName());
 		GameRegistry.registerBlock(machine_satlinker, machine_satlinker.getUnlocalizedName());
+		GameRegistry.registerBlock(machine_satremote, machine_satremote.getUnlocalizedName());
 		GameRegistry.registerBlock(machine_keyforge, machine_keyforge.getUnlocalizedName());
 		GameRegistry.registerBlock(machine_armor_table, machine_armor_table.getUnlocalizedName());
 		GameRegistry.registerBlock(machine_weapon_table, machine_weapon_table.getUnlocalizedName());

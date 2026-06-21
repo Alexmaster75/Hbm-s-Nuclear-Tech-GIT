@@ -254,6 +254,8 @@ public class OreDictManager {
 	/** MINT */
 	public static final DictFrame MEN = new DictFrame("Menthol");
 
+	public static final DictFrame CATSMILIUM = new DictFrame("Catsmilium");
+
 	public static final DictFrame MIN = new DictFrame("Mineral");
 	/*
 	 * DUST AND GEM ORES
@@ -496,6 +498,8 @@ public class OreDictManager {
 
 
 		OSMIRIDIUM	.nugget(nugget_osmiridium)								.ingot(ingot_osmiridium);
+
+		CATSMILIUM                                                          .ingot(ingot_catsmilium);
 
 		/*
 		 * DUST AND GEM ORES
