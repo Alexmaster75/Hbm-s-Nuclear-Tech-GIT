@@ -166,6 +166,7 @@ public class ResourceManager {
 	public static final IModelCustom chemical_plant = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/chemical_plant.obj")).asVBO();
 	public static final IModelCustom chemical_factory = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/chemical_factory.obj")).asVBO();
 	public static final IModelCustom purex = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/purex.obj")).asVBO();
+	public static final IModelCustom moxer = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/moxer.obj")).asVBO();
 	public static final HFRWavefrontObject spike_plant = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/plant_spike.obj"));
 
 	//Mixer
@@ -235,6 +236,7 @@ public class ResourceManager {
 
 	//Dark Matter Core
 	public static final IModelCustom dfc_emitter = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/core_emitter.obj"));
+	public static final IModelCustom dfc_pulse = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/core_emitter.obj"));
 	public static final IModelCustom dfc_receiver = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/core_receiver.obj"));
 	public static final IModelCustom dfc_injector = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/core_injector.obj"));
 
@@ -267,7 +269,7 @@ public class ResourceManager {
 	//Kilopower Reactor
 	public static final IModelCustom reactor_krusty_base = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/reactors/reactor_krusty_base.obj"));
 	public static final IModelCustom reactor_krusty_rod = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/reactors/reactor_krusty_rod.obj"));
-	
+
 	//Breeder
 	public static final IModelCustom breeder = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/reactors/breeder.obj"));
 
@@ -410,7 +412,7 @@ public class ResourceManager {
 	public static IModelCustomNamed silo_hatch = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/doors/silo_hatch.obj")).asVBO();
 	public static final ResourceLocation silo_hatch_large_tex = new ResourceLocation(RefStrings.MODID, "textures/models/doors/silo_hatch_large.png");
 	public static IModelCustomNamed silo_hatch_large = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/doors/silo_hatch_large.obj")).asVBO();
-	
+
 	//Vending Machine
 	public static final IModelCustom vending_machine = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/vending_machine.obj")).noSmooth().asVBO();
 
@@ -680,6 +682,7 @@ public class ResourceManager {
 	public static final ResourceLocation chemfac_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chemfac.png");
 	public static final ResourceLocation chemical_factory_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chemical_factory.png");
 	public static final ResourceLocation purex_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/purex.png");
+	public static final ResourceLocation moxer_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/moxer.png");
 	public static final ResourceLocation spike_plant_tex = new ResourceLocation(RefStrings.MODID, "textures/models/rubber_cacti.png");
 
 	//Mixer
@@ -758,6 +761,7 @@ public class ResourceManager {
 
 	//Dark Matter Core
 	public static final ResourceLocation dfc_emitter_tex = new ResourceLocation(RefStrings.MODID, "textures/models/core_emitter.png");
+	public static final ResourceLocation dfc_pulse_tex = new ResourceLocation(RefStrings.MODID, "textures/models/core_emitter.png");
 	public static final ResourceLocation dfc_receiver_tex = new ResourceLocation(RefStrings.MODID, "textures/models/core_receiver.png");
 	public static final ResourceLocation dfc_injector_tex = new ResourceLocation(RefStrings.MODID, "textures/models/core_injector.png");
 	public static final ResourceLocation dfc_stabilizer_tex = new ResourceLocation(RefStrings.MODID, "textures/models/core_stabilizer.png");
@@ -780,7 +784,7 @@ public class ResourceManager {
 	//Kilopower Reactor
 	public static final ResourceLocation reactor_krusty_base_tex = new ResourceLocation(RefStrings.MODID, "textures/models/reactor_krusty_base.png");
 	public static final ResourceLocation reactor_krusty_rod_tex = new ResourceLocation(RefStrings.MODID, "textures/models/reactor_krusty_rod.png");
-	
+
 	//Breeder
 	public static final ResourceLocation breeder_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/breeder.png");
 
@@ -885,7 +889,7 @@ public class ResourceManager {
 
 	//Elevator
 	public static final ResourceLocation cargo_elevator_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/elevator.png");
-	
+
 	//Vault Door
 	public static final ResourceLocation vault_cog_tex = new ResourceLocation(RefStrings.MODID, "textures/models/vault_cog.png");
 	public static final ResourceLocation vault_frame_tex = new ResourceLocation(RefStrings.MODID, "textures/models/vault_frame.png");
@@ -972,7 +976,7 @@ public class ResourceManager {
 	//Pipes
 	public static final ResourceLocation pipe_anchor_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/pipe_anchor.png");
 	public static final ResourceLocation fluid_pump_tex = new ResourceLocation(RefStrings.MODID, "textures/models/network/fluid_diode.png");
-	
+
 	//Barrels
 	public static ResourceLocation barrel_plastic_tex  = new ResourceLocation(RefStrings.MODID, "textures/blocks/barrel_plastic.png");
 	public static ResourceLocation barrel_steel_tex    = new ResourceLocation(RefStrings.MODID, "textures/blocks/barrel_steel.png");
@@ -1562,14 +1566,14 @@ public class ResourceManager {
 	public static final ResourceLocation supply_crate = new ResourceLocation(RefStrings.MODID, "textures/blocks/crate_can.png");
 	public static final ResourceLocation landing_capsule_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/warheads/rp_landing_capsule.png");
 	public static final ResourceLocation drop_pod_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/warheads/rp_drop_pod.png");
-	
+
 	public static final ResourceLocation combat_pod_skin_blue = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/combat_drop_pod.blue.png");
 	public static final ResourceLocation combat_pod_skin_yellow = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/combat_drop_pod.yellow.png");
 	public static final ResourceLocation combat_pod_skin_white = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/combat_drop_pod.white.png");
 	public static final ResourceLocation combat_pod_skin_green = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/combat_drop_pod.green.png");
 	public static final ResourceLocation combat_pod_skin_red = new ResourceLocation(RefStrings.MODID, "textures/models/bombs/combat_drop_pod.red.png");
 
-	
+
 	public static final ResourceLocation soyuz_module_dome_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_capsule/module_dome.png");
 	public static final ResourceLocation soyuz_module_lander_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_capsule/module_lander.png");
 	public static final ResourceLocation soyuz_module_lander_space_tex = new ResourceLocation(RefStrings.MODID, "textures/models/soyuz_capsule/module_lander_space.png");
@@ -1840,7 +1844,7 @@ public class ResourceManager {
 	public static final HFRWavefrontObject algae_film = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/algae_film.obj"));
 	public static final IModelCustom sat_rail = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/railgun_main.obj"));
 	public static final IModelCustom plane = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/plane.obj"));
-	
+
 	public static final IModelCustom charge_dynamite = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/charge_dynamite.obj")).noSmooth();
 	public static final IModelCustom charge_c4 = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/charge_c4.obj")).noSmooth();
 

@@ -730,6 +730,7 @@ container.cryoDistillator=Cryo-Distil
 container.cyclotron=Cyclotron
 container.dfcCore=Dark Fusion Core
 container.dfcEmitter=DFC Emitter
+container.dfcPulse=DFC Pulse Generator
 container.dfcInjector=DFC Fuel Injector
 container.dfcReceiver=DFC Receiver
 container.dfcStabilizer=DFC Stabilizer
@@ -3294,6 +3295,8 @@ item.hull_small_steel.name=Small Steel Shell
 item.icf_pellet.name=ICF Fuel Pellet
 item.icf_pellet_depleted.name=Depleted ICF Fuel Pellet
 item.icf_pellet_empty.name=Empty ICF Fuel Pellet
+item.custom_fuel_ingot.name=Custom Fuel Ingot
+item.custom_fuel_billet.name=Custom Fuel Billet
 item.igniter.name=Igniter
 item.igniter.desc=(Used by right-clicking the Prototype)$It's a green metal handle with a$bright red button and a small lid.$At the bottom, the initials N.E. are$engraved. Whoever N.E. was, he had$a great taste in shades of green.
 item.industrial_magnet.name=Industrial Magnet
@@ -5462,6 +5465,10 @@ purex.schrab=Schrabidium extraction from %s
 
 qmaw.tab=[ Press %s for help ]
 
+moxer.ingot=Custom Fuel Ingot
+moxer.billet=Custom Fuel Billet
+moxer.rbmk=Custom RBMK Fuel Rod
+
 radar.clearMap=Clear Map
 radar.detectMissiles=Detect Missiles
 radar.detectPlayers=Detect Players
@@ -6018,6 +6025,7 @@ tile.dry_ice.name=Dry Ice
 tile.salted_fallout.name=Salted Fallout
 tile.dfc_core.name=Dark Fusion Core
 tile.dfc_emitter.name=DFC Emitter
+tile.dfc_pulse.name=DFC Pulse Generator
 tile.dfc_injector.name=DFC Fuel Injector
 tile.dfc_receiver.name=DFC Receiver
 tile.dfc_stabilizer.name=DFC Stabilizer

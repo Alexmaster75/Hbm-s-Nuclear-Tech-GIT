@@ -37,6 +37,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntityFurnace;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
@@ -153,10 +154,11 @@ public class TileEntityFEL extends TileEntityMachineBase implements IEnergyRecei
 								worldObj.spawnEntityInWorld(new EntityItem(worldObj, x + 0.5, y + 0.5, z + 0.5, new ItemStack(Item.getItemFromBlock(ModBlocks.machine_silex))));
 							}
 						}
+
 					// was i drunk when thinking this?
 					} else if (b == ModBlocks.icf) {
 						TileEntity tile = worldObj.getTileEntity(x + dir.offsetX * (8), y - 3, z + dir.offsetZ * (8));
-						if(tile instanceof TileEntityICF) {
+						if (tile instanceof TileEntityICF) {
 							TileEntityICF icf = (TileEntityICF) tile;
 							icf.laser += (long) (this.mode == EnumWavelengths.DRX ? 66.6E6 : Math.pow(req, 1.2));
 							icf.maxLaser += this.getMaxPower();

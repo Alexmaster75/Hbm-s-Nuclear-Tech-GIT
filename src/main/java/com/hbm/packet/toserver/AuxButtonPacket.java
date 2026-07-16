@@ -7,12 +7,7 @@ import com.hbm.items.weapon.ItemCustomMissilePart.PartSize;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.tileentity.TileEntityTickingBase;
 import com.hbm.tileentity.bomb.TileEntityLaunchTable;
-import com.hbm.tileentity.machine.TileEntityCoreEmitter;
-import com.hbm.tileentity.machine.TileEntityCoreStabilizer;
-import com.hbm.tileentity.machine.TileEntityForceField;
-import com.hbm.tileentity.machine.TileEntityMachineMiningLaser;
-import com.hbm.tileentity.machine.TileEntityMachineMissileAssembly;
-import com.hbm.tileentity.machine.TileEntitySoyuzLauncher;
+import com.hbm.tileentity.machine.*;
 import com.hbm.tileentity.machine.storage.TileEntityBarrel;
 import com.hbm.tileentity.machine.storage.TileEntityMachineBattery;
 
@@ -69,44 +64,44 @@ public class AuxButtonPacket implements IMessage {
 		@SuppressWarnings("incomplete-switch")
 		@Override
 		public IMessage onMessage(AuxButtonPacket m, MessageContext ctx) {
-			
+
 			EntityPlayer p = ctx.getServerHandler().playerEntity;
-			
+
 			//try {
 				TileEntity te = p.worldObj.getTileEntity(m.x, m.y, m.z);
-				
+
 				if(te instanceof TileEntityForceField) {
 					TileEntityForceField field = (TileEntityForceField)te;
 					field.isOn = !field.isOn;
 				}
-				
+
 				if(te instanceof TileEntityMachineMissileAssembly) {
 					TileEntityMachineMissileAssembly assembly = (TileEntityMachineMissileAssembly)te;
 					assembly.construct();
 				}
-				
+
 				if(te instanceof TileEntityLaunchTable) {
 					TileEntityLaunchTable launcher = (TileEntityLaunchTable)te;
 					launcher.padSize = PartSize.values()[m.value];
 				}
-				
+
 				if(te instanceof TileEntityCoreEmitter) {
 					TileEntityCoreEmitter core = (TileEntityCoreEmitter)te;
 					if(m.id == 0) core.watts = m.value;
 					if(m.id == 1) core.isOn = !core.isOn;
 				}
-				
+
 				if(te instanceof TileEntityCoreStabilizer) {
 					TileEntityCoreStabilizer core = (TileEntityCoreStabilizer)te;
 					if(m.id == 0) core.watts = m.value;
 				}
-				
+
 				if(te instanceof TileEntityBarrel) {
 					TileEntityBarrel barrel = (TileEntityBarrel)te;
 					barrel.mode = (short) ((barrel.mode + 1) % barrel.modes);
 					barrel.markDirty();
 				}
-				
+
 				if(te instanceof TileEntityMachineBattery) {
 					TileEntityMachineBattery bat = (TileEntityMachineBattery)te;
 
@@ -128,18 +123,18 @@ public class AuxButtonPacket implements IMessage {
 						bat.markDirty();
 					}
 				}
-				
+
 				if(te instanceof TileEntitySoyuzLauncher) {
 					TileEntitySoyuzLauncher launcher = (TileEntitySoyuzLauncher)te;
 					if(m.id == 0) launcher.mode = (byte) m.value;
 					if(m.id == 1) launcher.startCountdown();
 				}
-				
+
 				if(te instanceof TileEntityMachineMiningLaser) {
 					TileEntityMachineMiningLaser laser = (TileEntityMachineMiningLaser)te;
 					laser.isOn = !laser.isOn;
 				}
-				
+
 				/// yes ///
 				//no fuck off
 				if(te instanceof TileEntityMachineBase) {
@@ -150,32 +145,32 @@ public class AuxButtonPacket implements IMessage {
 					TileEntityTickingBase base = (TileEntityTickingBase)te;
 					base.handleButtonPacket(m.value, m.id);
 				}
-				
+
 				//why make new packets when you can just abuse and uglify the existing ones?
 				if(te == null && m.value == 999) {
-					
+
 					NBTTagCompound perDat = p.getEntityData().getCompoundTag(EntityPlayer.PERSISTED_NBT_TAG);
-					
+
 					if(MobConfig.enableDucks && !perDat.getBoolean("hasDucked")) {
 						EntityDuck ducc = new EntityDuck(p.worldObj);
 						ducc.setPosition(p.posX, p.posY + p.eyeHeight, p.posZ);
-						
+
 						Vec3 vec = p.getLookVec();
 						ducc.motionX = vec.xCoord;
 						ducc.motionY = vec.yCoord;
 						ducc.motionZ = vec.zCoord;
-						
+
 						p.worldObj.spawnEntityInWorld(ducc);
 						p.worldObj.playSoundAtEntity(p, "hbm:entity.ducc", 1.0F, 1.0F);
-						
+
 						perDat.setBoolean("hasDucked", true);
-						
+
 						p.getEntityData().setTag(EntityPlayer.PERSISTED_NBT_TAG, perDat);
 					}
 				}
-				
+
 			//} catch (Exception x) { }
-			
+
 			return null;
 		}
 	}

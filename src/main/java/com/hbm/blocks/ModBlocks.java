@@ -1007,6 +1007,7 @@ public class ModBlocks {
 	public static Block digamma_matter;
 
 	public static Block dfc_emitter;
+	public static Block dfc_pulse;
 	public static Block dfc_injector;
 	public static Block dfc_receiver;
 	public static Block dfc_stabilizer;
@@ -2301,6 +2302,7 @@ public class ModBlocks {
 		machine_converter_rf_he = new BlockConverterRfHe(Material.iron).setBlockName("machine_converter_rf_he").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":machine_converter_rf_he");
 
 		dfc_emitter = new CoreComponent(Material.iron).setBlockName("dfc_emitter").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":dfc_emitter");
+		dfc_pulse = new CoreComponent(Material.iron).setBlockName("dfc_pulse").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":dfc_pulse");
 		dfc_injector = new CoreComponent(Material.iron).setBlockName("dfc_injector").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":dfc_injector");
 		dfc_receiver = new CoreComponent(Material.iron).setBlockName("dfc_receiver").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":dfc_receiver");
 		dfc_stabilizer = new CoreComponent(Material.iron).setBlockName("dfc_stabilizer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":dfc_stabilizer");
@@ -3880,6 +3882,7 @@ public class ModBlocks {
 
 		//Dark Fusion Core
 		GameRegistry.registerBlock(dfc_emitter, dfc_emitter.getUnlocalizedName());
+		GameRegistry.registerBlock(dfc_pulse, dfc_pulse.getUnlocalizedName());
 		GameRegistry.registerBlock(dfc_injector, dfc_injector.getUnlocalizedName());
 		GameRegistry.registerBlock(dfc_receiver, dfc_receiver.getUnlocalizedName());
 		GameRegistry.registerBlock(dfc_stabilizer, dfc_stabilizer.getUnlocalizedName());

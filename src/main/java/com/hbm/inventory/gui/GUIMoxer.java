@@ -4,10 +4,14 @@ import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hbm.inventory.recipes.MoxerRecipe;
+import com.hbm.inventory.recipes.MoxerRecipes;
+import com.hbm.items.machine.ItemBlueprints;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.inventory.Slot;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.input.Keyboard;
@@ -16,7 +20,6 @@ import org.lwjgl.opengl.GL11;
 import com.hbm.inventory.container.ContainerMoxer;
 import com.hbm.inventory.gui.element.GUIElements;
 import com.hbm.inventory.material.Mats;
-import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.Mats.MoxerStack;
 import com.hbm.inventory.material.NTMMaterial.SmeltingBehavior;
 import com.hbm.lib.RefStrings;
@@ -25,7 +28,6 @@ import com.hbm.util.i18n.I18nUtil;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
@@ -37,6 +39,7 @@ public class GUIMoxer extends GuiInfoContainer {
 	protected GuiTextField field;
 
 	int index;
+	int timer;
 	boolean return_prs;
 	boolean return_old;
 
@@ -45,7 +48,7 @@ public class GUIMoxer extends GuiInfoContainer {
 		super.initGui();
 
 		Keyboard.enableRepeatEvents(true);
-		this.field = new GuiTextField(this.fontRendererObj, guiLeft + 109, guiTop + 83, 50, 14);
+		this.field = new GuiTextField(this.fontRendererObj, guiLeft + 83, guiTop + 111, 50, 14);
 		this.field.setTextColor(-1);
 		this.field.setDisabledTextColour(-1);
 		this.field.setEnableBackgroundDrawing(false);
@@ -57,17 +60,28 @@ public class GUIMoxer extends GuiInfoContainer {
 		moxer = tedf;
 
 		this.xSize = 176;
-		this.ySize = 214;
+		this.ySize = 256;
 	}
 
 	@Override
 	public void drawScreen(int x, int y, float interp) {
 		super.drawScreen(x, y, interp);
 
-		drawStackInfo(moxer.inpStack, x, y, 61, 17);
+		drawStackInfo(moxer.inpStack, x, y, 62, 8);
 
-		moxer.tanks[0].renderTankInfo(this, x, y, guiLeft + 25, guiTop + 37, 18, 18);
-		moxer.tanks[1].renderTankInfo(this, x, y, guiLeft + 25, guiTop + 58, 18, 18);
+		for (int i = 0; i < moxer.inputTanks.length; i++)
+			moxer.inputTanks[i].renderTankInfo(this, x, y, guiLeft + 7 + i * 18, guiTop + 8, 18, 36);
+
+		this.drawElectricityInfo(this, x, y, guiLeft + 152, guiTop + 18, 16, 61, moxer.power, moxer.maxPower);
+
+		if(guiLeft + 7 <= x && guiLeft + 7 + 18 > x && guiTop + 125 < y && guiTop + 125 + 18 >= y) {
+			if(this.moxer.moxerModule.recipe != null && MoxerRecipes.INSTANCE.recipeNameMap.containsKey(this.moxer.moxerModule.recipe)) {
+				MoxerRecipe recipe = (MoxerRecipe) MoxerRecipes.INSTANCE.recipeNameMap.get(this.moxer.moxerModule.recipe);
+				GUIElements.drawHoveringTextRecipe(recipe.print(), x, y, this.fontRendererObj, itemRender, this.width, this.height);
+			} else {
+				this.drawCreativeTabHoveringText(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.recipe.setRecipe"), x, y);
+			}
+		}
 	}
 
 	@Override
@@ -81,33 +95,47 @@ public class GUIMoxer extends GuiInfoContainer {
 
 		if(count > 0) {
 
-			if(guiLeft + 106 <= x && guiLeft + 106 + 18 > x && guiTop + 53 < y && guiTop + 53 + 18 >= y) {
+			// selector down
+			if(guiLeft + 8 <= x && guiLeft + 8 + 16 > x && guiTop + 99 < y && guiTop + 99 + 16 >= y) {
+
+				index++;
+				index %= count;
+				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+				timer = 5;
+				return;
+			}
+			// selector up
+			if(guiLeft + 26 <= x && guiLeft + 26 + 16 > x && guiTop + 99 < y && guiTop + 99 + 16 >= y) {
 
 				index--;
 				if(index < 0)
 					index = count - 1;
 				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
+				timer = 5;
 				return;
 			}
+			// shitter
+			if(guiLeft + 44 <= x && guiLeft + 44 + 16 > x && guiTop + 99 < y && guiTop + 99 + 16 >= y) {
 
-			if(guiLeft + 124 <= x && guiLeft + 124 + 18 > x && guiTop + 53 < y && guiTop + 53 + 18 >= y) {
-
-				index++;
-				index %= count;
+				moxer.autoMode = !moxer.autoMode;
+				NBTTagCompound data = new NBTTagCompound();
+				data.setBoolean("autoChange", moxer.autoMode);
+				PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, moxer.xCoord, moxer.yCoord, moxer.zCoord));
 				mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 				return;
 			}
 		}
+
+		if(this.checkClick(x, y, 7, 125, 18, 18))
+			GUIScreenRecipeSelector.openSelector(MoxerRecipes.INSTANCE, moxer, moxer.moxerModule.recipe, 0, ItemBlueprints.grabPool(moxer.slots[1]), this);
 	}
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		String name = this.moxer.hasCustomInventoryName() ? this.moxer.getInventoryName() : I18n.format(this.moxer.getInventoryName());
-
-		this.fontRendererObj.drawString(name, this.xSize / 2 - this.fontRendererObj.getStringWidth(name) / 2, 5, 4210752);
 
 		return_prs = Keyboard.isKeyDown(Keyboard.KEY_RETURN);
-		if (return_prs && !return_old) {
+		MoxerRecipe recipe = MoxerRecipes.INSTANCE.recipeNameMap.get(moxer.moxerModule.recipe);
+		if (return_prs && !return_old && recipe != null) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 
 			if(this.field.getText().isEmpty())
@@ -115,15 +143,16 @@ public class GUIMoxer extends GuiInfoContainer {
 
 			NBTTagCompound data = new NBTTagCompound();
 			// this is horrible and i hate it, but it works
-			// example percentage = 1050 -> from the right, first 3 digits represent the actual percentage, everything after is the index
+			// example percentage = 150 -> from the right, first 2 digits represent the actual percentage amount, everything after is the index
 			int percentage;
 			try {
 				percentage = Integer.parseInt(this.field.getText());
 			} catch (NumberFormatException e) {
 				percentage = 0;
 			}
-			percentage = MathHelper.clamp_int(percentage, 0, 100);
-			percentage += index * 1000;
+			percentage = MathHelper.clamp_int(percentage, 0, 144);
+			percentage /= 2; // because 1 quantum = 2 mB, ffs
+			percentage += index * 100;
 			data.setInteger("percentage", percentage);
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, moxer.xCoord, moxer.yCoord, moxer.zCoord));
 
@@ -145,13 +174,16 @@ public class GUIMoxer extends GuiInfoContainer {
 			n = I18nUtil.resolveKey(names.get(index));
 		}
 
+		int recAmount = 1;
+		if (recipe != null)
+			recAmount = recipe.amount;
 		String t = this.field.getText();
-		String p = String.format("%d%s", moxer.inpStack.isEmpty() ? 0 : moxer.inpStack.get(index).percentage, "%");
+		String p = String.format("%.1f%s", moxer.inpStack.isEmpty() ? 0 : (double) moxer.inpStack.get(index).percentage / recAmount * 100, "%");
 
 		int amount = 0;
 		for (MoxerStack mat : moxer.inpStack)
 			amount += mat.amount;
-		String total = String.format("Total: %d mB", amount);
+		String total = String.format("Total: %d mB", 2 * amount);
 
 		String cursor = System.currentTimeMillis() % 1000 < 500 ? " " : "||";
 
@@ -161,10 +193,11 @@ public class GUIMoxer extends GuiInfoContainer {
 		double scale = 2;
 
 		GL11.glScaled(1D / scale, 1D / scale, 1);
-		this.fontRendererObj.drawString(total, (int)(109 * scale), (int)(20 * scale), 0x00ff00);
-		this.fontRendererObj.drawString(n, (int)(109 * scale), (int)(26 * scale), 0x00ff00);
-		this.fontRendererObj.drawString(p, (int)(109 * scale), (int)(32 * scale), 0x00ff00);
-		this.fontRendererObj.drawString(t, (int)(109 * scale), (int)(87 * scale), 0x00ff00);
+		this.fontRendererObj.drawString(total, (int)(83 * scale), (int)(77 * scale), 0x00ff00);
+		this.fontRendererObj.drawString(n, (int)(83 * scale), (int)(83 * scale), 0x00ff00);
+		this.fontRendererObj.drawString(p, (int)(83 * scale), (int)(89 * scale), 0x00ff00);
+		this.fontRendererObj.drawString("Status: " + moxer.getStatus(moxer.status), (int)(83 * scale), (int)(95 * scale), 0x00ff00);
+		this.fontRendererObj.drawString(t, (int)(83 * scale), (int)(116 * scale), 0x00ff00);
 		GL11.glScaled(scale, scale, 1);
 	}
 
@@ -175,23 +208,79 @@ public class GUIMoxer extends GuiInfoContainer {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
-		if(!moxer.inpStack.isEmpty()) drawStack(moxer.inpStack, moxer.inpZCapacity, 62, 97);
+		if(!moxer.inpStack.isEmpty()) drawStack(moxer.inpStack, moxer.inpZCapacity, 62, 61);
 
 		// selector down
-		if(guiLeft + 106 <= p_146976_2_ && guiLeft + 106 + 18 > p_146976_2_ && guiTop + 53 < p_146976_3_ && guiTop + 53 + 18 >=p_146976_3_) {
-			drawTexturedModalRect(guiLeft + 106, guiTop + 53, 210, 0, 18, 18);
+		if(guiLeft + 7 <= p_146976_2_ && guiLeft + 7 + 18 > p_146976_2_ && guiTop + 98 < p_146976_3_ && guiTop + 98 + 18 >=p_146976_3_) {
+			if (timer > 0)
+				drawTexturedModalRect(guiLeft + 7, guiTop + 98, 176, 147, 18, 18);
+			else
+				drawTexturedModalRect(guiLeft + 7, guiTop + 98, 176, 129, 18, 18);
 		}
 		// selector up
-		if(guiLeft + 124 <= p_146976_2_ && guiLeft + 124 + 18 > p_146976_2_ && guiTop + 53 < p_146976_3_ && guiTop + 53 + 18 >=p_146976_3_) {
-			drawTexturedModalRect(guiLeft + 124, guiTop + 53, 228, 0, 18, 18);
+		if(guiLeft + 25 <= p_146976_2_ && guiLeft + 25 + 18 > p_146976_2_ && guiTop + 98 < p_146976_3_ && guiTop + 98 + 18 >=p_146976_3_) {
+			if (timer > 0)
+				drawTexturedModalRect(guiLeft + 25, guiTop + 98, 194, 147, 18, 18);
+			else
+				drawTexturedModalRect(guiLeft + 25, guiTop + 98, 194, 129, 18, 18);
 		}
 		// shitter
-		if(guiLeft + 142 <= p_146976_2_ && guiLeft + 142 + 18 > p_146976_2_ && guiTop + 53 < p_146976_3_ && guiTop + 53 + 18 >=p_146976_3_) {
-			drawTexturedModalRect(guiLeft + 142, guiTop + 53, 210, 18, 18, 18);
+		if(guiLeft + 43 <= p_146976_2_ && guiLeft + 43 + 18 > p_146976_2_ && guiTop + 98 < p_146976_3_ && guiTop + 98 + 18 >=p_146976_3_) {
+			drawTexturedModalRect(guiLeft + 43, guiTop + 98, 212, 129, 18, 18);
+		}
+		if (moxer.autoMode)
+			drawTexturedModalRect(guiLeft + 43, guiTop + 98, 212, 147, 18, 18);
+
+		if (timer > 0)
+			timer--;
+
+		// progress bar
+		drawTexturedModalRect(guiLeft + 62, guiTop + 126, 176, 61, (int) (70 * moxer.progress), 16);
+
+		// power
+		int p = (int) (moxer.power * 61 / moxer.maxPower);
+		drawTexturedModalRect(guiLeft + 152, guiTop + 79 - p, 176, 61 - p, 16, p);
+
+		for (int i = 0; i < moxer.inputTanks.length; i++)
+			moxer.inputTanks[i].renderTank(guiLeft + 8 + i * 18, guiTop + 43, this.zLevel, 16, 34);
+
+		MoxerRecipe recipe = MoxerRecipes.INSTANCE.recipeNameMap.get(moxer.moxerModule.recipe);
+
+		/// LEFT LED
+		if(moxer.progress > 0) {
+			drawTexturedModalRect(guiLeft + 51, guiTop + 121, 195, 0, 3, 6);
+		} else if(recipe != null) {
+			drawTexturedModalRect(guiLeft + 51, guiTop + 121, 192, 0, 3, 6);
 		}
 
-		GUIElements.drawSmoothGauge(guiLeft + 34, guiTop + 47, this.zLevel, (double) moxer.tanks[0].getFill() / (double) moxer.tanks[0].getMaxFill(), 5, 2, 1, 0x7F0000);
-		GUIElements.drawSmoothGauge(guiLeft + 34, guiTop + 68, this.zLevel, (double) moxer.tanks[1].getFill() / (double) moxer.tanks[1].getMaxFill(), 5, 2, 1, 0x7F0000);
+		/// RIGHT LED
+		if(moxer.progress > 0) {
+			drawTexturedModalRect(guiLeft + 56, guiTop + 121, 195, 0, 3, 6);
+		} else if(recipe != null && moxer.power >= recipe.power) {
+			drawTexturedModalRect(guiLeft + 56, guiTop + 121, 192, 0, 3, 6);
+		}
+
+		this.renderItem(recipe != null ? recipe.getIcon() : TEMPLATE_FOLDER, 8, 126);
+
+		if(recipe != null && recipe.inputItem != null) {
+			for(int i = 0; i < recipe.inputItem.length; i++) {
+				Slot slot = (Slot) this.inventorySlots.inventorySlots.get(moxer.moxerModule.inputSlots[i]);
+				if(!slot.getHasStack()) this.renderItem(recipe.inputItem[i].extractForCyclingDisplay(20), slot.xDisplayPosition, slot.yDisplayPosition, 10F);
+			}
+
+			Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
+			OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+			GL11.glColor4f(1F, 1F, 1F, 0.5F);
+			GL11.glEnable(GL11.GL_BLEND);
+			this.zLevel = 300F;
+			for(int i = 0; i < recipe.inputItem.length; i++) {
+				Slot slot = (Slot) this.inventorySlots.inventorySlots.get(moxer.moxerModule.inputSlots[i]);
+				if(!slot.getHasStack()) drawTexturedModalRect(guiLeft + slot.xDisplayPosition, guiTop + slot.yDisplayPosition, slot.xDisplayPosition, slot.yDisplayPosition, 16, 16);
+			}
+			this.zLevel = 0F;
+			GL11.glColor4f(1F, 1F, 1F, 1F);
+			GL11.glDisable(GL11.GL_BLEND);
+		}
 	}
 
 	protected void drawStackInfo(List<MoxerStack> stack, int mouseX, int mouseY, int x, int y) {
@@ -201,13 +290,17 @@ public class GUIMoxer extends GuiInfoContainer {
 		if(stack.isEmpty())
 			list.add(EnumChatFormatting.RED + "Empty");
 
+		int recAmount = 1;
+		MoxerRecipe recipe = MoxerRecipes.INSTANCE.recipeNameMap.get(moxer.moxerModule.recipe);
+		if (recipe != null)
+			recAmount = recipe.amount;
 		for(MoxerStack sta : stack) {
-			list.add(EnumChatFormatting.YELLOW + String.format("(%3d%s) %s: %d mB", sta.percentage, "%", I18nUtil.resolveKey(sta.material.getUnlocalizedName()), sta.amount));
+			list.add(EnumChatFormatting.YELLOW + String.format("(%5.1f%s) %s: %d mB", (double) sta.percentage / recAmount * 100, "%", I18nUtil.resolveKey(sta.material.getUnlocalizedName()), 2 * sta.amount));
 			if (sta.percentage != 0)
-				list.add(EnumChatFormatting.RED + String.format("↪ -%d mB", (int) (144.0 * sta.percentage / 100.0)));
+				list.add(EnumChatFormatting.RED + String.format("↪ -%d mB", 2 * sta.percentage));
 		}
 
-		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + x, guiTop + y, 36, 81, mouseX, mouseY, list);
+		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + x, guiTop + y, 36, 54, mouseX, mouseY, list);
 	}
 
 	protected void drawStack(List<MoxerStack> stack, int capacity, int x, int y) {
@@ -221,7 +314,7 @@ public class GUIMoxer extends GuiInfoContainer {
 
 		for(MoxerStack sta : stack) {
 
-			int targetHeight = (lastQuant + sta.amount) * 79 / capacity;
+			int targetHeight = (lastQuant + sta.amount) * 52 / capacity;
 
 			if(lastHeight == targetHeight) continue; //skip draw calls that would be 0 pixels high
 
@@ -231,10 +324,10 @@ public class GUIMoxer extends GuiInfoContainer {
 			//hex = 0xC18336;
 			Color color = new Color(hex);
 			GL11.glColor3f(color.getRed() / 255F, color.getGreen() / 255F, color.getBlue() / 255F);
-			drawTexturedModalRect(guiLeft + x, guiTop + y - targetHeight, 176 + offset, 89 - targetHeight, 34, targetHeight - lastHeight);
+			drawTexturedModalRect(guiLeft + x, guiTop + y - targetHeight, 176 + offset, 129 - targetHeight, 34, targetHeight - lastHeight);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glColor4f(1F, 1F, 1F, 0.3F);
-			drawTexturedModalRect(guiLeft + x, guiTop + y - targetHeight, 176 + offset, 89 - targetHeight, 34, targetHeight - lastHeight);
+			drawTexturedModalRect(guiLeft + x, guiTop + y - targetHeight, 176 + offset, 129 - targetHeight, 34, targetHeight - lastHeight);
 			GL11.glDisable(GL11.GL_BLEND);
 
 			lastQuant += sta.amount;

@@ -123,8 +123,8 @@ public class GUIElements {
 		double mult = 1.5;
 		tess.addVertex(x + deltaX + tip.xCoord * mult, y + deltaY + tip.yCoord * mult, z);
 		tess.addVertex(x + deltaX + right.xCoord * mult, y + deltaY + right.yCoord * mult, z);
-		tess.addVertex(x + deltaX + Bright.xCoord * mult, y + deltaY + Bright.yCoord * mult, z);
-		tess.addVertex(x + deltaX + Bleft.xCoord * mult, y + deltaY + Bleft.yCoord * mult, z);
+		tess.addVertex(x + deltaX + Bright.xCoord * mult, y + deltaY + Bright.yCoord, z);
+		tess.addVertex(x + deltaX + Bleft.xCoord * mult, y + deltaY + Bleft.yCoord, z);
 		tess.addVertex(x + deltaX + left.xCoord * mult, y + deltaY + left.yCoord * mult, z);
 		tess.draw();
 
@@ -134,8 +134,8 @@ public class GUIElements {
 		tess.setColorOpaque_I(color);
 		tess.addVertex(x + deltaX + tip.xCoord, y + deltaY + tip.yCoord, z);
 		tess.addVertex(x + deltaX + right.xCoord, y + deltaY + right.yCoord, z);
-		tess.addVertex(x + deltaX + Bright.xCoord * mult, y + deltaY + Bright.yCoord, z);
-		tess.addVertex(x + deltaX + Bleft.xCoord * mult, y + deltaY + Bleft.yCoord, z);
+		tess.addVertex(x + deltaX + Bright.xCoord, y + deltaY + Bright.yCoord, z);
+		tess.addVertex(x + deltaX + Bleft.xCoord, y + deltaY + Bleft.yCoord, z);
 		tess.addVertex(x + deltaX + left.xCoord, y + deltaY + left.yCoord, z);
 		tess.draw();
 

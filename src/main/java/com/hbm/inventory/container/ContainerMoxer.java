@@ -1,75 +1,75 @@
 package com.hbm.inventory.container;
 
 import com.hbm.inventory.SlotNonRetarded;
-import com.hbm.inventory.SlotTakeOnly;
-import com.hbm.tileentity.machine.TileEntityMoxer;
+import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemBlueprints;
+import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.util.InventoryUtil;
 
+import api.hbm.energymk2.IBatteryItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.inventory.Container;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
-public class ContainerMoxer extends Container {
+public class ContainerMoxer extends ContainerBase {
 
-	protected TileEntityMoxer crucible;
+	public ContainerMoxer(InventoryPlayer invPlayer, IInventory moxer) {
+		super(invPlayer, moxer);
 
-	public ContainerMoxer(InventoryPlayer invPlayer, TileEntityMoxer crucible) {
-		this.crucible = crucible;
+		// Battery
+		this.addSlotToContainer(new SlotNonRetarded(moxer, 0, 152, 81));
+		// Schematic
+		this.addSlotToContainer(new SlotNonRetarded(moxer, 1, 35, 126));
+		// Upgrades
+		this.addSlots(moxer, 2, 152, 108, 2, 1);
+		// Solid Input
+		this.addSlotToContainer(new SlotNonRetarded(moxer, 4, 116, 9));
+		// Solid Output
+		this.addSlotToContainer(new SlotNonRetarded(moxer, 5, 116, 45));
+		// Fluid Input
+		this.addSlots(			moxer, 6, 8, 45, 1, 3);
+		this.addTakeOnlySlots(	moxer, 9, 8, 63, 1, 3);
 
-		this.addSlotToContainer(new SlotNonRetarded(crucible, 0, 26, 18));
-		this.addSlotToContainer(new SlotTakeOnly(crucible, 1, 26, 81));
-
-		for(int i = 0; i < 3; i++) {
-			for(int j = 0; j < 9; j++) {
-				this.addSlotToContainer(new Slot(invPlayer, j + i * 9 + 9, 8 + j * 18, 132 + i * 18));
-			}
-		}
-
-		for(int i = 0; i < 9; i++) {
-			this.addSlotToContainer(new Slot(invPlayer, i, 8 + i * 18, 190));
-		}
-	}
-
-	@Override
-	public ItemStack slotClick(int slot, int button, int mode, EntityPlayer player) {
-		if(mode == 2) return null;
-		return super.slotClick(slot, button, mode, player);
+		this.playerInv(invPlayer, 8, 174);
 	}
 
 	@Override
 	public ItemStack transferStackInSlot(EntityPlayer player, int index) {
-		ItemStack stack = null;
+		ItemStack slotOriginal = null;
 		Slot slot = (Slot) this.inventorySlots.get(index);
 
 		if(slot != null && slot.getHasStack()) {
-			ItemStack originalStack = slot.getStack();
-			stack = originalStack.copy();
+			ItemStack slotStack = slot.getStack();
+			slotOriginal = slotStack.copy();
 
-			if(index <= 0) {
-				if(!this.mergeItemStack(originalStack, 1, this.inventorySlots.size(), true)) {
+			if(index <= tile.getSizeInventory() - 1) {
+				if(!this.mergeItemStack(slotStack, tile.getSizeInventory(), this.inventorySlots.size(), true)) {
 					return null;
 				}
+			} else {
 
-				slot.onSlotChange(originalStack, stack);
-
-			} else if(!InventoryUtil.mergeItemStack(this.inventorySlots, originalStack, 0, 1, false)) {
-				return null;
+				if(slotOriginal.getItem() instanceof IBatteryItem || slotOriginal.getItem() == ModItems.battery_creative) {
+					if(!this.mergeItemStack(slotStack, 0, 1, false)) return null;
+				} else if(slotOriginal.getItem() instanceof ItemBlueprints) {
+					if(!this.mergeItemStack(slotStack, 1, 2, false)) return null;
+				} else if(slotOriginal.getItem() instanceof ItemMachineUpgrade) {
+					if(!this.mergeItemStack(slotStack, 2, 4, false)) return null;
+				} else {
+					if(!InventoryUtil.mergeItemStack(this.inventorySlots, slotStack, 4, 5, false)) return null;
+				}
 			}
 
-			if(originalStack.stackSize == 0) {
-				slot.putStack((ItemStack) null);
+			if(slotStack.stackSize == 0) {
+				slot.putStack(null);
 			} else {
 				slot.onSlotChanged();
 			}
+
+			slot.onPickupFromSlot(player, slotStack);
 		}
 
-		return stack;
-	}
-
-	@Override
-	public boolean canInteractWith(EntityPlayer player) {
-		return crucible.isUseableByPlayer(player);
+		return slotOriginal;
 	}
 }

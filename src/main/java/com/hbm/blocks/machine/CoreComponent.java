@@ -2,10 +2,7 @@ package com.hbm.blocks.machine;
 
 import com.hbm.blocks.ModBlocks;
 import com.hbm.main.MainRegistry;
-import com.hbm.tileentity.machine.TileEntityCoreEmitter;
-import com.hbm.tileentity.machine.TileEntityCoreInjector;
-import com.hbm.tileentity.machine.TileEntityCoreReceiver;
-import com.hbm.tileentity.machine.TileEntityCoreStabilizer;
+import com.hbm.tileentity.machine.*;
 
 import cpw.mods.fml.common.network.internal.FMLNetworkHandler;
 import net.minecraft.block.BlockContainer;
@@ -34,41 +31,43 @@ public class CoreComponent extends BlockContainer {
 			return new TileEntityCoreInjector();
 		if(this == ModBlocks.dfc_stabilizer)
 			return new TileEntityCoreStabilizer();
-		
+		if(this == ModBlocks.dfc_pulse)
+			return new TileEntityCorePulse();
+
 		return null;
 	}
-	
+
 	@Override
 	public int getRenderType(){
 		return -1;
 	}
-	
+
 	@Override
 	public boolean isOpaqueCube() {
 		return false;
 	}
-	
+
 	@Override
 	public boolean renderAsNormalBlock() {
 		return false;
 	}
-	
+
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase player, ItemStack stack) {
-    	
+
         int l = BlockPistonBase.determineOrientation(world, x, y, z, player);
         world.setBlockMetadataWithNotify(x, y, z, l, 2);
     }
-	
+
 	@Override
 	public boolean onBlockActivated(World world, int x, int y, int z, EntityPlayer player, int side, float hitX, float hitY, float hitZ) {
-		
+
 		if(world.isRemote) {
 			return true;
 		} else if(!player.isSneaking()) {
 			FMLNetworkHandler.openGui(player, MainRegistry.instance, 0, world, x, y, z);
-			
+
 			return true;
-			
+
 		} else {
 			return false;
 		}

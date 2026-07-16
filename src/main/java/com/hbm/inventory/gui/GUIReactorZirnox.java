@@ -93,9 +93,9 @@ public class GUIReactorZirnox extends GuiInfoContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
-		GUIElements.drawSmoothLinearGauge(guiLeft + 162, guiTop + 114, this.zLevel, (double) zirnox.steam.getFill() / zirnox.steam.getMaxFill(), 2, 3, 1, 14, 0, 0x7F0000);
-		GUIElements.drawSmoothLinearGauge(guiLeft + 144, guiTop + 114, this.zLevel, (double) zirnox.carbonDioxide.getFill() / zirnox.carbonDioxide.getMaxFill(), 2, 3, 1, 14, 0, 0x7F0000);
-		GUIElements.drawSmoothLinearGauge(guiLeft + 180, guiTop + 114, this.zLevel, (double) zirnox.water.getFill() / zirnox.water.getMaxFill(), 2, 3, 1, 14, 0, 0x7F0000);
+		GUIElements.drawSmoothLinearGauge(guiLeft + 162, guiTop + 114, this.zLevel, (double) zirnox.steam.getFill() / zirnox.steam.getMaxFill(), 2, 5, 0.75, 14, 0, 0x7F0000);
+		GUIElements.drawSmoothLinearGauge(guiLeft + 144, guiTop + 114, this.zLevel, (double) zirnox.carbonDioxide.getFill() / zirnox.carbonDioxide.getMaxFill(), 2, 5, 0.75, 14, 0, 0x7F0000);
+		GUIElements.drawSmoothLinearGauge(guiLeft + 180, guiTop + 114, this.zLevel, (double) zirnox.water.getFill() / zirnox.water.getMaxFill(), 2, 5, 0.75, 14, 0, 0x7F0000);
 
 		GUIElements.drawSmoothGauge(guiLeft + 169, guiTop + 42, this.zLevel, (double) zirnox.heat/100000, 5, 2, 1, 0x7F0000);
 		GUIElements.drawSmoothGauge(guiLeft + 187, guiTop + 42, this.zLevel, (double) zirnox.pressure/100000, 5, 2, 1, 0x7F0000);

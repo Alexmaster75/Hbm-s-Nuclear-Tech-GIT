@@ -1240,7 +1240,10 @@ public class ModItems {
 	public static Item watz_pellet;
 	public static Item watz_pellet_depleted;
 
-	public static Item custom_fuel;
+	public static Item custom_fuel_ingot;
+	public static Item custom_fuel_billet;
+	public static ItemRBMKRod custom_fuel_rbmk_rod;
+	public static ItemRBMKPellet custom_fuel_rbmk_pellet;
 
 	public static Item icf_pellet_empty;
 	public static Item icf_pellet;
@@ -3759,7 +3762,17 @@ public class ModItems {
 		watz_pellet = new ItemWatzPellet().setUnlocalizedName("watz_pellet").setTextureName(RefStrings.MODID + ":watz_pellet");
 		watz_pellet_depleted = new ItemWatzPellet().setUnlocalizedName("watz_pellet_depleted").setTextureName(RefStrings.MODID + ":watz_pellet");
 
-		custom_fuel = new ItemCustomFuel().setUnlocalizedName("custom_fuel").setTextureName(RefStrings.MODID + ":custom_fuel");
+		custom_fuel_ingot = new ItemCustomFuel(custom_fuel_ingot).setUnlocalizedName("custom_fuel_ingot").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":custom_fuel_ingot");
+		custom_fuel_billet = new ItemCustomFuel(custom_fuel_billet).setUnlocalizedName("custom_fuel_billet").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":custom_fuel_billet");
+
+		custom_fuel_rbmk_pellet = (ItemRBMKPellet) new ItemRBMKPellet("Custom Fuel").setUnlocalizedName("custom_fuel_rbmk_pellet").setTextureName(RefStrings.MODID + ":custom_fuel_rbmk_pellet");
+		custom_fuel_rbmk_rod = (ItemCustomRBMKRod) new ItemCustomRBMKRod(custom_fuel_rbmk_pellet)
+				.setYield(100000000D)
+				.setStats(40)
+				.setFunction(EnumBurnFunc.LOG_TEN)
+				.setDepletionFunction(EnumDepleteFunc.RAISING_SLOPE)
+				.setMeltingPoint(2815)
+				.setTint(tintUranium).setUnlocalizedName("custom_fuel_rbmk_rod").setTextureName(RefStrings.MODID + ":custom_fuel_rbmk_rod");
 
 		icf_pellet_empty = new Item().setUnlocalizedName("icf_pellet_empty").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":icf_pellet_empty");
 		icf_pellet = new ItemICFPellet().setUnlocalizedName("icf_pellet").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":icf_pellet");
@@ -6095,7 +6108,10 @@ public class ModItems {
 		GameRegistry.registerItem(watz_pellet, watz_pellet.getUnlocalizedName());
 		GameRegistry.registerItem(watz_pellet_depleted, watz_pellet_depleted.getUnlocalizedName());
 
-		GameRegistry.registerItem(custom_fuel, custom_fuel.getUnlocalizedName());
+		GameRegistry.registerItem(custom_fuel_ingot, custom_fuel_ingot.getUnlocalizedName());
+		GameRegistry.registerItem(custom_fuel_billet, custom_fuel_billet.getUnlocalizedName());
+		GameRegistry.registerItem(custom_fuel_rbmk_pellet, custom_fuel_rbmk_pellet.getUnlocalizedName());
+		GameRegistry.registerItem(custom_fuel_rbmk_rod, custom_fuel_rbmk_rod.getUnlocalizedName());
 
 		GameRegistry.registerItem(icf_pellet_empty, icf_pellet_empty.getUnlocalizedName());
 		GameRegistry.registerItem(icf_pellet, icf_pellet.getUnlocalizedName());

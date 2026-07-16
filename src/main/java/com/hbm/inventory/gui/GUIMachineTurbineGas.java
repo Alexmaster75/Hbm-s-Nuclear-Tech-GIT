@@ -287,34 +287,6 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 		GL11.glDisable(GL11.GL_BLEND);
 	}
 
-	protected void drawRPMGauge(int position) {
-
-		int xPos = guiLeft + 64;
-		int yPos = guiTop + 16;
-
-		int squareSideLenght = 48;
-
-		double uMin = (48D / 4848D) * position;
-		double uMax = (48D / 4848D) * (position + 1);
-		double vMin = 0D;
-		double vMax = 1D;
-
-		GL11.glEnable(GL11.GL_BLEND);
-
-		Minecraft.getMinecraft().getTextureManager().bindTexture(gauge_tex); //long boi
-
-		Tessellator tessellator = Tessellator.instance;
-
-		tessellator.startDrawingQuads();
-		tessellator.addVertexWithUV(xPos, yPos + squareSideLenght, this.zLevel, uMin, vMax);
-		tessellator.addVertexWithUV(xPos + squareSideLenght, yPos + squareSideLenght, this.zLevel, uMax, vMax);
-		tessellator.addVertexWithUV(xPos + squareSideLenght, yPos, this.zLevel,uMax, vMin);
-		tessellator.addVertexWithUV(xPos, yPos, this.zLevel, uMin, vMin);
-		tessellator.draw();
-
-		GL11.glDisable(GL11.GL_BLEND);
-	}
-
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
 		//useless piece of shit, at least for now

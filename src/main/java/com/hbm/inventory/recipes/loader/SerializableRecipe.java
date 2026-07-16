@@ -95,6 +95,7 @@ public abstract class SerializableRecipe {
 		recipeHandlers.add(AssemblyMachineRecipes.INSTANCE);
 		recipeHandlers.add(ChemicalPlantRecipes.INSTANCE);
 		recipeHandlers.add(PUREXRecipes.INSTANCE);
+		recipeHandlers.add(MoxerRecipes.INSTANCE);
 		recipeHandlers.add(FusionRecipes.INSTANCE);
 		recipeHandlers.add(PrecAssRecipes.INSTANCE);
 		recipeHandlers.add(PlasmaForgeRecipes.INSTANCE);
@@ -245,7 +246,7 @@ public abstract class SerializableRecipe {
 			ex.printStackTrace();
 		}
 	}
-	
+
 	public boolean allowEmptyRecipeList() { return false; }
 
 	public void readRecipeFile(File file) {
