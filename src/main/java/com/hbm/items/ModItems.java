@@ -2320,6 +2320,8 @@ public class ModItems {
 
 	public static Item swarm_member;
 
+	public static Item turbocompressor_bypass;
+
 	public static void initializeItem() {
 
 		redstone_sword = new RedstoneSword(ToolMaterial.STONE).setUnlocalizedName("redstone_sword").setCreativeTab(CreativeTabs.tabCombat).setTextureName(RefStrings.MODID + ":redstone_sword");
@@ -3762,8 +3764,8 @@ public class ModItems {
 		watz_pellet = new ItemWatzPellet().setUnlocalizedName("watz_pellet").setTextureName(RefStrings.MODID + ":watz_pellet");
 		watz_pellet_depleted = new ItemWatzPellet().setUnlocalizedName("watz_pellet_depleted").setTextureName(RefStrings.MODID + ":watz_pellet");
 
-		custom_fuel_ingot = new ItemCustomFuel(custom_fuel_ingot).setUnlocalizedName("custom_fuel_ingot").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":custom_fuel_ingot");
-		custom_fuel_billet = new ItemCustomFuel(custom_fuel_billet).setUnlocalizedName("custom_fuel_billet").setCreativeTab(MainRegistry.controlTab).setTextureName(RefStrings.MODID + ":custom_fuel_billet");
+		custom_fuel_ingot = new ItemCustomFuel(custom_fuel_ingot).setUnlocalizedName("custom_fuel_ingot").setTextureName(RefStrings.MODID + ":custom_fuel_ingot");
+		custom_fuel_billet = new ItemCustomFuel(custom_fuel_billet).setUnlocalizedName("custom_fuel_billet").setTextureName(RefStrings.MODID + ":custom_fuel_billet");
 
 		custom_fuel_rbmk_pellet = (ItemRBMKPellet) new ItemRBMKPellet("Custom Fuel").setUnlocalizedName("custom_fuel_rbmk_pellet").setTextureName(RefStrings.MODID + ":custom_fuel_rbmk_pellet");
 		custom_fuel_rbmk_rod = (ItemCustomRBMKRod) new ItemCustomRBMKRod(custom_fuel_rbmk_pellet)
@@ -4908,6 +4910,8 @@ public class ModItems {
 		conveyor_wand = new ItemConveyorWand().setUnlocalizedName("conveyor_wand").setCreativeTab(MainRegistry.machineTab).setFull3D().setTextureName(RefStrings.MODID + ":wand_s");
 
 		swarm_member = new Item().setUnlocalizedName("swarm_member").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":sat_base");
+
+		turbocompressor_bypass = new Item().setUnlocalizedName("turbocompressor_bypass").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":turbocompressor_bypass");
 
 		GunFactory.init();
 
@@ -7219,6 +7223,8 @@ public class ModItems {
 		GameRegistry.registerItem(conveyor_wand, conveyor_wand.getUnlocalizedName());
 
 		GameRegistry.registerItem(swarm_member, swarm_member.getUnlocalizedName());
+
+		GameRegistry.registerItem(turbocompressor_bypass, turbocompressor_bypass.getUnlocalizedName());
 
 		GameRegistry.registerItem(template_folder, template_folder.getUnlocalizedName());
 		GameRegistry.registerItem(nothing, nothing.getUnlocalizedName());

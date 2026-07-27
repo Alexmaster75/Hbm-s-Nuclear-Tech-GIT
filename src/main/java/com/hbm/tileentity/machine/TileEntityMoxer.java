@@ -571,11 +571,9 @@ public class TileEntityMoxer extends TileEntityMachineBase implements IGUIProvid
 
 	@Override
 	public void receiveControl(NBTTagCompound data) {
-		if(data.hasKey("percentage") && !inpStack.isEmpty()) {
-			int setting = data.getInteger("percentage");
-			// example setting = 150 -> from the right, first 2 digits represent the percentage amount, everything after is the index
-			int index = (int) Math.floor((double) setting / 100);
-			int percentage = setting - index * 100;
+		if(data.hasKey("perc_index") && data.hasKey("percentage") && !inpStack.isEmpty()) {
+			int index = data.getInteger("perc_index");
+			int percentage = data.getInteger("percentage");
 			MoxerStack ref = inpStack.get(index);
 			int tot_perc = 0;
 			for (MoxerStack mat : inpStack)

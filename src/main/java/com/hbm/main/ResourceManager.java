@@ -167,6 +167,7 @@ public class ResourceManager {
 	public static final IModelCustom chemical_factory = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/chemical_factory.obj")).asVBO();
 	public static final IModelCustom purex = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/purex.obj")).asVBO();
 	public static final IModelCustom moxer = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/moxer.obj")).asVBO();
+	public static final IModelCustom turbocompressor = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/turbocompressor.obj")).asVBO();
 	public static final HFRWavefrontObject spike_plant = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/plant_spike.obj"));
 
 	//Mixer
@@ -683,6 +684,7 @@ public class ResourceManager {
 	public static final ResourceLocation chemical_factory_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/chemical_factory.png");
 	public static final ResourceLocation purex_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/purex.png");
 	public static final ResourceLocation moxer_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/moxer.png");
+	public static final ResourceLocation turbocompressor_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/turbocompressor.png");
 	public static final ResourceLocation spike_plant_tex = new ResourceLocation(RefStrings.MODID, "textures/models/rubber_cacti.png");
 
 	//Mixer

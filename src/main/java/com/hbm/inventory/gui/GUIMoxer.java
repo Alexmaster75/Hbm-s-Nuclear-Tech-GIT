@@ -135,6 +135,10 @@ public class GUIMoxer extends GuiInfoContainer {
 
 		return_prs = Keyboard.isKeyDown(Keyboard.KEY_RETURN);
 		MoxerRecipe recipe = MoxerRecipes.INSTANCE.recipeNameMap.get(moxer.moxerModule.recipe);
+		int recAmount = 1;
+		if (recipe != null)
+			recAmount = recipe.amount;
+
 		if (return_prs && !return_old && recipe != null) {
 			mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));
 
@@ -142,17 +146,15 @@ public class GUIMoxer extends GuiInfoContainer {
 				return;
 
 			NBTTagCompound data = new NBTTagCompound();
-			// this is horrible and i hate it, but it works
-			// example percentage = 150 -> from the right, first 2 digits represent the actual percentage amount, everything after is the index
 			int percentage;
 			try {
 				percentage = Integer.parseInt(this.field.getText());
 			} catch (NumberFormatException e) {
 				percentage = 0;
 			}
-			percentage = MathHelper.clamp_int(percentage, 0, 144);
+			percentage = MathHelper.clamp_int(percentage, 0, 2 * recAmount);
 			percentage /= 2; // because 1 quantum = 2 mB, ffs
-			percentage += index * 100;
+			data.setInteger("perc_index", index);
 			data.setInteger("percentage", percentage);
 			PacketDispatcher.wrapper.sendToServer(new NBTControlPacket(data, moxer.xCoord, moxer.yCoord, moxer.zCoord));
 
@@ -174,9 +176,6 @@ public class GUIMoxer extends GuiInfoContainer {
 			n = I18nUtil.resolveKey(names.get(index));
 		}
 
-		int recAmount = 1;
-		if (recipe != null)
-			recAmount = recipe.amount;
 		String t = this.field.getText();
 		String p = String.format("%.1f%s", moxer.inpStack.isEmpty() ? 0 : (double) moxer.inpStack.get(index).percentage / recAmount * 100, "%");
 

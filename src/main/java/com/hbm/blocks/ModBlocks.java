@@ -766,6 +766,7 @@ public class ModBlocks {
 	public static Block machine_industrial_boiler;
 
 	public static Block machine_moxer;
+	public static Block machine_turbocompressor;
 
 	public static Block foundry_mold;
 	public static Block foundry_basin;
@@ -2035,6 +2036,7 @@ public class ModBlocks {
 		machine_industrial_boiler = new MachineHeatBoilerIndustrial().setBlockName("machine_industrial_boiler").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 
 		machine_moxer = new MachineMoxer().setBlockName("machine_moxer").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":brick_fire");
+		machine_turbocompressor = new MachineTurboCompressor().setBlockName("machine_turbocompressor").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":brick_fire");
 
 		foundry_mold = new FoundryMold().setBlockName("foundry_mold").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":brick_fire");
 		foundry_basin = new FoundryBasin().setBlockName("foundry_basin").setHardness(5.0F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":brick_fire");
@@ -3508,6 +3510,7 @@ public class ModBlocks {
 		register(machine_boiler);
 		register(machine_industrial_boiler);
 		register(machine_moxer);
+		register(machine_turbocompressor);
 		register(foundry_mold);
 		register(foundry_basin);
 		register(foundry_channel);

@@ -31,13 +31,8 @@ public class ItemCustomRBMKRod extends ItemRBMKRod {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int pass) {
-		if (stack != null && pass == 0) {
-			int[] inp;
-			try {
-				inp = stack.stackTagCompound.getIntArray("inp");
-			} catch (NullPointerException e) {
-				inp = new int[0];
-			}
+		if (stack != null && stack.hasTagCompound() && pass == 0) {
+			int[] inp = stack.stackTagCompound.getIntArray("inp");
 
 			int size = inp.length / 2;
 			if (size > 0) {
@@ -61,7 +56,6 @@ public class ItemCustomRBMKRod extends ItemRBMKRod {
 		return 0xffffff;
 	}
 
-	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 
 		list.add(EnumChatFormatting.ITALIC + this.fullName);
@@ -78,7 +72,21 @@ public class ItemCustomRBMKRod extends ItemRBMKRod {
 		list.add(EnumChatFormatting.DARK_PURPLE + I18nUtil.resolveKey("trait.rbmk.xenon", ((int)(getPoison(stack) * 1000D) / 1000D) + "%"));
 		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("trait.rbmk.splitsWith", I18nUtil.resolveKey(nType.unlocalized)));
 		list.add(EnumChatFormatting.BLUE + I18nUtil.resolveKey("trait.rbmk.splitsInto", I18nUtil.resolveKey(rType.unlocalized)));
-		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.fluxFunc", EnumChatFormatting.WHITE + getFuncDescription(stack)));
+		//list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.fluxFunc", EnumChatFormatting.WHITE + getFuncDescription(stack)));
+		if (stack != null && stack.hasTagCompound()) {
+			String funcName = stack.stackTagCompound.getString("funcName");
+			String funcStep = "";
+			for (int i = 0; i < funcName.length(); i++) {
+				if (funcName.charAt(i) == '|') {
+					list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.fluxFunc", EnumChatFormatting.WHITE + funcStep));
+					funcStep = "";
+				} else {
+					funcStep += funcName.charAt(i);
+				}
+			}
+		} else {
+			list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.fluxFunc", EnumChatFormatting.WHITE + "ERROR"));
+		}
 		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.funcType", this.function.title));
 		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.xenonGen", EnumChatFormatting.WHITE + "x * " + xGen));
 		list.add(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("trait.rbmk.xenonBurn", EnumChatFormatting.WHITE + "x² / " + xBurn));

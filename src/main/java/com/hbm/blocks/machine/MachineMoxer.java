@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.hbm.blocks.BlockDummyable;
 import com.hbm.blocks.ITooltipProvider;
+import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.material.Mats.MoxerStack;
 import com.hbm.items.machine.ItemScraps;
@@ -77,12 +78,12 @@ public class MachineMoxer extends BlockDummyable implements ITooltipProvider {
 
 		ForgeDirection rot = dir.getRotation(ForgeDirection.UP);
 
-		makeExtra(world, x + rot.offsetX, y, z + rot.offsetZ);
-		makeExtra(world, x + rot.offsetX + dir.offsetX * 2, y, z + rot.offsetZ + dir.offsetZ * 2);
-		makeExtra(world, x + rot.offsetX - dir.offsetX * 2, y, z + rot.offsetZ - dir.offsetZ * 2);
-		makeExtra(world, x - rot.offsetX, y, z - rot.offsetZ);
-		makeExtra(world, x - rot.offsetX + dir.offsetX * 2, y, z - rot.offsetZ + dir.offsetZ * 2);
-		makeExtra(world, x - rot.offsetX - dir.offsetX * 2, y, z - rot.offsetZ - dir.offsetZ * 2);
+		this.makeExtra(world, x - dir.offsetX + 1, y, z - dir.offsetZ + 1);
+		this.makeExtra(world, x - dir.offsetX + 1, y, z - dir.offsetZ - 1);
+		this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ + 1);
+		this.makeExtra(world, x - dir.offsetX - 1, y, z - dir.offsetZ - 1);
+		this.makeExtra(world, x - dir.offsetX + rot.offsetX * 2, y, z - dir.offsetZ + rot.offsetZ * 2);
+		this.makeExtra(world, x - dir.offsetX - rot.offsetX * 2, y, z - dir.offsetZ - rot.offsetZ * 2);
 	}
 
 	@Override

@@ -27,11 +27,11 @@ public class ItemCustomFuel extends Item {
 	public static enum EnumCustomFuel {
 
 		TH232(-0.20D, Mats.MAT_THORIUM,    new Function.FunctionLogarithmic(1.00D)),
-		U233(  0.00D, Mats.MAT_U233,        new Function.FunctionSqrt(1.00D)),
-		U235(  0.00D, Mats.MAT_U235,        new Function.FunctionSqrt(1.00D)),
+		U233(  0.15D, Mats.MAT_U233,        new Function.FunctionSqrt(1.00D)),
+		U235(  0.10D, Mats.MAT_U235,        new Function.FunctionSqrt(1.00D)),
 		U238( -1.00D, Mats.MAT_U238,        new Function.FunctionSqrt(1.25D)),
-		PU239( 0.00D, Mats.MAT_PU239,       new Function.FunctionSqrt(1.50D)),
-		NP237( 0.00D, Mats.MAT_NEPTUNIUM,   new Function.FunctionSqrt(1.75D)),
+		PU239( 0.10D, Mats.MAT_PU239,       new Function.FunctionSqrt(1.50D)),
+		NP237( 0.10D, Mats.MAT_NEPTUNIUM,   new Function.FunctionSqrt(1.75D)),
 		SB326( 0.20D, Mats.MAT_SCHRABIDIUM, new Function.FunctionLinear(2.00D)),
 		SB327( 0.50D, Mats.MAT_SOLINIUM,    new Function.FunctionLinear(1.25D)),
 		;
@@ -97,7 +97,7 @@ public class ItemCustomFuel extends Item {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public int getColorFromItemStack(ItemStack stack, int pass) {
-		if (stack != null && pass == 0) {
+		if (stack != null && stack.hasTagCompound() && pass == 0) {
 			int[] inp = stack.stackTagCompound.getIntArray("inp");
 
 			int size = inp.length / 2;
@@ -137,21 +137,23 @@ public class ItemCustomFuel extends Item {
 
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
-		int[] inp = stack.stackTagCompound.getIntArray("inp");
-		String funcName = stack.stackTagCompound.getString("funcName");
-		String funcStep = "";
-		for(int i = 0; i < inp.length / 2; i++) {
-			NTMMaterial mat = Mats.matById.get(inp[i * 2]);
-			if(mat == null) continue;
-			list.add(EnumChatFormatting.YELLOW + String.format("(%5.1f%s) %s: %d mB", (double) inp[i * 2 + 1] / Math.max(stack.stackTagCompound.getInteger("amount"), 1) * 100, "%", I18nUtil.resolveKey(mat.getUnlocalizedName()), 2 * inp[i * 2 + 1]));
-		}
-		list.add(EnumChatFormatting.GREEN + "f(x) = ");
-		for (int i = 0; i < funcName.length(); i++) {
-			if (funcName.charAt(i) == '|') {
-				list.add(EnumChatFormatting.GREEN + funcStep);
-				funcStep = "";
-			} else {
-				funcStep += funcName.charAt(i);
+		if (stack != null && stack.hasTagCompound()) {
+			int[] inp = stack.stackTagCompound.getIntArray("inp");
+			String funcName = stack.stackTagCompound.getString("funcName");
+			String funcStep = "";
+			for (int i = 0; i < inp.length / 2; i++) {
+				NTMMaterial mat = Mats.matById.get(inp[i * 2]);
+				if (mat == null) continue;
+				list.add(EnumChatFormatting.YELLOW + String.format("(%5.1f%s) %s: %d mB", (double) inp[i * 2 + 1] / Math.max(stack.stackTagCompound.getInteger("amount"), 1) * 100, "%", I18nUtil.resolveKey(mat.getUnlocalizedName()), 2 * inp[i * 2 + 1]));
+			}
+			list.add(EnumChatFormatting.GREEN + "f(x) = ");
+			for (int i = 0; i < funcName.length(); i++) {
+				if (funcName.charAt(i) == '|') {
+					list.add(EnumChatFormatting.GREEN + funcStep);
+					funcStep = "";
+				} else {
+					funcStep += funcName.charAt(i);
+				}
 			}
 		}
 	}
