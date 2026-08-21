@@ -1841,6 +1841,7 @@ public class ResourceManager {
 	public static final HFRWavefrontObject rail_standard_switch = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/rail_standard_switch.obj")).noSmooth();
 	public static final HFRWavefrontObject rail_standard_switch_flipped = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/rail_standard_switch_flipped.obj")).noSmooth();
 	public static final HFRWavefrontObject capacitor = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/capacitor.obj")).noSmooth();
+	public static final HFRWavefrontObject radio_extender = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/radio_extender.obj")).noSmooth();
 	public static final HFRWavefrontObject funnel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/funnel.obj")).noSmooth();
 
 	public static final HFRWavefrontObject algae_film = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/blocks/algae_film.obj"));

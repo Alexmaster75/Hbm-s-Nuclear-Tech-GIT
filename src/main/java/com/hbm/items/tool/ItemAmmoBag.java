@@ -22,7 +22,7 @@ public class ItemAmmoBag extends Item implements IGUIProvider {
 	public ItemAmmoBag() {
 		this.setMaxStackSize(1);
 	}
-	
+
 	@Override
 	public int getMaxItemUseDuration(ItemStack stack) {
 		return 1;
@@ -54,7 +54,7 @@ public class ItemAmmoBag extends Item implements IGUIProvider {
 	@Override
 	public double getDurabilityForDisplay(ItemStack stack) {
 		if(!stack.hasTagCompound()) return 1D;
-		
+
 		InventoryAmmoBag inv = new InventoryAmmoBag(stack);
 		int capacity = 0;
 		int bullets = 0;
@@ -69,21 +69,21 @@ public class ItemAmmoBag extends Item implements IGUIProvider {
 		}
 		return 1D - (double) bullets / (double) capacity;
 	}
-	
+
 	public static class InventoryAmmoBag implements IInventory {
-		
+
 		public final ItemStack box;
 		public ItemStack[] slots;
-		
+
 		public InventoryAmmoBag(ItemStack bag) {
 			this.box = bag;
 			slots = new ItemStack[this.getSizeInventory()];
-			
+
 			if(!bag.hasTagCompound())
 				bag.setTagCompound(new NBTTagCompound());
-			
+
 			ItemStack[] fromNBT = ItemStackUtil.readStacksFromNBT(bag, slots.length);
-			
+
 			if(fromNBT != null) {
 				for(int i = 0; i < slots.length; i++) {
 					slots[i] = fromNBT[i];
@@ -117,11 +117,11 @@ public class ItemAmmoBag extends Item implements IGUIProvider {
 
 		@Override
 		public void setInventorySlotContents(int slot, ItemStack stack) {
-			
+
 			if(stack != null) {
 				stack.stackSize = Math.min(stack.stackSize, this.getInventoryStackLimit());
 			}
-			
+
 			slots[slot] = stack;
 			markDirty();
 		}
@@ -137,13 +137,18 @@ public class ItemAmmoBag extends Item implements IGUIProvider {
 					slots[i] = null;
 				}
 			}
-			
+
 			ItemStackUtil.addStacksToNBT(box, slots);
 		}
 
 		@Override public boolean isUseableByPlayer(EntityPlayer player) { return true; }
 		@Override public void openInventory() { }
 		@Override public void closeInventory() { }
-		@Override public boolean isItemValidForSlot(int slot, ItemStack stack) { return !stack.hasTagCompound(); }
+		@Override public boolean isItemValidForSlot(int slot, ItemStack stack) {
+			return !stack.hasTagCompound() && (
+				stack.getItem() == ModItems.ammo_standard ||
+				stack.getItem() == ModItems.ammo_secret
+			);
+		}
 	}
 }

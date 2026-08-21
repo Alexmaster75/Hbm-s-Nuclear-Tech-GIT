@@ -56,6 +56,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.potion.Potion;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.FakePlayer;
@@ -89,6 +90,10 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	//what way are we facing?
 	public double rotationYaw;
 	public double rotationPitch;
+	// used for OC control
+	public double OCTargetYaw;
+	public double OCTargetPitch;
+	public boolean OCAutoControl;
 	//only used by clients for interpolation
 	public double lastRotationYaw;
 	public double lastRotationPitch;
@@ -196,7 +201,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 
 			if(isOn() && hasPower()) {
 
-				if(tPos != null)
+				if(tPos != null || OCAutoControl)
 					this.alignTurret();
 			} else {
 
@@ -259,6 +264,9 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		BufferUtil.writeVec3(buf, this.tPos);
 		buf.writeDouble(this.rotationPitch);
 		buf.writeDouble(this.rotationYaw);
+		buf.writeDouble(this.OCTargetPitch);
+		buf.writeDouble(this.OCTargetYaw);
+		buf.writeBoolean(this.OCAutoControl);
 		buf.writeLong(this.power);
 		buf.writeBoolean(this.isOn);
 		buf.writeBoolean(this.targetPlayers);
@@ -274,6 +282,9 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		this.tPos = BufferUtil.readVec3(buf);
 		this.syncRotationPitch = buf.readDouble();
 		this.syncRotationYaw = buf.readDouble();
+		this.OCTargetPitch = buf.readDouble();
+		this.OCTargetYaw = buf.readDouble();
+		this.OCAutoControl = buf.readBoolean();
 		this.power = buf.readLong();
 		this.isOn = buf.readBoolean();
 		this.targetPlayers = buf.readBoolean();
@@ -486,11 +497,19 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	 */
 	public void turnTowards(Vec3 ent) {
 
-		Vec3 pos = this.getTurretPos();
-		Vec3 delta = Vec3.createVectorHelper(ent.xCoord - pos.xCoord, ent.yCoord - pos.yCoord, ent.zCoord - pos.zCoord);
+		double targetPitch;
+		double targetYaw;
 
-		double targetPitch = Math.asin(delta.yCoord / delta.lengthVector());
-		double targetYaw = -Math.atan2(delta.xCoord, delta.zCoord);
+		if (!OCAutoControl) {
+			Vec3 pos = this.getTurretPos();
+			Vec3 delta = Vec3.createVectorHelper(ent.xCoord - pos.xCoord, ent.yCoord - pos.yCoord, ent.zCoord - pos.zCoord);
+
+			targetPitch = Math.asin(delta.yCoord / delta.lengthVector());
+			targetYaw = -Math.atan2(delta.xCoord, delta.zCoord);
+		} else {
+			targetPitch = OCTargetPitch;
+			targetYaw = OCTargetYaw;
+		}
 
 		this.turnTowardsAngle(targetPitch, targetYaw);
 	}
@@ -968,6 +987,36 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		return new Object[] {};
 	}
 
+	@Callback(direct = true, limit = 4)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setPitch(Context context, Arguments args) {
+		this.OCTargetPitch = MathHelper.clamp_double(args.checkDouble(0), -Math.PI, Math.PI);
+		return new Object[] {this.OCAutoControl};
+	}
+
+	@Callback(direct = true, limit = 4)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setYaw(Context context, Arguments args) {
+		this.OCTargetYaw = MathHelper.clamp_double(args.checkDouble(0), 0, Math.PI * 2);
+		return new Object[] {this.OCAutoControl};
+	}
+
+	@Callback(direct = false, limit = 4)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setDirection(Context context, Arguments args) {
+		Vec3 directionVector = Vec3.createVectorHelper(args.checkDouble(0), args.checkDouble(1), args.checkDouble(2));
+		this.OCTargetPitch = Math.atan2(directionVector.yCoord, Math.sqrt(directionVector.zCoord * directionVector.zCoord + directionVector.xCoord * directionVector.xCoord));
+		this.OCTargetYaw = -Math.atan2(directionVector.zCoord, directionVector.xCoord);
+		return new Object[] {this.OCAutoControl};
+	}
+
+	@Callback(direct = true, limit = 4)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] setOCControl(Context context, Arguments args) {
+		this.OCAutoControl = args.checkBoolean(0);
+		return new Object[] {this.OCAutoControl};
+	}
+
 	@Callback(direct = true)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] getTargeting(Context context, Arguments args) {
@@ -1101,7 +1150,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 			if(whitelist.contains(playerName)) this.removeName(whitelist.indexOf(playerName));
 			this.markChanged();
 		}
-		
+
 		return null;
 	}
 }

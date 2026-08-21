@@ -11,13 +11,13 @@ import net.minecraft.inventory.Slot;
 import net.minecraft.item.ItemStack;
 
 public class ContainerAmmoBag extends Container {
-	
+
 	private InventoryAmmoBag bag;
-	
+
 	public ContainerAmmoBag(InventoryPlayer invPlayer, InventoryAmmoBag box) {
 		this.bag = box;
 		this.bag.openInventory();
-		
+
 		for(int i = 0; i < 2; i++) {
 			for(int j = 0; j < 4; j++) {
 				this.addSlotToContainer(new SlotNonRetarded(box, j + i * 4, 53 + j * 18, 18 + i * 18));
@@ -76,7 +76,7 @@ public class ContainerAmmoBag extends Container {
 	public boolean canInteractWith(EntityPlayer player) {
 		return bag.isUseableByPlayer(player);
 	}
-	
+
 	@Override
 	public void onContainerClosed(EntityPlayer player) {
 		super.onContainerClosed(player);

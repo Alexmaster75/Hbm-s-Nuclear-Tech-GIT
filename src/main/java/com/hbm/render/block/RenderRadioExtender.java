@@ -1,0 +1,69 @@
+package com.hbm.render.block;
+
+import com.hbm.blocks.network.RadioExtender;
+import com.hbm.interfaces.NotableComments;
+import com.hbm.main.ResourceManager;
+import com.hbm.render.loader.HFRWavefrontObject;
+import com.hbm.render.util.ObjUtil;
+
+import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import net.minecraft.block.Block;
+import net.minecraft.client.renderer.RenderBlocks;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.IIcon;
+import net.minecraft.world.IBlockAccess;
+
+@NotableComments
+public class RenderRadioExtender implements ISimpleBlockRenderingHandler {
+
+	@Override
+	public void renderInventoryBlock(Block block, int metadata, int modelId, RenderBlocks renderer) { }
+
+	@Override
+	public boolean renderWorldBlock(IBlockAccess world, int x, int y, int z, Block block, int modelId, RenderBlocks renderer) {
+
+		Tessellator tessellator = Tessellator.instance;
+		int brightness = block.getMixedBrightnessForBlock(world, x, y, z);
+		tessellator.setBrightness(brightness);
+		tessellator.setColorOpaque_F(1, 1, 1);
+
+		IIcon icon = block.getIcon(0, 0);
+		int meta = world.getBlockMetadata(x, y, z);
+
+		float flip = 0;
+		float rotation = 0;
+
+		if(meta == 0)
+			flip = (float)Math.PI;
+
+		if(meta == 2)
+			rotation = 90F / 180F * (float) Math.PI;
+
+		if(meta == 3)
+			rotation = 270F / 180F * (float) Math.PI;
+
+		if(meta == 4)
+			rotation = 180F / 180F * (float)Math.PI;
+
+		if(rotation != 0F || meta == 5)
+			flip = (float)Math.PI * 0.5F;
+
+		//using OBJ here because vanilla's block renderer is so broken it's not even funny anymore
+		//mojang genuinely doesn't know how on earth UVs work
+		tessellator.addTranslation(x + 0.5F, y + 0.5F, z + 0.5F);
+		ObjUtil.renderWithIcon((HFRWavefrontObject) ResourceManager.radio_extender, icon, tessellator, rotation, flip, false);
+		tessellator.addTranslation(-x - 0.5F, -y - 0.5F, -z - 0.5F);
+
+		return true;
+	}
+
+	@Override
+	public boolean shouldRender3DInInventory(int modelId) {
+		return false;
+	}
+
+	@Override
+	public int getRenderId() {
+		return RadioExtender.renderID;
+	}
+}

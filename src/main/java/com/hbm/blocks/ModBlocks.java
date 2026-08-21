@@ -889,6 +889,7 @@ public class ModBlocks {
 	public static Block radio_torch_controller;
 	public static Block radio_telex;
 	public static Block radio_autocal;
+	public static Block radio_extender;
 	public static Block oc_cable_paintable;
 
 	public static Block conveyor;
@@ -2177,6 +2178,7 @@ public class ModBlocks {
 		radio_torch_controller = new RadioTorchController().setBlockName("radio_torch_controller").setHardness(0.1F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":rtty_controller");
 		radio_telex = new RadioTelex().setBlockName("radio_telex").setHardness(3F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":radio_telex");
 		radio_autocal = new RadioAUTOCAL().setBlockName("radio_autocal").setHardness(3F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
+		radio_extender = new RadioExtender().setBlockName("radio_extender").setHardness(3F).setResistance(10.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":radio_extender");
 
 		conveyor = new BlockConveyor().setBlockName("conveyor").setHardness(2.0F).setResistance(2.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":conveyor");
 		conveyor_express = new BlockConveyorExpress().setBlockName("conveyor_express").setHardness(2.0F).setResistance(2.0F).setCreativeTab(null).setBlockTextureName(RefStrings.MODID + ":conveyor_express");
@@ -3655,6 +3657,7 @@ public class ModBlocks {
 		register(radio_torch_controller);
 		register(radio_telex);
 		register(radio_autocal);
+		GameRegistry.registerBlock(radio_extender, radio_extender.getUnlocalizedName());
 
 		register(crane_extractor);
 		register(crane_inserter);

@@ -2,6 +2,7 @@ package com.hbm.tileentity.machine;
 
 import api.hbm.fluidmk2.IFluidReceiverMK2;
 import api.hbm.fluidmk2.IFluidStandardSenderMK2;
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import com.hbm.dim.trait.CBT_Atmosphere;
 import com.hbm.explosion.ExplosionNT;
 import com.hbm.handler.atmosphere.AtmosphereBlob;
@@ -31,7 +32,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.List;
 
-public class TileEntityMachineTurboCompressor extends TileEntityMachineBase implements IFluidReceiverMK2, IBufPacketReceiver, IFluidStandardSenderMK2 {
+public class TileEntityMachineTurboCompressor extends TileEntityMachineBase implements IFluidReceiverMK2, IBufPacketReceiver, IFluidStandardSenderMK2, IRORValueProvider {
 
 	public int onTicks;
 	public long rpm;
@@ -155,6 +156,7 @@ public class TileEntityMachineTurboCompressor extends TileEntityMachineBase impl
 			if (onTicks > 0) onTicks--;
 
 		} else {
+			// propeller
 			if (onTicks > 0)
 				this.spawnParticles();
 			this.lastSpin = this.spin;
@@ -165,13 +167,11 @@ public class TileEntityMachineTurboCompressor extends TileEntityMachineBase impl
 				this.lastSpin -= 360F;
 			}
 
+			// audio
 			if (rpm > 0) {
-
 				if (audio == null) {
-
 					audio = MainRegistry.proxy.getLoopedSound("hbm:block.turbinegasRunning", xCoord, yCoord, zCoord, getVolume(1.0F), 20F, 2.0F, 20);
 					audio.startSound();
-
 				} else if(!audio.isPlaying()) {
 					audio.stopSound();
 					audio = MainRegistry.proxy.getLoopedSound("hbm:block.turbinegasRunning", xCoord, yCoord, zCoord, getVolume(1.0F), 20F, 2.0F, 20);
@@ -332,5 +332,22 @@ public class TileEntityMachineTurboCompressor extends TileEntityMachineBase impl
 	@SideOnly(Side.CLIENT)
 	public double getMaxRenderDistanceSquared() {
 		return 65536.0D;
+	}
+
+	public static final String[] ROR = new String[] { // not to be confused with RUR
+		PREFIX_VALUE + "rpm",
+		PREFIX_VALUE + "soot",
+	};
+
+	@Override
+	public String[] getFunctionInfo() {
+		return ROR;
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "rpm").equals(name))  return "" + (int) (rpm * 100);
+		if((PREFIX_VALUE + "soot").equals(name)) return "" + (slots[0] != null ? slots[0].stackSize : 0);
+		return null;
 	}
 }
