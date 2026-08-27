@@ -166,8 +166,8 @@ public class GUIMoxer extends GuiInfoContainer {
 
 		String n = EnumChatFormatting.ITALIC + I18nUtil.resolveKey("turret.none");
 
-		while(this.index >= this.getCount())
-			this.index--;
+		if(this.index >= this.getCount())
+			this.index = this.getCount()-1;
 
 		if(index < 0)
 			index = 0;

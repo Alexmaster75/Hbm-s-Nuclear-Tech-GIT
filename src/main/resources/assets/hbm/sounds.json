@@ -103,6 +103,7 @@
     "block.metalImpact": {"category": "block", "sounds": ["block/metalImpact1", "block/metalImpact2"]},
 	"block.nukeCharge": {"category": "block", "sounds": [{"name": "block/nukeCharge", "stream": false}]},
 	"block.buttonIncorrect": {"category": "block", "sounds": [{"name": "block/buttonIncorrect", "stream": false}]},
+	"bosanska": {"category": "block", "sounds": [{"name": "bosanska", "stream": false}]},
 
 	"door.TransitionSealOpen": {"category": "block", "sounds": [{"name": "block/door/transition_seal_open", "stream": true}]},
 	"door.wghStart": {"category": "block", "sounds": [{"name": "block/door/wgh_start", "stream": true}]},

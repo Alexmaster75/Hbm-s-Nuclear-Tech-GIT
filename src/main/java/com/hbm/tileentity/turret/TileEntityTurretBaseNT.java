@@ -145,6 +145,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 
 		this.power = nbt.getLong("power");
 		this.isOn = nbt.getBoolean("isOn");
+		this.OCAutoControl = nbt.getBoolean("OCAutoControl");
 		this.targetPlayers = nbt.getBoolean("targetPlayers");
 		this.targetAnimals = nbt.getBoolean("targetAnimals");
 		this.targetMobs = nbt.getBoolean("targetMobs");
@@ -158,6 +159,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 
 		nbt.setLong("power", this.power);
 		nbt.setBoolean("isOn", this.isOn);
+		nbt.setBoolean("OCAutoControl", this.OCAutoControl);
 		nbt.setBoolean("targetPlayers", this.targetPlayers);
 		nbt.setBoolean("targetAnimals", this.targetAnimals);
 		nbt.setBoolean("targetMobs", this.targetMobs);
@@ -500,15 +502,15 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 		double targetPitch;
 		double targetYaw;
 
-		if (!OCAutoControl) {
+		if (OCAutoControl) {
+			targetPitch = OCTargetPitch;
+			targetYaw = OCTargetYaw;
+		} else {
 			Vec3 pos = this.getTurretPos();
 			Vec3 delta = Vec3.createVectorHelper(ent.xCoord - pos.xCoord, ent.yCoord - pos.yCoord, ent.zCoord - pos.zCoord);
 
 			targetPitch = Math.asin(delta.yCoord / delta.lengthVector());
 			targetYaw = -Math.atan2(delta.xCoord, delta.zCoord);
-		} else {
-			targetPitch = OCTargetPitch;
-			targetYaw = OCTargetYaw;
 		}
 
 		this.turnTowardsAngle(targetPitch, targetYaw);
@@ -997,7 +999,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	@Callback(direct = true, limit = 4)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] setYaw(Context context, Arguments args) {
-		this.OCTargetYaw = MathHelper.clamp_double(args.checkDouble(0), 0, Math.PI * 2);
+		this.OCTargetYaw = args.checkDouble(0) % Math.PI * 2;
 		return new Object[] {this.OCAutoControl};
 	}
 
@@ -1005,7 +1007,7 @@ public abstract class TileEntityTurretBaseNT extends TileEntityMachineBase imple
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] setDirection(Context context, Arguments args) {
 		Vec3 directionVector = Vec3.createVectorHelper(args.checkDouble(0), args.checkDouble(1), args.checkDouble(2));
-		this.OCTargetPitch = Math.atan2(directionVector.yCoord, Math.sqrt(directionVector.zCoord * directionVector.zCoord + directionVector.xCoord * directionVector.xCoord));
+		this.OCTargetPitch = Math.asin(directionVector.yCoord / directionVector.lengthVector());
 		this.OCTargetYaw = -Math.atan2(directionVector.zCoord, directionVector.xCoord);
 		return new Object[] {this.OCAutoControl};
 	}

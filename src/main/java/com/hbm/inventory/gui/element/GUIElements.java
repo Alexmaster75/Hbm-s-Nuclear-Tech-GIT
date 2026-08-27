@@ -20,6 +20,8 @@ import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 
+import javax.vecmath.Vector2f;
+
 public class GUIElements {
 
 	@Deprecated public static enum Gauge {
@@ -160,12 +162,29 @@ public class GUIElements {
 		double xTarget = 0;
 		double yTarget = 0;
 
+		// addons is just a numeric flag for how many fixed point to add, to generate the triangles
 		if (angle >= -180 && angle < -90) {
 			addons = 1;
 		} else if (angle >= -270 && angle < -180) {
 			addons = 2;
 		}
 
+		// the abysmal control under here is responsible for the positioning of the last point
+		// basically this whole function makes this shape:
+		// + - - - - - - - - - - - +
+		// | \ * * * * * * * * * / |
+		// | * \ * * * * * * * / * |
+		// | * * \ * * * * * / * * |
+		// | * * * \ * * * / * * * |
+		// | * * * * \ * / * * * * |
+		// | * * * * * + * * * * * |
+		// | * * * * /   \ * * * * |
+		// | * * * /       \ * * * |
+		// | * * /           \ * * |
+		// | * /               \ * |
+		// | /                   \ |
+		// + - - - - - - - - - - - +
+		// the "/, \" are the sides, "+" points and "*" rendered part (lower triangle isn't shown)
 		if (angle >= -90) {
 			xTarget = -1;
 			yTarget = -Math.tan(theta);
@@ -191,25 +210,72 @@ public class GUIElements {
 
 		Tessellator tess = Tessellator.instance;
 
-		tess.startDrawing(GL11.GL_TRIANGLES);
-		tess.addVertexWithUV((double) (xDraw), (double) (yDraw + yDelta), (double) zDraw, (double) ((float) (xStart) * var7), (double) ((float) (yStart + yDelta) * var8));
-		tess.addVertexWithUV((double) (xDraw + xMid), (double) (yDraw + yMid), (double) zDraw, (double) ((float) (xStart + xMid) * var7), (double) ((float) (yStart + yMid) * var8));
+		tess.startDrawing(GL11.GL_TRIANGLES); // i should've used GL_POLYGON yes i know, too bad im either too retarded to understand it or OpenGL makes it funky, i already tried
+		tess.addVertexWithUV(xDraw, yDraw + yDelta, zDraw, ((float) (xStart) * var7), ((float) (yStart + yDelta) * var8));
+		tess.addVertexWithUV(xDraw + xMid, yDraw + yMid, zDraw, (float) (xStart + xMid) * var7, (float) (yStart + yMid) * var8);
 		if (addons == 2 || addons == 1) {
-			tess.addVertexWithUV((double) (xDraw), (double) (yDraw), (double) zDraw, (double) ((float) (xStart) * var7), (double) ((float) (yStart) * var8));
+			tess.addVertexWithUV(xDraw, yDraw, zDraw, (float) (xStart) * var7, (float) (yStart) * var8);
 			tess.draw();
 			tess.startDrawing(GL11.GL_TRIANGLES);
-			tess.addVertexWithUV((double) (xDraw), (double) (yDraw), (double) zDraw, (double) ((float) (xStart) * var7), (double) ((float) (yStart) * var8));
-			tess.addVertexWithUV((double) (xDraw + xMid), (double) (yDraw + yMid), (double) zDraw, (double) ((float) (xStart + xMid) * var7), (double) ((float) (yStart + yMid) * var8));
+			tess.addVertexWithUV(xDraw, yDraw, zDraw, (float) (xStart) * var7, (float) (yStart) * var8);
+			tess.addVertexWithUV(xDraw + xMid, yDraw + yMid, zDraw, (float) (xStart + xMid) * var7, (float) (yStart + yMid) * var8);
 		}
 		if (addons == 2) {
-			tess.addVertexWithUV((double) (xDraw + xDelta), (double) (yDraw), (double) zDraw, (double) ((float) (xStart + xDelta) * var7), (double) ((float) (yStart) * var8));
+			tess.addVertexWithUV(xDraw + xDelta, yDraw, zDraw, (float) (xStart + xDelta) * var7, (float) (yStart) * var8);
 			tess.draw();
 			tess.startDrawing(GL11.GL_TRIANGLES);
-			tess.addVertexWithUV((double) (xDraw + xDelta), (double) (yDraw), (double) zDraw, (double) ((float) (xStart + xDelta) * var7), (double) ((float) (yStart) * var8));
-			tess.addVertexWithUV((double) (xDraw + xMid), (double) (yDraw + yMid), (double) zDraw, (double) ((float) (xStart + xMid) * var7), (double) ((float) (yStart + yMid) * var8));
+			tess.addVertexWithUV(xDraw + xDelta, yDraw, (double) zDraw, (float) (xStart + xDelta) * var7, (float) (yStart) * var8);
+			tess.addVertexWithUV(xDraw + xMid, yDraw + yMid, zDraw, (float) (xStart + xMid) * var7, (float) (yStart + yMid) * var8);
 		}
-		tess.addVertexWithUV((double) (xDraw + xTarget + xMid), (double) (yDraw - yTarget + yMid), (double) zDraw, (double) ((float) (xStart + xTarget + xMid) * var7), (double) ((float) (yStart - yTarget + yMid) * var8));
+		tess.addVertexWithUV(xDraw + xTarget + xMid, yDraw - yTarget + yMid, zDraw, (float) (xStart + xTarget + xMid) * var7, (float) (yStart - yTarget + yMid) * var8);
 		tess.draw();
+	}
+
+	public static void drawHollowCircle(int x, int y, double z, float r, int segments, int color) {
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		Tessellator tess = Tessellator.instance;
+		tess.startDrawing(GL11.GL_LINE_LOOP);
+		tess.setColorOpaque_I(color);
+
+		for (int i = 0; i < segments; i++) {
+			float theta = (float) (2.0f * Math.PI * (double) i / (double) segments);
+			tess.addVertex(x + r * Math.cos(theta), y + r * Math.sin(theta), z);
+		}
+
+		tess.draw();
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
+	public static void drawArrowVector(int x, int y, float z, Vector2f vector, float minDist, int color) {
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		Tessellator tess = Tessellator.instance;
+		tess.startDrawing(GL11.GL_LINE_LOOP);
+		tess.setColorOpaque_I(color);
+
+		Vector2f delta = new Vector2f(vector.x - x, vector.y - y);
+		Vector2f segment = new Vector2f();
+		// if the delta length is smaller than the minimum it's ok, if not we use the unit vector
+		// this allows for having a fixed dimension arrowhead but dynamically smaller at shorter range so to not overlap the origin
+		if (delta.length() * 0.1f > minDist) {
+			float deltaM = delta.length();
+			segment.x = minDist * delta.x / deltaM;
+			segment.y = minDist * delta.y / deltaM;
+		} else {
+			segment.x = 0.1f * delta.x;
+			segment.y = 0.1f * delta.y;
+		}
+
+		tess.addVertex(x, y, z);
+		tess.addVertex(x + delta.x - segment.x, y + delta.y - segment.y, z);
+		tess.addVertex(x + delta.x - segment.x - segment.y, y + delta.y - segment.y + segment.x, z);
+		tess.addVertex(x + delta.x, y + delta.y, z);
+		tess.addVertex(x + delta.x - segment.x + segment.y, y + delta.y - segment.y - segment.x, z);
+		tess.addVertex(x + delta.x - segment.x, y + delta.y - segment.y, z);
+
+		tess.draw();
+		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
 	public static final int STANDARD_COLOR_BACKGROUND = -0xFEFFFF0;

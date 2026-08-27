@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.hbm.inventory.gui.element.GUIElements;
+import com.hbm.module.NumberDisplay;
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerMachineTurbineGas;
@@ -30,6 +31,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 	private static ResourceLocation texture = new ResourceLocation(RefStrings.MODID + ":textures/gui/generators/gui_turbinegas.png");
 	private static ResourceLocation gauge_tex = new ResourceLocation(RefStrings.MODID + ":textures/gui/gauges/button_big.png");
 	private TileEntityMachineTurbineGas turbinegas;
+	private NumberDisplay display;
 
 	int yStart;
 	int slidStart;
@@ -40,6 +42,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 
 		this.xSize = 176;
 		this.ySize = 223;
+		display = new NumberDisplay(this, 65, 71, 0x08FF00).setDigitLength(7).setSegmentSize(4, 3, 1).setPadding(2);
 	}
 
 	//@Override
@@ -174,7 +177,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 			break;
 			case 1:
 				drawTexturedModalRect(guiLeft + 80, guiTop + 32, 210, 38, 16, 16); //green button
-				drawPowerMeterDisplay((int) (20 * turbinegas.instantPowerOutput));
+				display.drawNumber(20 * turbinegas.instantPowerOutput);
 			break;
 			default:
 			break;
@@ -221,39 +224,7 @@ public class GUIMachineTurbineGas extends GuiInfoContainer {
 		if(turbinegas.counter > 50)
 			numberToDisplay = 0;
 
-		drawPowerMeterDisplay(numberToDisplay);
-	}
-
-	protected void drawPowerMeterDisplay(int number) { //display code
-
-		int firstDigitX = 65;
-		int firstDigitY = 62;
-
-		int[] digit = new int[7];
-
-		for(int i = 6; i >= 0; i--) { //creates an array of digits that represent the numbers
-
-			digit[i] = (int) (number % 10);
-
-			number = number / 10;
-
-			drawTexturedModalRect(guiLeft + firstDigitX + i * 7, guiTop + 9 + firstDigitY, 194 + digit[i] * 5, 0, 5, 11);
-		}
-
-		int uselessZeros = 0;
-
-		for(int i = 0; i < 6; i++) { //counts how much zeros there are before the number, to display 57 instead of 000057
-
-			if(digit[i] == 0)
-				uselessZeros++;
-			else
-				break;
-		}
-
-		for(int i = 0; i < uselessZeros; i++) { //turns off the useless zeros
-
-			drawTexturedModalRect(guiLeft + firstDigitX + i * 7, guiTop + 9 + firstDigitY, 244, 0, 5, 11);
-		}
+		display.drawNumber(numberToDisplay);
 	}
 
 	protected void drawThermometer(int temp) {
