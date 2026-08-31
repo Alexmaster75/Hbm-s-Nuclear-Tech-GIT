@@ -72,5 +72,13 @@ public class SludgeProcessorRecipes extends GenericRecipes<SludgeProcessorRecipe
 			.outputFluids(
 				new FluidStack(Fluids.WATER, 2000)
 			));
+
+		this.register((SludgeProcessorRecipe) new SludgeProcessorRecipe("sludge.sand_slop_processing")
+			.setup(50, 5_000)
+			.inputFluids(new FluidStack(Fluids.HEAVY_SAND_SLOP, 1000))
+			.outputItems(new ItemStack(ModItems.powder_zirconium, 2))
+			.outputFluids(new FluidStack(Fluids.MONAZITE_SLOP, 500), new FluidStack(Fluids.CHLORINE, 500))
+			.setIconToFirstIngredient()
+		);
 	}
 }
