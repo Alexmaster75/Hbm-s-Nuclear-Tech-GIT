@@ -82,6 +82,7 @@ public class TileMappings {
 		put(TileEntityMachineCentrifuge.class, "tileentity_centrifuge");
 		put(TileEntityNukeMan.class, "tileentity_nukeman");
 		put(TileEntityMachineUF6Tank.class, "tileentity_uf6_tank");
+		put(TileEntityDriveRack.class, "tileentity_drive_rack");
 		put(TileEntityMachinePuF6Tank.class, "tileentity_puf6_tank");
 		put(TileEntityMachineReactorBreeding.class, "tileentity_reactor");
 		put(TileEntityFurnaceSpace.class, "tileentity_furnace_space");

@@ -9,12 +9,16 @@ import net.minecraft.world.World;
 public class MachineDriveRack extends BlockDummyable {
 
 	public MachineDriveRack(Material mat) { super(mat); }
+
 	public TileEntityDriveRack createNewTileEntity(World world, int meta) {
-		return new TileEntityDriveRack();
+		if (meta >= 6) {
+			return new TileEntityDriveRack();
+		}
+		return null;
 	}
 
 	@Override
-	public int[] getDimensions() { return new int[] {2, 0, 0, 0, 0, 0}; }
+	public int[] getDimensions() { return new int[] {1, 0, 0, 0, 0, 0}; }
 
 	@Override
 	public int getOffset() { return 0; }
