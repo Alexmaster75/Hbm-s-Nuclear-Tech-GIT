@@ -238,7 +238,7 @@ public class GUIElements {
 		tess.setColorOpaque_I(color);
 
 		for (int i = 0; i < segments; i++) {
-			float theta = (float) (2.0f * Math.PI * (double) i / (double) segments);
+			float theta = (float) (2F * Math.PI * (double) i / (double) segments);
 			tess.addVertex(x + r * Math.cos(theta), y + r * Math.sin(theta), z);
 		}
 
@@ -257,13 +257,13 @@ public class GUIElements {
 		Vector2f segment = new Vector2f();
 		// if the delta length is smaller than the minimum it's ok, if not we use the unit vector
 		// this allows for having a fixed dimension arrowhead but dynamically smaller at shorter range so to not overlap the origin
-		if (delta.length() * 0.1f > minDist) {
+		if (delta.length() * 0.1F > minDist) {
 			float deltaM = delta.length();
 			segment.x = minDist * delta.x / deltaM;
 			segment.y = minDist * delta.y / deltaM;
 		} else {
-			segment.x = 0.1f * delta.x;
-			segment.y = 0.1f * delta.y;
+			segment.x = 0.1F * delta.x;
+			segment.y = 0.1F * delta.y;
 		}
 
 		tess.addVertex(x, y, z);

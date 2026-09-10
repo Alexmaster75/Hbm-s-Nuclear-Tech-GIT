@@ -17,7 +17,7 @@ public class ContainerTurretRailgun extends ContainerBase {
 		// Battery
 		this.addSlotToContainer(new SlotNonRetarded(tedf, 0, 153, 78));
 		// Ammo slots
-		this.addSlots(tedf, 1, 26, 104, 1, 5);
+		this.addSlots(tedf, 1, 62, 104, 1, 3);
 
 		this.playerInv(invPlayer, 8, 140);
 	}

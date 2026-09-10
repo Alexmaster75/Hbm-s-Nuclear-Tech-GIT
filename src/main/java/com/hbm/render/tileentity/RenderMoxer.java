@@ -38,9 +38,7 @@ public class RenderMoxer extends TileEntitySpecialRenderer implements IItemRende
 		if(moxer.frame) ResourceManager.moxer.renderPart("Frame");
 
 		GL11.glPushMatrix();
-		//GL11.glTranslated(0, 0, 0);
 		GL11.glRotated(-anim * 45 % 360D, 0, 1, 0);
-		//GL11.glTranslated(0, 0, 0);
 		ResourceManager.moxer.renderPart("Fan");
 		GL11.glPopMatrix();
 

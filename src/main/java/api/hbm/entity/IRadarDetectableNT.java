@@ -28,13 +28,13 @@ public interface IRadarDetectableNT {
 	public boolean paramsApplicable(RadarScanParams params);
 	/** Whether this radar entry should be counted for the redstone output */
 	public boolean suppliesRedstone(RadarScanParams params);
-	
+
 	public static class RadarScanParams {
 		public boolean scanMissiles = true;
 		public boolean scanShells = true;
 		public boolean scanPlayers = true;
 		public boolean smartMode = true;
-		
+
 		public RadarScanParams(boolean m, boolean s, boolean p, boolean smart) {
 			this.scanMissiles = m;
 			this.scanShells = s;

@@ -15,7 +15,7 @@ public class TurretRailgun extends BlockDummyable {
 
 	@Override
 	public int[] getDimensions() {
-		return new int[] { 1, 0, 1, 1, 1, 1 };
+		return new int[] { 2, 0, 2, 2, 2, 2 };
 	}
 
 	@Override
@@ -26,8 +26,7 @@ public class TurretRailgun extends BlockDummyable {
 	@Override
 	public TileEntity createNewTileEntity(World world, int i) {
 		if (i >= 12) return new TileEntityTurretRailgun();
-		if (i >= 6) return new TileEntityProxyCombo().inventory().power();
-		return null;
+		return new TileEntityProxyCombo().inventory().power();
 	}
 
 	@Override
