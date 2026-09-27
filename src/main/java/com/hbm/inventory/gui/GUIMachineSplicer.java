@@ -89,8 +89,8 @@ public class GUIMachineSplicer extends GuiInfoContainer {
 		int bar1 = read * 89 / 200;
 		int bar2 = write * 89 / 200;
 
-		if(bar1 > 0) func_146110_a(guiLeft + 23, guiTop + 29, 227, 92, bar1, 20, TEX, TEX);
-		if(bar2 > 0) func_146110_a(guiLeft + 112 - bar2, guiTop + 77, 316 - bar2, 116, bar2, 20, TEX, TEX);
+		if(bar1 > 0) func_146110_a(guiLeft + 23, guiTop + 29, 227, 91, bar1, 20, TEX, TEX);
+		if(bar2 > 0) func_146110_a(guiLeft + 112 - bar2, guiTop + 77, 316 - bar2, 115, bar2, 20, TEX, TEX);
 
 		if(splicer.active) {
 			func_146110_a(guiLeft + 5, guiTop + 53, 227, 72, 29, 17, TEX, TEX);
