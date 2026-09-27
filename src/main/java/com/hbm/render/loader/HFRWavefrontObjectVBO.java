@@ -26,50 +26,47 @@ public class HFRWavefrontObjectVBO implements IModelCustomNamed {
 
 	static int VERTEX_SIZE = 3;
 	static int UV_SIZE = 3;
-	
+	private static final Vertex DEFAULT_NORMAL = new Vertex(0F, 0F, 1F);
+
 	public HFRWavefrontObjectVBO(HFRWavefrontObject obj) {
 		load(obj);
 	}
-	
+
 	public void load(HFRWavefrontObject obj) {
 		for(S_GroupObject g : obj.groupObjects) {
 			VBOBufferData data = new VBOBufferData();
 			data.name = g.name;
 
-			FloatBuffer vertexData = BufferUtils.createFloatBuffer(g.faces.size() * 3 * VERTEX_SIZE);
-			FloatBuffer uvData = BufferUtils.createFloatBuffer(g.faces.size() * 3 * UV_SIZE);
-			FloatBuffer normalData = BufferUtils.createFloatBuffer(g.faces.size() * 3 * VERTEX_SIZE);
+			// i dont care enough to fix the model to fix non-triangles in plushies for vbos so anything that isnt one is fanned into them first
+			int vertexCount = 0;
+			for(S_Face face : g.faces) vertexCount += (face.vertices.length - 2) * 3;
+
+			FloatBuffer vertexData = BufferUtils.createFloatBuffer(vertexCount * VERTEX_SIZE);
+			FloatBuffer uvData = BufferUtils.createFloatBuffer(vertexCount * UV_SIZE);
+			FloatBuffer normalData = BufferUtils.createFloatBuffer(vertexCount * VERTEX_SIZE);
 
 			for(S_Face face : g.faces) {
-				for(int i = 0; i < face.vertices.length; i++) {
-					Vertex vert = face.vertices[i];
-					TextureCoordinate tex = new TextureCoordinate(0, 0);
-					Vertex normal = face.vertexNormals[i];
-
-					if(face.textureCoordinates != null && face.textureCoordinates.length > 0) {
-						tex = face.textureCoordinates[i];
-					}
-
-					data.vertices++;
-					vertexData.put(new float[] { vert.x, vert.y, vert.z });
-					uvData.put(new float[] { tex.u, tex.v, tex.w });
-					normalData.put(new float[] { normal.x, normal.y, normal.z });
+				int count = face.vertices.length;
+				for(int t = 1; t < count - 1; t++) {
+					putVertex(data, vertexData, uvData, normalData, face, 0);
+					putVertex(data, vertexData, uvData, normalData, face, t);
+					putVertex(data, vertexData, uvData, normalData, face, t + 1);
 				}
 			}
 			vertexData.flip();
 			uvData.flip();
 			normalData.flip();
-	
+
 			data.vertexHandle = GL15.glGenBuffers();
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, data.vertexHandle);
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, vertexData, GL15.GL_STATIC_DRAW);
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-			
+
 			data.uvHandle = GL15.glGenBuffers();
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, data.uvHandle);
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, uvData, GL15.GL_STATIC_DRAW);
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
-			
+
 			data.normalHandle = GL15.glGenBuffers();
 			GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, data.normalHandle);
 			GL15.glBufferData(GL15.GL_ARRAY_BUFFER, normalData, GL15.GL_STATIC_DRAW);
@@ -78,7 +75,18 @@ public class HFRWavefrontObjectVBO implements IModelCustomNamed {
 			groups.add(data);
 		}
 	}
-	
+
+	private static void putVertex(VBOBufferData data, FloatBuffer vertexData, FloatBuffer uvData, FloatBuffer normalData, S_Face face, int i) {
+		Vertex vert = face.vertices[i];
+		Vertex normal = face.vertexNormals != null && i < face.vertexNormals.length && face.vertexNormals[i] != null ? face.vertexNormals[i] : DEFAULT_NORMAL;
+		TextureCoordinate tex = face.textureCoordinates != null && i < face.textureCoordinates.length && face.textureCoordinates[i] != null ? face.textureCoordinates[i] : new TextureCoordinate(0, 0);
+
+		data.vertices++;
+		vertexData.put(new float[] { vert.x, vert.y, vert.z });
+		uvData.put(new float[] { tex.u, tex.v, tex.w });
+		normalData.put(new float[] { normal.x, normal.y, normal.z });
+	}
+
 	// truth be told, i have no fucking idea what i'm doing
 	// i know the VBO sends data to the GPU to be saved there directly which is where the optimization comes from in the first place
 	// so logically, if we want to get rid of this, we need to blow the data up
@@ -103,16 +111,16 @@ public class HFRWavefrontObjectVBO implements IModelCustomNamed {
 
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, data.uvHandle);
 		GL11.glTexCoordPointer(UV_SIZE, GL11.GL_FLOAT, 0, 0l);
-		
+
 		GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, data.normalHandle);
 		GL11.glNormalPointer(GL11.GL_FLOAT, 0, 0l);
 
 		GL11.glEnableClientState(GL11.GL_VERTEX_ARRAY);
 		GL11.glEnableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 		GL11.glEnableClientState(GL11.GL_NORMAL_ARRAY);
-		
+
 		GL11.glDrawArrays(GL11.GL_TRIANGLES, 0, data.vertices);
-		
+
 		GL11.glDisableClientState(GL11.GL_VERTEX_ARRAY);
 		GL11.glDisableClientState(GL11.GL_TEXTURE_COORD_ARRAY);
 		GL11.glDisableClientState(GL11.GL_NORMAL_ARRAY);

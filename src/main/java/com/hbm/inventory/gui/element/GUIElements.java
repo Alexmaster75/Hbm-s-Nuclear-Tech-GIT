@@ -616,6 +616,10 @@ public class GUIElements {
 	}
 
 	public static void drawHelix(double x0, double x1, double cy, double z, double radius, double turns, double spin, double phase, int bits, int strandColor) {
+		drawHelix(x0, x1, cy, z, radius, turns, spin, phase, bits, null, strandColor, 0);
+	}
+
+	public static void drawHelix(double x0, double x1, double cy, double z, double radius, double turns, double spin, double phase, int bits, String genome, int strandColor, int missingColor) {
 		int strandSteps = 120;
 		double bitPhase = Math.toRadians(3.0);
 		double strandOffset = Math.PI * 0.95;
@@ -635,7 +639,7 @@ public class GUIElements {
 			double a = helixPhase(x, x0, x1, xDiv, turns, bits, bitPhase) + phase;
 			double y0 = radius * spin * Math.cos(a);
 			double y1 = radius * spin * Math.cos(a + strandOffset);
-			tess.setColorOpaque_I(segColors[segmentOf(i)]);
+			tess.setColorOpaque_I(genome != null && genome.charAt(i) == '?' ? missingColor : segColors[segmentOf(i)]);
 			tess.addVertex(x, cy + y0, z);
 			tess.addVertex(x, cy + y1, z);
 		}

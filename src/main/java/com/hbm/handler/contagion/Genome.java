@@ -19,7 +19,7 @@ public class Genome {
 	private static final int SEG_SIZE = 8;
 
 		public static String reference(String id) {
-		Random rand = new Random(id.hashCode());
+		Random rand = new Random(id == null ? 0 : id.hashCode());
 		StringBuilder sb = new StringBuilder(LENGTH);
 		for(int i = 0; i < LENGTH; i++) sb.append(ALPHABET.charAt(rand.nextInt(ALPHABET.length())));
 		return sb.toString();

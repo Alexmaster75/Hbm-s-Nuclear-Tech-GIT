@@ -85,31 +85,61 @@ public class GenomeSample {
 	}
 
 	// unnused, to be used in the gene splcier
+	public static final int POOR_INCUBATION = 720_000;
+	public static final int POOR_INTERVAL = 72_000;
+
+	public static final String UNKNOWN_SEGMENT = "????????";
 
 	public static String buildGenome(Map<String, String> pieces) {
-		return get(pieces, "severity", "00000000") + get(pieces, "resistance", "00000000") + get(pieces, "transmission", "00000000");
+		return get(pieces, "severity", UNKNOWN_SEGMENT) + get(pieces, "resistance", UNKNOWN_SEGMENT) + get(pieces, "transmission", UNKNOWN_SEGMENT);
 	}
 
-		public static DiseaseDefinition buildDefinition(Map<String, String> pieces) {
+	public static final String[] CORE_KEYS = { "id", "type", "severity", "resistance", "transmission" };
+
+	public static boolean isComplete(Map<String, String> pieces) {
+		for(String key : CORE_KEYS) {
+			String value = pieces == null ? null : pieces.get(key);
+			if(value == null || value.isEmpty()) return false;
+		}
+		return true;
+	}
+
+	public static String getMissing(Map<String, String> pieces) {
+		StringBuilder sb = new StringBuilder();
+		for(String key : CORE_KEYS) {
+			String value = pieces == null ? null : pieces.get(key);
+			if(value != null && !value.isEmpty()) continue;
+			if(sb.length() > 0) sb.append(", ");
+			sb.append(key);
+		}
+		return sb.toString();
+	}
+
+	public static DiseaseDefinition buildDefinition(Map<String, String> pieces) {
+		if(!isComplete(pieces)) return null;
+
+		PathogenType type = null;
+		try {
+			type = PathogenType.valueOf(get(pieces, "type", ""));
+		} catch(IllegalArgumentException e) { }
+		if(type == null) return null;
+
 		DiseaseDefinition def = new DiseaseDefinition();
 		def.id = get(pieces, "id", "");
 		def.displayName = get(pieces, "name", def.id);
-		try {
-			String type = get(pieces, "type", "");
-			if(!type.isEmpty()) def.type = PathogenType.valueOf(type);
-		} catch(IllegalArgumentException e) { }
-		def.incubationTicks = intVal(pieces, "incubation", def.incubationTicks);
-		def.durationTicks = intVal(pieces, "duration", def.durationTicks);
-		def.baseSeverity = floatVal(pieces, "baseSeverity", def.baseSeverity);
-		def.baseResistance = floatVal(pieces, "baseResistance", def.baseResistance);
-		def.baseMutationRate = floatVal(pieces, "mutationRate", def.baseMutationRate);
-		def.mutationIntervalTicks = intVal(pieces, "mutationInterval", def.mutationIntervalTicks);
-		def.antigenMutability = floatVal(pieces, "antigenMutability", def.antigenMutability);
-		def.transmissionIntervalTicks = intVal(pieces, "transmissionInterval", def.transmissionIntervalTicks);
-		def.range = floatVal(pieces, "range", def.range);
-		def.wetBoost = floatVal(pieces, "wetBoost", def.wetBoost);
-		def.fomite = boolVal(pieces, "fomite", def.fomite);
-		def.uncurable = boolVal(pieces, "uncurable", def.uncurable);
+		def.type = type;
+		def.incubationTicks = intVal(pieces, "incubation", POOR_INCUBATION);
+		def.durationTicks = intVal(pieces, "duration", 0);
+		def.baseSeverity = floatVal(pieces, "baseSeverity", 0F);
+		def.baseResistance = floatVal(pieces, "baseResistance", 0F);
+		def.baseMutationRate = floatVal(pieces, "mutationRate", 0F);
+		def.mutationIntervalTicks = intVal(pieces, "mutationInterval", POOR_INTERVAL);
+		def.antigenMutability = floatVal(pieces, "antigenMutability", 0F);
+		def.transmissionIntervalTicks = intVal(pieces, "transmissionInterval", POOR_INTERVAL);
+		def.range = floatVal(pieces, "range", 0F);
+		def.wetBoost = floatVal(pieces, "wetBoost", 0F);
+		def.fomite = boolVal(pieces, "fomite", false);
+		def.uncurable = boolVal(pieces, "uncurable", false);
 		def.transmission.put(TransmissionAxis.AEROSOL, floatVal(pieces, "aerosol", 0F));
 		def.transmission.put(TransmissionAxis.TOUCH, floatVal(pieces, "touch", 0F));
 		def.transmission.put(TransmissionAxis.HIT, floatVal(pieces, "hit", 0F));

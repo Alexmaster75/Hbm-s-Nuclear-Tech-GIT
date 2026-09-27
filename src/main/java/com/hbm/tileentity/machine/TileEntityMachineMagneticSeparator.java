@@ -107,14 +107,16 @@ public class TileEntityMachineMagneticSeparator extends TileEntityMachineBase im
 				if(outputTank.getFill() > 0) this.tryProvide(outputTank, worldObj, pos);
 			}
 
-			if(processGenomeSamples()) {
+			int parallels = getParallels();
+			boolean hasDisc = parallels > 0;
+
+			if(hasDisc && processGenomeSamples()) {
 				this.didProcess = true;
 			} else {
 				this.genomeProgress = 0;
-				int parallels = getParallels();
-				this.module.parallels = parallels > 0 ? parallels : 1;
+				this.module.parallels = hasDisc ? parallels : 1;
 
-				this.module.update(1D, this.module.parallels / 2D, parallels > 0, null);
+				this.module.update(1D, this.module.parallels / 2D, hasDisc, null);
 				this.didProcess = this.module.didProcess;
 			}
 

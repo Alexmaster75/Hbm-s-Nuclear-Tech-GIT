@@ -1140,6 +1140,7 @@ public class ModBlocks {
 	public static Block machine_precass;
 	public static Block machine_arc_welder;
 	public static Block machine_incubator;
+	public static Block machine_splicer;
 	public static Block machine_cloner;
 	public static Block machine_soldering_station;
 	public static Block machine_arc_furnace;
@@ -2607,6 +2608,7 @@ public class ModBlocks {
 		block_sample_synthesizer = new BlockSampleSynthesizer().setBlockName("block_sample_synthesizer").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		block_genome_sequencer = new BlockGenomeSequencer().setBlockName("block_genome_sequencer").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		machine_incubator = new BlockIncubator().setBlockName("machine_incubator").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
+		machine_splicer = new BlockSplicer().setBlockName("machine_splicer").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		machine_cloner = new BlockCloner().setBlockName("machine_cloner").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		block_medicine_synthesizer = new BlockMedicineSynthesizer().setBlockName("block_medicine_synthesizer").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
 		machine_chemical_factory = new MachineChemicalFactory(Material.iron).setBlockName("machine_chemical_factory").setHardness(5.0F).setResistance(30.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel");
@@ -3887,6 +3889,7 @@ public class ModBlocks {
 		register(block_sample_synthesizer);
 		register(block_genome_sequencer);
 		register(machine_incubator);
+		register(machine_splicer);
 		register(machine_cloner);
 		register(block_medicine_synthesizer);
 		register(machine_chemical_factory);

@@ -563,6 +563,7 @@ public class TileMappings {
 		put(TileEntityRadioAUTOCAL.class, "tileentity_rtty_autocal");
 		put(TileEntityGenomeSequencer.class, "tileentity_genome_sequencer");
 		put(TileEntityIncubator.class, "tileentity_incubator");
+		put(com.hbm.tileentity.machine.TileEntityMachineSplicer.class, "tileentity_splicer");
 		put(TileEntityCloner.class, "tileentity_cloner");
 		put(TileEntityMedicineSynthesizer.class, "tileentity_medicine_synthesizer");
 
