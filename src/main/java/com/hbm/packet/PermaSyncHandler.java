@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import com.hbm.dim.CelestialBody;
@@ -14,6 +16,8 @@ import com.hbm.dim.orbit.OrbitalStation;
 import com.hbm.dim.trait.CBT_War;
 import com.hbm.dim.trait.CBT_War.Projectile;
 import com.hbm.dim.trait.CelestialBodyTrait;
+import com.hbm.extprop.HbmBloodstreamProps;
+import com.hbm.extprop.HbmPlayerProps;
 import com.hbm.handler.CelestialNukeShockHandler;
 import com.hbm.handler.ImpactWorldHandler;
 import com.hbm.handler.pollution.PollutionHandler;
@@ -33,6 +37,10 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.World;
 import net.minecraftforge.common.DimensionManager;
 
+import com.mojang.authlib.GameProfile;
+
+import cpw.mods.fml.common.network.ByteBufUtils;
+
 /**
  * Utility for permanently synchronizing values every tick with a player in the given context of a world.
  * Uses the Byte Buffer directly instead of NBT to cut back on unnecessary data.
@@ -41,6 +49,10 @@ import net.minecraftforge.common.DimensionManager;
 public class PermaSyncHandler {
 
 	public static HashSet<Integer> boykissers = new HashSet<Integer>();
+
+
+	public static Map<Integer, GameProfile> huskForms = new ConcurrentHashMap<Integer, GameProfile>();
+	public static Map<Integer, Integer> huskBlood = new ConcurrentHashMap<Integer, Integer>();
 	public static float[] pollution = new float[PollutionType.values().length];
 
 	public static void writePacket(ByteBuf buf, World world, EntityPlayerMP player) {
@@ -65,6 +77,22 @@ public class PermaSyncHandler {
 		buf.writeShort((short) ids.size());
 		for(Integer i : ids) buf.writeInt(i);
 		/// SHITTY MEMES ///
+
+		/// HUSK FORMS ///
+		List<EntityPlayer> forms = new ArrayList<EntityPlayer>();
+		for(Object o : world.playerEntities) {
+			EntityPlayer p = (EntityPlayer) o;
+			if(!HbmPlayerProps.getData(p).huskUUID.isEmpty()) forms.add(p);
+		}
+		buf.writeShort((short) forms.size());
+		for(EntityPlayer p : forms) {
+			HbmPlayerProps props = HbmPlayerProps.getData(p);
+			buf.writeInt(p.getEntityId());
+			ByteBufUtils.writeUTF8String(buf, props.huskName);
+			ByteBufUtils.writeUTF8String(buf, props.huskUUID);
+			buf.writeInt(HbmBloodstreamProps.getData(p).getBloodType().getID());
+		}
+		/// HUSK FORMS ///
 
 		/// POLLUTION ///
 		PollutionData pollution = PollutionHandler.getPollutionData(world, (int) Math.floor(player.posX), (int) Math.floor(player.posY), (int) Math.floor(player.posZ));
@@ -187,6 +215,27 @@ public class PermaSyncHandler {
 		int ids = buf.readShort();
 		for(int i = 0; i < ids; i++) boykissers.add(buf.readInt());
 		/// SHITTY MEMES ///
+
+		/// HUSK FORMS ///
+		Map<Integer, GameProfile> forms = new ConcurrentHashMap<Integer, GameProfile>();
+		Map<Integer, Integer> blood = new ConcurrentHashMap<Integer, Integer>();
+		int formCount = buf.readShort();
+		for(int i = 0; i < formCount; i++) {
+			int id = buf.readInt();
+			String name = ByteBufUtils.readUTF8String(buf);
+			String uuid = ByteBufUtils.readUTF8String(buf);
+
+			try {
+				forms.put(id, new GameProfile(UUID.fromString(uuid), name));
+			} catch(IllegalArgumentException ex) {
+				// malformed uuid
+			}
+
+			blood.put(id, Integer.valueOf(buf.readInt()));
+		}
+		huskForms = forms;
+		huskBlood = blood;
+		/// HUSK FORMS ///
 
 		/// POLLUTION ///
 		for(int i = 0; i < PollutionType.values().length; i++) {

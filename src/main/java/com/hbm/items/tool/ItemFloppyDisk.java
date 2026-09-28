@@ -1,6 +1,7 @@
 package com.hbm.items.tool;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -79,58 +80,112 @@ public class ItemFloppyDisk extends Item {
 		if(def != null) def.id = getFrameId(stack);
 		return def;
 	}
+    /// for the splicer
+	private static NBTTagCompound ensurePathogen(ItemStack stack) {
+		if(!stack.hasTagCompound()) stack.stackTagCompound = new NBTTagCompound();
+		if(!stack.stackTagCompound.hasKey("pathogen")) stack.stackTagCompound.setTag("pathogen", new NBTTagCompound());
+		return stack.stackTagCompound.getCompoundTag("pathogen");
+	}
+
+	public static Map<String, String> getSections(ItemStack stack) {
+		Map<String, String> sections = new HashMap<String, String>();
+		NBTTagCompound pathogen = getPathogen(stack);
+		if(pathogen == null || !pathogen.hasKey("sections")) return sections;
+		NBTTagCompound tag = pathogen.getCompoundTag("sections");
+		for(Object key : tag.func_150296_c()) sections.put((String) key, tag.getString((String) key));
+		return sections;
+	}
+
+	public static void putSection(ItemStack stack, String key, String value) {
+		if(stack == null || key == null || value == null) return;
+		NBTTagCompound pathogen = ensurePathogen(stack);
+		NBTTagCompound sections = pathogen.hasKey("sections") ? pathogen.getCompoundTag("sections") : new NBTTagCompound();
+		sections.setString(key, value);
+		pathogen.setTag("sections", sections);
+	}
+
+	public static void clearPathogen(ItemStack stack) {
+		if(stack == null || !stack.hasTagCompound()) return;
+		stack.stackTagCompound.removeTag("pathogen");
+	}
+
+	public static void writeGenome(ItemStack stack, DiseaseDefinition def, String genome) {
+		if(stack == null) return;
+		NBTTagCompound pathogen = ensurePathogen(stack);
+		if(genome != null && !genome.isEmpty()) pathogen.setString("genome", genome);
+		if(def != null) {
+			if(def.id != null && !def.id.isEmpty()) pathogen.setString("frame", def.id);
+			pathogen.setTag("stats", def.toNBT());
+		}
+	}
+   // note; make sure the dialadisease checks this
+	public static boolean isGenomeComplete(String genome) {
+		return genome != null && !genome.isEmpty() && genome.indexOf('?') < 0;
+	}
 
 	public static List<String> getAnalysisLines(ItemStack stack) {
 		List<String> lines = new ArrayList<String>();
 
 		String frameId = getFrameId(stack);
-		if(frameId == null) return lines;
+		String genome = getGenome(stack);
+		if(frameId == null && (genome == null || genome.isEmpty())) return lines;
 
-		DiseaseDefinition def = DiseaseRegistry.get(frameId);
+		Map<String, String> sections = getSections(stack);
+		DiseaseDefinition def = frameId != null ? DiseaseRegistry.get(frameId) : null;
 		if(def == null) def = getStoredDef(stack);
 		String diskName = getDiskName(stack);
 
-		String defaultName = def != null && !def.displayName.isEmpty() ? def.displayName : frameId;
+		String defaultName = def != null && !def.displayName.isEmpty() ? def.displayName : (frameId != null ? frameId : section(sections, "name"));
 		lines.add("NAME: " + (diskName != null && !diskName.isEmpty() ? diskName : defaultName));
 		lines.add("");
 
-		if(def != null) {
-			lines.add("TYPE: " + def.type.name());
-			lines.add("INCUBATION: " + fmt(def.incubationTicks));
-			lines.add("DURATION: " + fmt(def.durationTicks));
-			lines.add("SEVERITY: " + pct(def.baseSeverity));
-			lines.add("RESISTANCE: " + pct(def.baseResistance));
-			lines.add("MUTATION: " + df(def.baseMutationRate));
-			lines.add("ANTIGEN: " + pct(def.antigenMutability));
-		}
+		lines.add("TYPE: " + (def != null && def.type != null ? def.type.name() : section(sections, "type")));
+		lines.add("INCUBATION: " + (def != null ? fmt(def.incubationTicks) : section(sections, "incubation")));
+		lines.add("DURATION: " + (def != null ? fmt(def.durationTicks) : section(sections, "duration")));
+		lines.add("SEVERITY: " + (def != null ? pct(def.baseSeverity) : section(sections, "baseSeverity")));
+		lines.add("RESISTANCE: " + (def != null ? pct(def.baseResistance) : section(sections, "baseResistance")));
+		lines.add("MUTATION: " + (def != null ? df(def.baseMutationRate) : section(sections, "mutationRate")));
+		lines.add("ANTIGEN: " + (def != null ? pct(def.antigenMutability) : section(sections, "antigenMutability")));
 
-		Map<DiseaseDefinition.TransmissionAxis, Float> transmission = def != null ? def.transmission : null;
-		if(transmission != null && !transmission.isEmpty()) {
-			lines.add("");
-			lines.add("TRANSMISSION");
-			for(Map.Entry<DiseaseDefinition.TransmissionAxis, Float> entry : transmission.entrySet()) {
+		lines.add("");
+		lines.add("TRANSMISSION");
+
+		if(def != null && def.transmission != null && !def.transmission.isEmpty()) {
+			for(Map.Entry<DiseaseDefinition.TransmissionAxis, Float> entry : def.transmission.entrySet()) {
 				lines.add("  " + entry.getKey().name() + ": " + pct(entry.getValue()));
+			}
+		} else {
+			for(String axis : new String[] { "aerosol", "touch", "hit", "proximity", "injected" }) {
+				lines.add("  " + axis.toUpperCase() + ": " + section(sections, axis));
 			}
 		}
 
-		if(def != null) {
+		lines.add("");
+		lines.add(def != null ? (def.uncurable ? "CURE: IMPOSSIBLE" : "CURE: ANTISERUM") : "CURE: N/A");
+
+		if(genome != null && !isGenomeComplete(genome)) {
 			lines.add("");
-			lines.add(def.uncurable ? "CURE: IMPOSSIBLE" : "CURE: ANTISERUM");
+			lines.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.floppy.incomplete"));
 		}
 
 		return lines;
 	}
 
+	private static String section(Map<String, String> sections, String key) {
+		String value = sections == null ? null : sections.get(key);
+		return value == null || value.isEmpty() ? "N/A" : value;
+	}
+
 	@Override
 	public void addInformation(ItemStack stack, EntityPlayer player, List list, boolean bool) {
 		String frameId = getFrameId(stack);
-		if(frameId != null) {
-			String genome = getGenome(stack);
-			if(genome != null && !genome.isEmpty()) {
-				list.add(EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.item.floppy.strain", colorStrain(genome, 0)));
-			} else {
-				list.add(EnumChatFormatting.YELLOW + frameId);
-			}
+		String genome = getGenome(stack);
+
+		if(genome != null && !genome.isEmpty()) {
+			list.add(EnumChatFormatting.ITALIC + I18nUtil.resolveKey("desc.item.floppy.strain", colorStrain(genome, 0)));
+			if(!isGenomeComplete(genome)) list.add(EnumChatFormatting.RED + I18nUtil.resolveKey("desc.item.floppy.incomplete"));
+		} else if(frameId != null) {
+			list.add(EnumChatFormatting.YELLOW + frameId);
 		} else {
 			list.add(EnumChatFormatting.GRAY + I18nUtil.resolveKey("desc.item.floppy.blank"));
 		}

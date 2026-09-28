@@ -19,7 +19,7 @@ public class Genome {
 	private static final int SEG_SIZE = 8;
 
 		public static String reference(String id) {
-		Random rand = new Random(id.hashCode());
+		Random rand = new Random(id == null ? 0 : id.hashCode());
 		StringBuilder sb = new StringBuilder(LENGTH);
 		for(int i = 0; i < LENGTH; i++) sb.append(ALPHABET.charAt(rand.nextInt(ALPHABET.length())));
 		return sb.toString();
@@ -85,12 +85,12 @@ public class Genome {
 	public static float getTypeMultiplier(PathogenType type) {
 		if(type == null) return 1.0F;
 		switch(type) {
-			case VIRUS:     return 1.5F;
-			case BACTERIA:  return 0.8F;
-			case FUNGUS:    return 0.3F;
-			case PARASITE:  return 0.5F;
-			case PRION:     return 2.0F;
-			default:        return 1.0F;
+			case VIRUS:     return 3.0F;
+			case BACTERIA:  return 1.6F;
+			case FUNGUS:    return 0.6F;
+			case PARASITE:  return 1.0F;
+			case PRION:     return 0.0F;
+			default:        return 2.0F;
 		}
 	}
 

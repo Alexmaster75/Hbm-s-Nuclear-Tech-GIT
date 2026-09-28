@@ -153,7 +153,7 @@ public class ModEventHandlerClient {
 	public static final int shakeDuration = 1_500;
 	public static long shakeTimestamp;
 
-	private static boolean rageSongPlaying = false;
+	private static AudioWrapper rageAudio;
 
 	@SubscribeEvent
 	public void onOverlayRender(RenderGameOverlayEvent.Pre event) {
@@ -200,12 +200,14 @@ public class ModEventHandlerClient {
 			if(player.isPotionActive(HbmPotion.turkishRage)) {
 				RenderScreenOverlay.renderSymptomOverlay(event.resolution, "overlay_turkish_rage", 0.45F + 0.15F * pulse);
 
-				if(!rageSongPlaying) {
-					rageSongPlaying = true;
-					player.playSound(RefStrings.MODID + ":music.turkishRage", 1.0F, 1.0F);
+				if(rageAudio == null) {
+					rageAudio = MainRegistry.proxy.getLoopedSound(RefStrings.MODID + ":music.turkishRage", player, 1.0F, 64F, 1.0F, 10);
+					rageAudio.startSound();
 				}
-			} else {
-				rageSongPlaying = false;
+				rageAudio.keepAlive();
+			} else if(rageAudio != null) {
+				rageAudio.stopSound();
+				rageAudio = null;
 			}
 
 			if(player.isPotionActive(HbmPotion.ganja)) {
@@ -798,6 +800,12 @@ public class ModEventHandlerClient {
 	}
 
 	@SubscribeEvent
+	public void drawScreenPost(net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent.Post event) {
+		boolean nei = Loader.isModLoaded("NotEnoughItems") && event.gui instanceof GuiContainer;
+		com.hbm.render.util.TooltipRenderer.renderPending(Minecraft.getMinecraft().fontRenderer, event.gui.width, event.gui.height, event.mouseX, event.mouseY, 300D, nei);
+	}
+
+	@SubscribeEvent
 	public void drawTooltip(ItemTooltipEvent event) {
 
 		ItemStack stack = event.itemStack;
@@ -954,6 +962,9 @@ public class ModEventHandlerClient {
 				}
 			}
 		}
+
+		com.hbm.render.util.TooltipRenderer.reserve(stack, list);
+		com.hbm.render.util.TooltipRenderer.setPending(stack, list);
 	}
 
 	private static long canneryTimestamp;

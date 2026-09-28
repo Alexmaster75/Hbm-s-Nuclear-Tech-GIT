@@ -196,7 +196,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		DERG(		"Dragon",			"Squeeze him.", "hbm:block.squeakyToy"), // blerg
 		FATO(		"FAT TETO",			"pls don't bully me", "hbm:block.teto"),
 		YANO(		"Yanosiq",			"Life-sized!",	"hbm:block.squeakyToy"),
-		;
+		IRIS(		"Iris",				"Tam69 is genuinely so squishy and gooey bruh.", "hbm:block.squeakyToy");
 
 		public String label;
 		public String inscription;

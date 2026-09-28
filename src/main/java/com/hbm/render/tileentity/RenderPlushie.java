@@ -37,6 +37,8 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 	public static final ResourceLocation yomiTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/yomi.png");
 	public static final ResourceLocation numbernineTex = new ResourceLocation(RefStrings.MODID, "textures/models/horse/numbernine.png");
 	public static final ResourceLocation hundunTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/hundun.png");
+	public static final IModelCustom irisModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/plushie_iris.obj")).asVBO();
+	public static final ResourceLocation irisTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/plushie_iris.png");
 
 	//VOCALOIDS//
 	public static final IModelCustom tetoModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/teto.obj")).asVBO();
@@ -80,6 +82,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 		case NERU: GL11.glScaled(0.5, 0.5, 0.5); break;
 		case HUNDUN: GL11.glScaled(1, 1, 1); break;
 		case DERG: break;
+		case IRIS: GL11.glRotated(90, 0, 1, 0); GL11.glScaled(1.25, 1.25, 1.25); break;
 		}
 		renderPlushie(te.type, te.squishTimer);
 
@@ -163,6 +166,10 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 			Minecraft.getMinecraft().getTextureManager().bindTexture(yanoTex);
 			yanoModel.renderAll();
 			GL11.glEnable(GL11.GL_CULL_FACE);
+      break;
+		case IRIS:
+			Minecraft.getMinecraft().getTextureManager().bindTexture(irisTex);
+			irisModel.renderAll();
 			break;
 		}
 	}
@@ -195,6 +202,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 				case NERU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case DERG: GL11.glScaled(1.5, 1.5, 1.5); break;
 				case YANO: GL11.glScaled(1.5, 1.5, 1.5); break;
+				case IRIS: GL11.glRotated(90, 0, 1, 0); GL11.glTranslated(0, 0.25, 0); GL11.glScaled(3.0, 3.0, 3.0); break;
 				}
 				renderPlushie(type, 0);
 			}};

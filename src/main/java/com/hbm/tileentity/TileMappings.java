@@ -199,6 +199,7 @@ public class TileMappings {
 		put(TileEntityMachineCrystallizer.class, "tileentity_acidomatic");
 		put(TileEntitySoyuzStruct.class, "tileentity_soyuz_struct");
 		put(TileEntityMachineMiningLaser.class, "tileentity_mining_laser");
+		put(TileEntityMachineNanoprobe.class, "tileentity_nanoprobe");
 		put(TileEntityNukeBalefire.class, "tileentity_nuke_fstbmb");
 		put(TileEntityAntimatter.class, "tileentity_nuke_Antimatter");
 		put(TileEntityMicrowave.class, "tileentity_microwave");
@@ -561,6 +562,9 @@ public class TileMappings {
 		put(TileEntityRadioTelex.class, "tileentity_rtty_telex");
 		put(TileEntityRadioAUTOCAL.class, "tileentity_rtty_autocal");
 		put(TileEntityGenomeSequencer.class, "tileentity_genome_sequencer");
+		put(TileEntityIncubator.class, "tileentity_incubator");
+		put(com.hbm.tileentity.machine.TileEntityMachineSplicer.class, "tileentity_splicer");
+		put(TileEntityCloner.class, "tileentity_cloner");
 		put(TileEntityMedicineSynthesizer.class, "tileentity_medicine_synthesizer");
 
 		put(TileEntityDroneWaypoint.class, "tileentity_drone_waypoint");

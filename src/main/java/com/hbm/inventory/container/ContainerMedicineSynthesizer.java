@@ -21,12 +21,12 @@ public class ContainerMedicineSynthesizer extends ContainerBase {
 			}
 		});
 		addSlotToContainer(new Slot(tile, 1, 11, 36));
-		addSlotToContainer(new Slot(tile, 2, 11, 54));
-		addSlotToContainer(new Slot(tile, 3, 72, 76));
+		addSlotToContainer(new Slot(tile, 2, 62, 76));
+		addSlotToContainer(new Slot(tile, 3, 11, 54));
 
 		addSlotToContainer(new Slot(tile, 4, 168, 83));
 
-		addSlotToContainer(new SlotTakeOnly(tile, 5, 101, 36));
+		addSlotToContainer(new SlotTakeOnly(tile, 5, 118, 36));
 
 		for(int i = 0; i < 3; i++) {
 			for(int j = 0; j < 9; j++) {

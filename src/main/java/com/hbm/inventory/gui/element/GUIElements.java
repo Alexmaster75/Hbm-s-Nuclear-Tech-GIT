@@ -1,7 +1,6 @@
 package com.hbm.inventory.gui.element;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
@@ -10,7 +9,6 @@ import org.lwjgl.opengl.GL12;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.lib.RefStrings;
 import com.hbm.render.util.DiamondPronter;
-import com.hbm.util.ColorUtil;
 import com.hbm.util.Vec3NT;
 
 import net.minecraft.client.Minecraft;
@@ -244,6 +242,13 @@ public class GUIElements {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
+	public static void drawGraphAxes(int x, int y, int w, int h, double z, int color) {
+		int ox = x + 3;
+		int oy = y + h - 3;
+		drawArrowVector(ox, oy, (float) z, new Vector2f(ox, y + 4), 2F, color);
+		drawArrowVector(ox, oy, (float) z, new Vector2f(x + w - 4, oy), 2F, color);
+	}
+
 	public static void drawArrowVector(int x, int y, float z, Vector2f vector, float minDist, int color) {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		Tessellator tess = Tessellator.instance;
@@ -282,6 +287,7 @@ public class GUIElements {
 	public static final int RECIPE_COLOR_LINE1 = 0xFFFFFF00;
 	public static final int STANDARD_HEADER_OFFSET = 2;
 	public static final int STANDARD_LINE_DIST = 10;
+	public static final int TEXT_BAR_THRESHOLD = 128;
 	public static void drawHoveringText(List lines, int x, int y, FontRenderer font, RenderItem itemRender, int guiWidth, int guiHeight) {
 		drawHoveringText(lines, x, y, font, itemRender, guiWidth, guiHeight, STANDARD_HEADER_OFFSET, STANDARD_LINE_DIST, STANDARD_COLOR_BACKGROUND, STANDARD_COLOR_BACKGROUND, STANDARD_COLOR_LINE0, STANDARD_COLOR_LINE1);
 	}
@@ -290,19 +296,148 @@ public class GUIElements {
 	}
 
 	public static void drawHoveringTextFluid(List lines, int x, int y, FontRenderer font, RenderItem itemRender, int guiWidth, int guiHeight, FluidType type) {
-		int color0 = type.getColor();
-		int r = ColorUtil.ir(color0);
-		int g = ColorUtil.ig(color0);
-		int b = ColorUtil.ib(color0);
-		int add = (r + g + b) / 3 > 0x80 ? -0x40 : 0x40;
-		int color1 = ColorUtil.color(MathHelper.clamp_int(r + add, 0, 255), MathHelper.clamp_int(g + add, 0, 255), MathHelper.clamp_int(b + add, 0, 255));
-		color0 |= 0xff000000;
-		color1 |= 0xff000000;
-		drawHoveringText(lines, x, y, font, itemRender, guiWidth, guiHeight, 6, STANDARD_LINE_DIST, STANDARD_COLOR_BACKGROUND, STANDARD_COLOR_BACKGROUND, color0, color1);
+		drawHoveringTextFluids(lines, x, y, font, itemRender, guiWidth, guiHeight, true, type);
 
 		if(GuiScreen.isShiftKeyDown() && type != null && !lines.isEmpty()) {
 			drawDangerDiamond(lines, x, y, font, guiWidth, guiHeight, type);
 		}
+	}
+     // i am hungry and desire lunch
+	public static void drawHoveringTextFluids(List<String> lines, int x, int y, FontRenderer font, RenderItem itemRender, int guiWidth, int guiHeight, FluidType... types) {
+		drawHoveringTextFluids(lines, x, y, font, itemRender, guiWidth, guiHeight, false, types);
+	}
+
+	private static void drawHoveringTextFluids(List<String> lines, int x, int y, FontRenderer font, RenderItem itemRender, int guiWidth, int guiHeight, boolean bar, FluidType... types) {
+		if(lines.isEmpty()) return;
+
+		int[] colors = fluidBorderColors(types);
+		int headerOffset = 6;
+		int[] bounds = hoveringBounds(lines, x, y, font, guiWidth, guiHeight, headerOffset, STANDARD_LINE_DIST);
+		int boundX = bounds[0], boundY = bounds[1], width = bounds[2], height = bounds[3];
+
+		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		RenderHelper.disableStandardItemLighting();
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
+
+		itemRender.zLevel = 300.0F;
+		drawHoveringBackground(boundX, boundY, width, height, STANDARD_COLOR_BACKGROUND, STANDARD_COLOR_BACKGROUND);
+		drawFluidBorder(boundX - 3, boundY - 3, boundX + width + 3, boundY + height + 3, colors);
+
+		float frameSide = (width + 6F) / (2F * (width + height + 12F));
+
+		int lineY = boundY;
+		for(int i = 0; i < lines.size(); i++) {
+			String line = lines.get(i);
+			boolean drawn = false;
+
+			for(FluidType type : types) {
+				if(type == null) continue;
+				String name = type.getLocalizedName();
+				if(line.startsWith(name)) {
+					if(bar) {
+						drawStringOnBar(font, line, boundX, width, lineY, 0xff000000 | type.getColor(), colors, frameSide);
+					} else {
+						font.drawStringWithShadow(name, boundX, lineY, 0xff000000 | type.getColor());
+						font.drawStringWithShadow(line.substring(name.length()), boundX + font.getStringWidth(name), lineY, 0xffffffff);
+					}
+					drawn = true;
+					break;
+				}
+			}
+
+			if(!drawn) font.drawStringWithShadow(line, boundX, lineY, 0xffffffff);
+			if(i == 0) lineY += headerOffset;
+			lineY += STANDARD_LINE_DIST;
+		}
+
+		itemRender.zLevel = 0.0F;
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		RenderHelper.enableStandardItemLighting();
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+	}
+
+	private static int[] fluidBorderColors(FluidType... types) {
+		int count = 0;
+		for(FluidType type : types) if(type != null) count++;
+
+		int[] colors = new int[count == 1 ? 2 : Math.max(1, count)];
+		int index = 0;
+		for(FluidType type : types) if(type != null) colors[index++] = 0xff000000 | type.getColor();
+		if(count == 1) colors[1] = shiftColor(colors[0]);
+
+		return colors;
+	}
+
+	private static int shiftColor(int color) {
+		int r = (color >> 16) & 255, g = (color >> 8) & 255, b = color & 255;
+		int add = (r + g + b) / 3 > 0x80 ? -0x40 : 0x40;
+		return 0xff000000 | MathHelper.clamp_int(r + add, 0, 255) << 16 | MathHelper.clamp_int(g + add, 0, 255) << 8 | MathHelper.clamp_int(b + add, 0, 255);
+	}
+
+	private static void drawFluidBorder(int x0, int y0, int x1, int y1, int[] colors) {
+		int w = x1 - x0, h = y1 - y0;
+		float perimeter = 2F * (w + h);
+		if(perimeter <= 0F || colors.length == 0) return;
+
+		float t1 = (float) w / perimeter;
+		float t2 = (float) (w + h) / perimeter;
+		float t3 = (float) (2 * w + h) / perimeter;
+
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+
+		Tessellator tess = Tessellator.instance;
+		tess.startDrawingQuads();
+		borderRun(tess, x0, x1, y0, 0F, t1, colors, true);
+		borderRun(tess, y0, y1, x1 - 1, t1, t2, colors, false);
+		borderRun(tess, x1, x0, y1 - 1, t2, t3, colors, true);
+		borderRun(tess, y1, y0, x0, t3, 1F, colors, false);
+		tess.draw();
+
+		GL11.glShadeModel(GL11.GL_FLAT);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
+	private static void borderRun(Tessellator tess, int a, int b, int fixed, float tStart, float tEnd, int[] colors, boolean horizontal) {
+		int steps = Math.max(1, Math.abs(b - a) / 8);
+		for(int i = 0; i < steps; i++) {
+			double p0 = a + (double) (b - a) * i / steps;
+			double p1 = a + (double) (b - a) * (i + 1) / steps;
+			float s0 = tStart + (tEnd - tStart) * i / steps;
+			float s1 = tStart + (tEnd - tStart) * (i + 1) / steps;
+
+			tess.setColorOpaque_I(sampleColor(colors, s0));
+			tess.addVertex(horizontal ? p0 : fixed, horizontal ? fixed : p0, 300D);
+			tess.setColorOpaque_I(sampleColor(colors, s1));
+			tess.addVertex(horizontal ? p1 : fixed, horizontal ? fixed : p1, 300D);
+			tess.addVertex(horizontal ? p1 : fixed + 1, horizontal ? fixed + 1 : p1, 300D);
+			tess.setColorOpaque_I(sampleColor(colors, s0));
+			tess.addVertex(horizontal ? p0 : fixed + 1, horizontal ? fixed + 1 : p0, 300D);
+		}
+	}
+
+	private static int sampleColor(int[] colors, float t) {
+		if(colors.length == 1) return colors[0];
+		float f = (t % 1F + 1F) % 1F * colors.length;
+		int i = (int) f;
+		return lerpColor(colors[i % colors.length], colors[(i + 1) % colors.length], f - i);
+	}
+    // hex mixing!
+	private static int lerpColor(int c0, int c1, float u) {
+		int a = (int) ((c0 >>> 24) + ((c1 >>> 24) - (c0 >>> 24)) * u);
+		int r = (int) (((c0 >> 16) & 255) + (((c1 >> 16) & 255) - ((c0 >> 16) & 255)) * u);
+		int g = (int) (((c0 >> 8) & 255) + (((c1 >> 8) & 255) - ((c0 >> 8) & 255)) * u);
+		int b = (int) ((c0 & 255) + ((c1 & 255) - (c0 & 255)) * u);
+		return a << 24 | r << 16 | g << 8 | b;
 	}
 
 	private static void drawDangerDiamond(List lines, int x, int y, FontRenderer font, int guiWidth, int guiHeight, FluidType type) {
@@ -320,7 +455,7 @@ public class GUIElements {
 
 		float size = 26F;
 		GL11.glPushMatrix();
-		GL11.glTranslatef(boundX + width + 3, boundY - 4, 300F);
+		GL11.glTranslatef(boundX + width + 3, boundY - 3, 300F);
 		GL11.glRotatef(180F, 0F, 0F, 1F);
 		GL11.glRotatef(90F, 0F, 1F, 0F);
 		GL11.glScalef(size, size, size);
@@ -335,67 +470,62 @@ public class GUIElements {
 		GL11.glPopMatrix();
 	}
 
+	public static int[] hoveringBounds(List lines, int x, int y, FontRenderer font, int guiWidth, int guiHeight, int headerOffset, int lineDist) {
+		int width = 0;
+		for(Object line : lines) width = Math.max(width, font.getStringWidth((String) line));
+
+		int boundX = x + 12;
+		int boundY = y - 12;
+		int height = 6 + headerOffset;
+		if(lines.size() > 1) height += 2 + (lines.size() - 1) * lineDist;
+
+		if(boundX + width + 4 > guiWidth) boundX -= 28 + width;
+		if(boundY + height + 6 > guiHeight) boundY = guiHeight - height - 6;
+		if(boundX < 4) boundX = 4;
+		if(boundY < 4) boundY = 4;
+
+		return new int[] { boundX, boundY, width, height };
+	}
+
+	private static void drawHoveringBackground(int boundX, int boundY, int width, int height, int colBG0, int colBG1) {
+		drawGradientRect(boundX - 3, boundY - 4, boundX + width + 3, boundY - 3, colBG0, colBG0);
+		drawGradientRect(boundX - 3, boundY + height + 3, boundX + width + 3, boundY + height + 4, colBG1, colBG1);
+		drawGradientRect(boundX - 3, boundY - 3, boundX + width + 3, boundY + height + 3, colBG0, colBG1);
+		drawGradientRect(boundX - 4, boundY - 3, boundX - 3, boundY + height + 3, colBG0, colBG1);
+		drawGradientRect(boundX + width + 3, boundY - 3, boundX + width + 4, boundY + height + 3, colBG0, colBG1);
+	}
+
 	public static void drawHoveringText(List lines, int x, int y, FontRenderer font, RenderItem itemRender, int guiWidth, int guiHeight, int headerOffset, int lineDist, int colBG0, int colBG1, int colLine0, int colLine1) {
+		if(lines.isEmpty()) return;
 
-		if(!lines.isEmpty()) {
-			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-			RenderHelper.disableStandardItemLighting();
-			GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glDisable(GL11.GL_DEPTH_TEST);
-			int width = 0;
-			Iterator iterator = lines.iterator();
+		GL11.glDisable(GL12.GL_RESCALE_NORMAL);
+		RenderHelper.disableStandardItemLighting();
+		GL11.glDisable(GL11.GL_LIGHTING);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-			while(iterator.hasNext()) {
-				String line = (String) iterator.next();
-				int lineLength = font.getStringWidth(line);
+		int[] bounds = hoveringBounds(lines, x, y, font, guiWidth, guiHeight, headerOffset, lineDist);
+		int boundX = bounds[0], boundY = bounds[1], width = bounds[2], height = bounds[3];
 
-				if(lineLength > width) {
-					width = lineLength;
-				}
-			}
+		itemRender.zLevel = 300.0F;
+		drawHoveringBackground(boundX, boundY, width, height, colBG0, colBG1);
 
-			int boundX = x + 12;
-			int boundY = y - 12;
-			int height = 6 + headerOffset;
+		drawGradientRect(boundX - 3, boundY - 3 + 1, boundX - 3 + 1, boundY + height + 3 - 1, colLine0, colLine1);
+		drawGradientRect(boundX + width + 2, boundY - 3 + 1, boundX + width + 3, boundY + height + 3 - 1, colLine0, colLine1);
+		drawGradientRect(boundX - 3, boundY - 3, boundX + width + 3, boundY - 3 + 1, colLine0, colLine0);
+		drawGradientRect(boundX - 3, boundY + height + 2, boundX + width + 3, boundY + height + 3, colLine1, colLine1);
 
-			if(lines.size() > 1) {
-				height += 2 + (lines.size() - 1) * lineDist;
-			}
-
-			// if trying to leave bottom or right side, move inwards
-			if(boundX + width + 4 > guiWidth) boundX -= 28 + width;
-			if(boundY + height + 6 > guiHeight) boundY = guiHeight - height - 6;
-
-			// afterwards, see if the tooltip exits the top or left and then fix that, this one's more important and for some fucking reason wasn't handled by vanilla t all
-			if(boundX < 4) boundX = 4;
-			if(boundY < 4) boundY = 4;
-
-			itemRender.zLevel = 300.0F;
-			drawGradientRect(boundX - 3, boundY - 4, boundX + width + 3, boundY - 3, colBG0, colBG0);
-			drawGradientRect(boundX - 3, boundY + height + 3, boundX + width + 3, boundY + height + 4, colBG1, colBG1);
-			drawGradientRect(boundX - 3, boundY - 3, boundX + width + 3, boundY + height + 3, colBG0, colBG1);
-			drawGradientRect(boundX - 4, boundY - 3, boundX - 3, boundY + height + 3, colBG0, colBG1);
-			drawGradientRect(boundX + width + 3, boundY - 3, boundX + width + 4, boundY + height + 3, colBG0, colBG1);
-
-			drawGradientRect(boundX - 3, boundY - 3 + 1, boundX - 3 + 1, boundY + height + 3 - 1, colLine0, colLine1);
-			drawGradientRect(boundX + width + 2, boundY - 3 + 1, boundX + width + 3, boundY + height + 3 - 1, colLine0, colLine1);
-			drawGradientRect(boundX - 3, boundY - 3, boundX + width + 3, boundY - 3 + 1, colLine0, colLine0);
-			drawGradientRect(boundX - 3, boundY + height + 2, boundX + width + 3, boundY + height + 3, colLine1, colLine1);
-
-			for(int i = 0; i < lines.size(); ++i) {
-				String line = (String) lines.get(i);
-				font.drawStringWithShadow(line, boundX, boundY, -1);
-
-				if(i == 0) boundY += headerOffset;
-				boundY += lineDist;
-			}
-
-			itemRender.zLevel = 0.0F;
-			GL11.glEnable(GL11.GL_LIGHTING);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
-			RenderHelper.enableStandardItemLighting();
-			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
+		int lineY = boundY;
+		for(int i = 0; i < lines.size(); i++) {
+			font.drawStringWithShadow((String) lines.get(i), boundX, lineY, -1);
+			if(i == 0) lineY += headerOffset;
+			lineY += lineDist;
 		}
+
+		itemRender.zLevel = 0.0F;
+		GL11.glEnable(GL11.GL_LIGHTING);
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
+		RenderHelper.enableStandardItemLighting();
+		GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 	}
 
 	public static void drawDivider(int x, int y, int width, int color) {
@@ -420,6 +550,65 @@ public class GUIElements {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
+	public static void drawScaledText(FontRenderer font, String text, float x, float y, float scale, int color) {
+		GL11.glPushMatrix();
+		GL11.glScaled(scale, scale, 1D);
+		font.drawStringWithShadow(text, Math.round(x / scale), Math.round(y / scale), color);
+		GL11.glPopMatrix();
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+	}
+
+
+	public static void drawCenteredText(FontRenderer font, String text, int boxLeft, int boxTop, int boxWidth, int boxHeight, float maxScale, int color) {
+		int w = font.getStringWidth(text);
+		float scale = Math.min(maxScale, boxWidth / (float) Math.max(w, 1));
+
+		GL11.glPushMatrix();
+		GL11.glTranslated(boxLeft + boxWidth / 2D, boxTop + boxHeight / 2D, 0D);
+		GL11.glScaled(scale, scale, 1D);
+		font.drawStringWithShadow(text, -w / 2, -font.FONT_HEIGHT / 2, color);
+		GL11.glPopMatrix();
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+	}
+
+	private static void drawStringOnBar(FontRenderer font, String text, int boxLeft, int boxWidth, int y, int color, int[] gradient, float tMax) {
+		drawGradientBar(boxLeft - 2, y - 2, boxLeft + boxWidth + 2, y + font.FONT_HEIGHT, gradient, tMax);
+		int textX = boxLeft + (boxWidth - font.getStringWidth(text)) / 2;
+		font.drawString(text, textX, y, luminance(color) < TEXT_BAR_THRESHOLD ? 0xFFFFFFFF : 0xFF101010, false);
+	}
+
+	private static void drawGradientBar(int x0, int y0, int x1, int y1, int[] colors, float tMax) {
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		OpenGlHelper.glBlendFunc(770, 771, 1, 0);
+		GL11.glShadeModel(GL11.GL_SMOOTH);
+
+		Tessellator tess = Tessellator.instance;
+		tess.startDrawingQuads();
+		int steps = Math.max(1, (x1 - x0) / 8);
+		for(int i = 0; i < steps; i++) {
+			double xa = x0 + (double) (x1 - x0) * i / steps;
+			double xb = x0 + (double) (x1 - x0) * (i + 1) / steps;
+			tess.setColorOpaque_I(sampleColor(colors, tMax * i / steps));
+			tess.addVertex(xa, y0, 300D);
+			tess.addVertex(xa, y1, 300D);
+			tess.setColorOpaque_I(sampleColor(colors, tMax * (i + 1) / steps));
+			tess.addVertex(xb, y1, 300D);
+			tess.addVertex(xb, y0, 300D);
+		}
+		tess.draw();
+
+		GL11.glShadeModel(GL11.GL_FLAT);
+		GL11.glDisable(GL11.GL_BLEND);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+
+	private static int luminance(int color) {
+		return (((color >> 16) & 255) * 299 + ((color >> 8) & 255) * 587 + (color & 255) * 114) / 1000;
+	}
+
 	public static List<String> wrapText(List<String> lines, int max) {
 		List<String> out = new ArrayList<String>();
 		for(String line : lines) {
@@ -434,6 +623,10 @@ public class GUIElements {
 	}
 
 	public static void drawHelix(double x0, double x1, double cy, double z, double radius, double turns, double spin, double phase, int bits, int strandColor) {
+		drawHelix(x0, x1, cy, z, radius, turns, spin, phase, bits, null, strandColor, 0);
+	}
+
+	public static void drawHelix(double x0, double x1, double cy, double z, double radius, double turns, double spin, double phase, int bits, String genome, int strandColor, int missingColor) {
 		int strandSteps = 120;
 		double bitPhase = Math.toRadians(3.0);
 		double strandOffset = Math.PI * 0.95;
@@ -441,6 +634,7 @@ public class GUIElements {
 		int[] segColors = {0xFFFF5555, 0xFF55FFFF, 0xFF55FF55};
 		int strandColorDark = 0xFF00A000;
 		Tessellator tess = Tessellator.instance;
+		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_LINE_BIT | GL11.GL_CURRENT_BIT);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		GL11.glDisable(GL11.GL_LIGHTING);
 		GL11.glLineWidth(3.5F);
@@ -452,7 +646,7 @@ public class GUIElements {
 			double a = helixPhase(x, x0, x1, xDiv, turns, bits, bitPhase) + phase;
 			double y0 = radius * spin * Math.cos(a);
 			double y1 = radius * spin * Math.cos(a + strandOffset);
-			tess.setColorOpaque_I(segColors[segmentOf(i)]);
+			tess.setColorOpaque_I(genome != null && genome.charAt(i) == '?' ? missingColor : segColors[segmentOf(i)]);
 			tess.addVertex(x, cy + y0, z);
 			tess.addVertex(x, cy + y1, z);
 		}
@@ -472,9 +666,7 @@ public class GUIElements {
 			tess.draw();
 		}
 
-		GL11.glLineWidth(1.0F);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glPopAttrib();
 	}
 
 	private static double helixPhase(double x, double x0, double x1, double xDiv, double turns, int bits, double bitPhase) {
