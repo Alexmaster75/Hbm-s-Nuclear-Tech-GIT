@@ -1,7 +1,7 @@
 {
     "name": "Buurmic Acid",
-    "icon": ["hbm:item.fluid_icon", 1, 255],
-    "trigger": [["hbm:item.fluid_icon", 1, 255]],
+    "icon": ["hbm:item.fluid_icon", 1, 265],
+    "trigger": [["hbm:item.fluid_icon", 1, 265], ["hbm:item.fluid_icon", 1, 266]],
     "title": {
         "en_US": "Buurmic Acid"
     },
