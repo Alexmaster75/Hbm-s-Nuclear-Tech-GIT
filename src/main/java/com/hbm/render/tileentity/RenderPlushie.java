@@ -33,6 +33,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 	public static final IModelCustom yomiModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/yomi.obj"), false).asVBO();
 	public static final IModelCustom hundunModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/hundun.obj"), false).asVBO();
 	public static final IModelCustom dergModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/derg.obj"), false).asVBO();
+	public static final IModelCustom yanoModel = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/trinkets/yano.obj"), false).asVBO();
 	public static final ResourceLocation yomiTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/yomi.png");
 	public static final ResourceLocation numbernineTex = new ResourceLocation(RefStrings.MODID, "textures/models/horse/numbernine.png");
 	public static final ResourceLocation hundunTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/hundun.png");
@@ -53,6 +54,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 	public static final ResourceLocation neruBlush = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/neru_squished.png");
 
 	public static final ResourceLocation dergTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/derg.png");
+	public static final ResourceLocation yanoTex = new ResourceLocation(RefStrings.MODID, "textures/models/trinkets/yano.png");
 
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float interp) {
@@ -159,6 +161,12 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 			dergModel.renderPart("Derg");
 			dergModel.renderPart(squishTimer > 0 ? "Blep" : "ColonThree");
 			break;
+		case YANO:
+			GL11.glDisable(GL11.GL_CULL_FACE);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(yanoTex);
+			yanoModel.renderAll();
+			GL11.glEnable(GL11.GL_CULL_FACE);
+      break;
 		case IRIS:
 			Minecraft.getMinecraft().getTextureManager().bindTexture(irisTex);
 			irisModel.renderAll();
@@ -193,6 +201,7 @@ public class RenderPlushie extends TileEntitySpecialRenderer implements IItemRen
 				case MIKU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case NERU: GL11.glTranslated(0, 0.25, 0); GL11.glScaled(1.5, 1.5, 1.5); break;
 				case DERG: GL11.glScaled(1.5, 1.5, 1.5); break;
+				case YANO: GL11.glScaled(1.5, 1.5, 1.5); break;
 				case IRIS: GL11.glRotated(90, 0, 1, 0); GL11.glTranslated(0, 0.25, 0); GL11.glScaled(3.0, 3.0, 3.0); break;
 				}
 				renderPlushie(type, 0);

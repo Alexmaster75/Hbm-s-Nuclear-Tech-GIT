@@ -1,7 +1,7 @@
-{
+	{
     "name": "Natural Concrete",
-    "icon": ["hbm:item.fluid_icon", 1, 252],
-    "trigger": [["hbm:item.fluid_icon", 1, 252]],
+    "icon": ["hbm:item.fluid_icon", 1, 262],
+    "trigger": [["hbm:item.fluid_icon", 1, 262]],
     "title": {
         "en_US": "Natural Concrete"
     },

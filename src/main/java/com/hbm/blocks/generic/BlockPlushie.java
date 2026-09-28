@@ -25,6 +25,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.stats.StatList;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.StatCollector;
@@ -148,6 +149,18 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 			return new S35PacketUpdateTileEntity(this.xCoord, this.yCoord, this.zCoord, 0, nbt);
 		}
 
+		private AxisAlignedBB bb = null;
+		@Override
+		public AxisAlignedBB getRenderBoundingBox() {
+			if (this.bb == null) {
+				this.bb = AxisAlignedBB.getBoundingBox(
+					this.xCoord - 0.5, this.yCoord - 0.5, this.zCoord - 0.5,
+					this.xCoord + 1.5, this.yCoord + 1.5, this.zCoord + 1.5
+				);
+			}
+			return this.bb;
+		}
+
 		@Override
 		public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity pkt) {
 			this.readFromNBT(pkt.func_148857_g());
@@ -168,6 +181,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		@Override
 		public void transformTE(World world, int coordBaseMode) {
 			type = PlushieType.values()[world.rand.nextInt(PlushieType.values().length - 1) + 1];
+			this.bb = null;
 		}
 	}
 
@@ -181,6 +195,7 @@ public class BlockPlushie extends BlockContainer implements IBlockMulti, IToolti
 		NERU(		"Akita Neru",		"Careful, she might electrocute you.", "hbm:block.akita"),
 		DERG(		"Dragon",			"Squeeze him.", "hbm:block.squeakyToy"), // blerg
 		FATO(		"FAT TETO",			"pls don't bully me", "hbm:block.teto"),
+		YANO(		"Yanosiq",			"Life-sized!",	"hbm:block.squeakyToy"),
 		IRIS(		"Iris",				"Tam69 is genuinely so squishy and gooey bruh.", "hbm:block.squeakyToy");
 
 		public String label;
