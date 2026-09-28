@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import javax.vecmath.Vector2f;
-
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.dim.CelestialBody;
@@ -137,22 +135,15 @@ public class GUIMachineNanoprobe extends GuiInfoContainer {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(texture);
 	}
 
-	private void drawAxes(int gx, int gy, int gw, int gh) {
-		int ox = guiLeft + gx + 3;
-		int oy = guiTop + gy + gh - 3;
-		GUIElements.drawArrowVector(ox, oy, this.zLevel, new Vector2f(ox, guiTop + gy + 4), 2F, AXIS_COLOR);
-		GUIElements.drawArrowVector(ox, oy, this.zLevel, new Vector2f(guiLeft + gx + gw - 4, oy), 2F, AXIS_COLOR);
-	}
-
 	private void drawEfficiencyGraph(int gx, int gy, int gw, int gh) {
-		drawAxes(gx, gy, gw, gh);
+		GUIElements.drawGraphAxes(guiLeft + gx, guiTop + gy, gw, gh, this.zLevel, AXIS_COLOR);
 		if(!probe.isActive()) return;
 		drawCurve(gx, gy, gw, gh, 0xFF5555, true, probe.deployed);
 		drawCurve(gx, gy, gw, gh, 0x55FF55, false, probe.deployed);
 	}
 
 	private void drawYieldGraph(int gx, int gy, int gw, int gh) {
-		drawAxes(gx, gy, gw, gh);
+		GUIElements.drawGraphAxes(guiLeft + gx, guiTop + gy, gw, gh, this.zLevel, AXIS_COLOR);
 		if(!probe.isActive()) return;
 
 		FluidType[] outputs = probe.getOutputs();

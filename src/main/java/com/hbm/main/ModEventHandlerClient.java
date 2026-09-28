@@ -800,6 +800,12 @@ public class ModEventHandlerClient {
 	}
 
 	@SubscribeEvent
+	public void drawScreenPost(net.minecraftforge.client.event.GuiScreenEvent.DrawScreenEvent.Post event) {
+		boolean nei = Loader.isModLoaded("NotEnoughItems") && event.gui instanceof GuiContainer;
+		com.hbm.render.util.TooltipRenderer.renderPending(Minecraft.getMinecraft().fontRenderer, event.gui.width, event.gui.height, event.mouseX, event.mouseY, 300D, nei);
+	}
+
+	@SubscribeEvent
 	public void drawTooltip(ItemTooltipEvent event) {
 
 		ItemStack stack = event.itemStack;
@@ -956,6 +962,9 @@ public class ModEventHandlerClient {
 				}
 			}
 		}
+
+		com.hbm.render.util.TooltipRenderer.reserve(stack, list);
+		com.hbm.render.util.TooltipRenderer.setPending(stack, list);
 	}
 
 	private static long canneryTimestamp;

@@ -242,6 +242,13 @@ public class GUIElements {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 
+	public static void drawGraphAxes(int x, int y, int w, int h, double z, int color) {
+		int ox = x + 3;
+		int oy = y + h - 3;
+		drawArrowVector(ox, oy, (float) z, new Vector2f(ox, y + 4), 2F, color);
+		drawArrowVector(ox, oy, (float) z, new Vector2f(x + w - 4, oy), 2F, color);
+	}
+
 	public static void drawArrowVector(int x, int y, float z, Vector2f vector, float minDist, int color) {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
 		Tessellator tess = Tessellator.instance;
@@ -463,7 +470,7 @@ public class GUIElements {
 		GL11.glPopMatrix();
 	}
 
-	private static int[] hoveringBounds(List lines, int x, int y, FontRenderer font, int guiWidth, int guiHeight, int headerOffset, int lineDist) {
+	public static int[] hoveringBounds(List lines, int x, int y, FontRenderer font, int guiWidth, int guiHeight, int headerOffset, int lineDist) {
 		int width = 0;
 		for(Object line : lines) width = Math.max(width, font.getStringWidth((String) line));
 

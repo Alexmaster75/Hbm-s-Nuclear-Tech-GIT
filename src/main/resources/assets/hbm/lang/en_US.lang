@@ -7687,6 +7687,10 @@ trait.neutron=Neutron Radiation
 trait.radioactive=Radioactive
 trait.radResistance=Radiation resistance: %s
 
+desc.fuel.graphLegend=§aFlux (x) -> output (y)   §9Depletion (x) -> multiplier (y)
+desc.fuel.graphLegendFlux=§aFlux (x) -> output (y)
+desc.fuel.holdShift=§8Hold <§e§oLSHIFT§8§o> to display statistics
+
 trait.rbmk.coreTemp=Core temp: %s
 trait.rbmk.depletion=Depletion: %s
 trait.rbmk.diffusion=Diffusion: %s
