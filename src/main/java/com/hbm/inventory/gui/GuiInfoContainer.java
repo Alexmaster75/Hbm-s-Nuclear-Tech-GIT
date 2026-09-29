@@ -337,6 +337,45 @@ public abstract class GuiInfoContainer extends GuiContainer implements INEIGuiHa
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 		}
 	}
+    // the turret preview, but generalised!
+ 	public boolean isPreviewSlot(Slot slot, int mouseX, int mouseY) {
+		return this.mc.thePlayer.inventory.getItemStack() == null && this.isMouseOverSlot(slot, mouseX, mouseY) && !slot.getHasStack();
+	}
+
+	public void drawStackPreview(List<ItemStack> validInputs, int mouseX, int mouseY) {
+
+		if(validInputs == null) return;
+
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		for(ItemStack stack : validInputs) if(stack != null) list.add(stack.copy());
+		if(list.isEmpty()) return;
+
+		ItemStack selected = list.get(0);
+
+		if(list.size() > 1) {
+			int cycle = (int) ((System.currentTimeMillis() % (1000L * list.size())) / 1000);
+			selected = list.get(cycle);
+			selected.stackSize = 0;
+		}
+
+		List<Object[]> lines = new ArrayList<Object[]>();
+
+		if(list.size() < 10) {
+			lines.add(list.toArray());
+		} else if(list.size() < 24) {
+			lines.add(list.subList(0, list.size() / 2).toArray());
+			lines.add(list.subList(list.size() / 2, list.size()).toArray());
+		} else {
+			int bound0 = (int) Math.ceil(list.size() / 3D);
+			int bound1 = (int) Math.ceil(list.size() / 3D * 2D);
+			lines.add(list.subList(0, bound0).toArray());
+			lines.add(list.subList(bound0, bound1).toArray());
+			lines.add(list.subList(bound1, list.size()).toArray());
+		}
+
+		lines.add(new Object[] {selected.getDisplayName()});
+		this.drawStackText(lines, mouseX, mouseY, this.fontRendererObj);
+	}
 
 	public void click() {
 		mc.getSoundHandler().playSound(PositionedSoundRecord.func_147674_a(new ResourceLocation("gui.button.press"), 1.0F));

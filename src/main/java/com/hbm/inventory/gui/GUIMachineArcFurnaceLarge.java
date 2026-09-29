@@ -10,6 +10,8 @@ import org.lwjgl.opengl.GL11;
 import com.hbm.inventory.container.ContainerMachineArcFurnaceLarge;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.Mats.MaterialStack;
+import com.hbm.items.ModItems;
+import com.hbm.items.machine.ItemArcElectrode;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
@@ -21,6 +23,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.ResourceLocation;
@@ -45,6 +48,19 @@ public class GUIMachineArcFurnaceLarge extends GuiInfoContainer {
 		drawStackInfo(arc.liquids, x, y, 152, 36);
 		
 		this.drawElectricityInfo(this, x, y, guiLeft + 8, guiTop + 36, 7, 70, arc.getPower(), arc.getMaxPower());
+
+		// electrode slots
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(0), x, y)) this.drawStackPreview(getElectrodes(), x, y);
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(1), x, y)) this.drawStackPreview(getElectrodes(), x, y);
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(2), x, y)) this.drawStackPreview(getElectrodes(), x, y);
+	}
+
+	private static List<ItemStack> getElectrodes() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		for(ItemArcElectrode.EnumElectrodeType type : ItemArcElectrode.EnumElectrodeType.values()) {
+			list.add(new ItemStack(ModItems.arc_electrode, 1, type.ordinal()));
+		}
+		return list;
 	}
 	
 	@Override

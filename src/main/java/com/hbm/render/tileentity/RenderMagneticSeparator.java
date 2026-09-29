@@ -106,7 +106,7 @@ public class RenderMagneticSeparator extends TileEntitySpecialRenderer implement
 	public IItemRenderer getRenderer() {
 		return new ItemRenderBase() {
 			public void renderInventory() {
-				GL11.glTranslated(0, -2.5, 0);
+				GL11.glTranslated(0, -1.5, 0);
 				GL11.glScaled(2.5, 2.5, 2.5);
 			}
 			public void renderCommon() {

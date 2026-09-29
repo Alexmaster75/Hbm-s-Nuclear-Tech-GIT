@@ -59,7 +59,7 @@ public class RenderMedicineSynthesizer extends TileEntitySpecialRenderer impleme
 	public IItemRenderer getRenderer() {
 		return new ItemRenderBase() {
 			public void renderInventory() {
-				GL11.glTranslated(0, -2.5, 0);
+				GL11.glTranslated(0, -3.5, 0);
 				GL11.glScaled(5.25, 5.25, 5.25);
 			}
 			public void renderCommon() {

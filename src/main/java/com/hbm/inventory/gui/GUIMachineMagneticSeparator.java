@@ -9,6 +9,7 @@ import com.hbm.inventory.container.ContainerMachineMagneticSeparator;
 import com.hbm.inventory.gui.element.GUIElements;
 import com.hbm.inventory.recipes.MagneticSeparatorRecipes;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
+import com.hbm.items.ModItems;
 import com.hbm.items.machine.ItemMagneticDisc;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineMagneticSeparator;
@@ -51,6 +52,19 @@ public class GUIMachineMagneticSeparator extends GuiInfoContainer {
 				this.drawCreativeTabHoveringText(EnumChatFormatting.YELLOW + I18nUtil.resolveKey("gui.recipe.setRecipe"), mouseX, mouseY);
 			}
 		}
+
+		// magnetic disc
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(2), mouseX, mouseY)) {
+			this.drawStackPreview(getDiscs(), mouseX, mouseY);
+		}
+	}
+
+	private static List<ItemStack> getDiscs() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		for(ItemMagneticDisc.EnumMagneticDisc type : ItemMagneticDisc.EnumMagneticDisc.values()) {
+			list.add(new ItemStack(ModItems.magnetic_disc, 1, type.ordinal()));
+		}
+		return list;
 	}
 
 	@Override

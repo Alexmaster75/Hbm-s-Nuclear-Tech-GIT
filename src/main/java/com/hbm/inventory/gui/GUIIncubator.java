@@ -1,15 +1,24 @@
 package com.hbm.inventory.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerIncubator;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.ItemVial;
+import com.hbm.items.ModItems;
+import com.hbm.items.tool.ItemMedicalSyringe;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityIncubator;
 import com.hbm.util.i18n.I18nUtil;
 
+import api.hbm.fluidmk2.IFillableItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class GUIIncubator extends GuiInfoContainer {
@@ -38,6 +47,25 @@ public class GUIIncubator extends GuiInfoContainer {
 		if(incubator.processTime > 0) {
 			this.drawCustomInfoStat(x, y, guiLeft + 72, guiTop + 35, 31, 18, x, y, I18nUtil.resolveKey("gui.incubator.time", formatTime(incubator.processTime - incubator.progress)));
 		}
+
+		// vials and syringes
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(0), x, y)) this.drawStackPreview(getInputs(), x, y);
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(1), x, y)) this.drawStackPreview(getInputs(), x, y);
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(2), x, y)) this.drawStackPreview(getInputs(), x, y);
+	}
+
+	private static List<ItemStack> getInputs() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+
+		ItemStack vial = new ItemStack(ModItems.vial);
+		IFillableItem.setFluidFill(vial, Fluids.HUMAN_BLOOD, (short) ItemVial.MAX_FLUID);
+		list.add(vial);
+
+		ItemStack syringe = new ItemStack(ModItems.medical_syringe);
+		IFillableItem.setFluidFill(syringe, Fluids.HUMAN_BLOOD, (short) ItemMedicalSyringe.MAX_DOSE);
+		list.add(syringe);
+
+		return list;
 	}
 
 	private static String formatTime(int ticks) {

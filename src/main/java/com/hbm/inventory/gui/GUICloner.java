@@ -12,6 +12,7 @@ import com.hbm.inventory.container.ContainerCloner;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
 import com.hbm.inventory.gui.element.GUIElements;
+import com.hbm.items.ModItems;
 import com.hbm.items.special.ItemHumanPart;
 import com.hbm.items.special.ItemHumanPart.EnumBodyStat;
 import com.hbm.items.special.ItemHumanPart.EnumPartTrait;
@@ -25,6 +26,7 @@ import com.hbm.tileentity.machine.TileEntityCloner;
 import com.hbm.util.i18n.I18nUtil;
 import com.mojang.authlib.GameProfile;
 
+import api.hbm.fluidmk2.IFillableItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.entity.AbstractClientPlayer;
@@ -102,6 +104,17 @@ public class GUICloner extends GuiInfoContainer {
 		super.drawScreen(mouseX, mouseY, interp);
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 188, guiTop + 19, 16, 34, cloner.getPower(), cloner.getMaxPower());
 		cloner.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 188, guiTop + 89, 16, 35);
+
+		// donor syringe
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(0), mouseX, mouseY)) this.drawStackPreview(getSyringes(), mouseX, mouseY);
+	}
+
+	private static List<ItemStack> getSyringes() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		ItemStack syringe = new ItemStack(ModItems.medical_syringe);
+		IFillableItem.setFluidFill(syringe, Fluids.HUMAN_BLOOD, (short) ItemMedicalSyringe.MAX_DOSE);
+		list.add(syringe);
+		return list;
 	}
 
 	@Override

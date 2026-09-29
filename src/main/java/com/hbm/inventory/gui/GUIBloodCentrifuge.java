@@ -1,13 +1,21 @@
 package com.hbm.inventory.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerBloodCentrifuge;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.ModItems;
+import com.hbm.items.tool.ItemMedicalSyringe;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityBloodCentrifuge;
 
+import api.hbm.fluidmk2.IFillableItem;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 public class GUIBloodCentrifuge extends GuiInfoContainer {
@@ -29,6 +37,18 @@ public class GUIBloodCentrifuge extends GuiInfoContainer {
 
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 8, guiTop + 17, 16, 34, centrifuge.power, centrifuge.maxPower);
 		centrifuge.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 62, guiTop + 17, 8, 52);
+
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(0), mouseX, mouseY)) {
+			this.drawStackPreview(getBloodInputs(), mouseX, mouseY);
+		}
+	}
+
+	private static List<ItemStack> getBloodInputs() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		ItemStack syringe = new ItemStack(ModItems.medical_syringe);
+		IFillableItem.setFluidFill(syringe, Fluids.HUMAN_BLOOD, (short) ItemMedicalSyringe.MAX_DOSE);
+		list.add(syringe);
+		return list;
 	}
 
 	@Override

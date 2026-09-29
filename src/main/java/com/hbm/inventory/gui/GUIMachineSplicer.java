@@ -1,10 +1,14 @@
 package com.hbm.inventory.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.handler.contagion.GenomeSample;
 import com.hbm.inventory.container.ContainerMachineSplicer;
 import com.hbm.inventory.gui.element.GUIElements;
+import com.hbm.items.ModItems;
 import com.hbm.items.tool.ItemFloppyDisk;
 import com.hbm.lib.RefStrings;
 import com.hbm.tileentity.machine.TileEntityMachineSplicer;
@@ -52,6 +56,29 @@ public class GUIMachineSplicer extends GuiInfoContainer {
 			this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 6, guiTop + 115, 79, 10, mouseX, mouseY,
 					EnumChatFormatting.RED + I18nUtil.resolveKey("gui.splicer.required"), missing);
 		}
+
+		// genome sample, floppy disk and pharmaceutical computing unit
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(0), mouseX, mouseY)) this.drawStackPreview(getGenomeSamples(), mouseX, mouseY);
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(1), mouseX, mouseY)) this.drawStackPreview(getFloppies(), mouseX, mouseY);
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(2), mouseX, mouseY)) this.drawStackPreview(getPharmaUnits(), mouseX, mouseY);
+	}
+
+	private static List<ItemStack> getGenomeSamples() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		list.add(GenomeSample.make("severity", "01234567"));
+		return list;
+	}
+
+	private static List<ItemStack> getFloppies() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		list.add(new ItemStack(ModItems.floppy_disk));
+		return list;
+	}
+
+	private static List<ItemStack> getPharmaUnits() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		list.add(new ItemStack(ModItems.pharma_computing_unit));
+		return list;
 	}
 
 	@Override

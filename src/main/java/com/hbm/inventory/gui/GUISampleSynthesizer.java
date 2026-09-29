@@ -1,16 +1,24 @@
 package com.hbm.inventory.gui;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.lwjgl.opengl.GL11;
 
 import com.hbm.inventory.container.ContainerSampleSynthesizer;
+import com.hbm.inventory.fluid.Fluids;
+import com.hbm.items.ItemVial;
+import com.hbm.items.ModItems;
 import com.hbm.lib.RefStrings;
 import com.hbm.packet.PacketDispatcher;
 import com.hbm.packet.toserver.NBTControlPacket;
 import com.hbm.tileentity.machine.TileEntitySampleSynthesizer;
 
+import api.hbm.fluidmk2.IFillableItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.InventoryPlayer;
+import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
@@ -36,6 +44,25 @@ public class GUISampleSynthesizer extends GuiInfoContainer {
 
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 49, guiTop + 17, 18, 18, mouseX, mouseY, new String[] {"Clone disk"});
 		this.drawCustomInfoStat(mouseX, mouseY, guiLeft + 38, guiTop + 61, 18, 18, mouseX, mouseY, new String[] {"Scan vial"});
+
+		// source disk, blood sample and target disk
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(0), mouseX, mouseY)) this.drawStackPreview(getDisks(), mouseX, mouseY);
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(1), mouseX, mouseY)) this.drawStackPreview(getSamples(), mouseX, mouseY);
+		if(this.isPreviewSlot(this.inventorySlots.getSlot(2), mouseX, mouseY)) this.drawStackPreview(getDisks(), mouseX, mouseY);
+	}
+
+	private static List<ItemStack> getDisks() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		list.add(new ItemStack(ModItems.floppy_disk));
+		return list;
+	}
+
+	private static List<ItemStack> getSamples() {
+		List<ItemStack> list = new ArrayList<ItemStack>();
+		ItemStack vial = new ItemStack(ModItems.vial);
+		IFillableItem.setFluidFill(vial, Fluids.HUMAN_BLOOD, (short) ItemVial.MAX_FLUID);
+		list.add(vial);
+		return list;
 	}
 
 	@Override
