@@ -110,6 +110,8 @@ public abstract class SerializableRecipe {
 		recipeHandlers.add(new CustomMachineRecipes());
 		//AFTER MatDistribution
 		recipeHandlers.add(new ArcFurnaceRecipes());
+
+		recipeHandlers.add(GrowthChamberRecipes.INSTANCE);
 	}
 
 	public static void initialize() {

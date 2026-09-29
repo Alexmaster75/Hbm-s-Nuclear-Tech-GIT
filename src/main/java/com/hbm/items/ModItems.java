@@ -481,6 +481,8 @@ public class ModItems {
 	public static Item divine_shard;
 	public static Item symbol_guilt;
 	public static Item nostalgic_gears;
+	public static Item salt;
+	public static Item sodium_carbonate;
 
 	public static Item scuttertail;
 	public static Item saltleaf;
@@ -584,6 +586,7 @@ public class ModItems {
 	//but unforutnatley something went so chopped chin wrong
 	//now i cant do anything but sing this stupid song!!!!!!!!!!
 	public static Item crystal_zinc;
+	public static Item crystal_salt;
 
 	public static Item nickel_salts;
 
@@ -2514,6 +2517,8 @@ public class ModItems {
 		divine_shard = new Item().setUnlocalizedName("divine_shard").setCreativeTab(null).setTextureName(RefStrings.MODID + ":divine_shard");
 		symbol_guilt = new ItemSymbol();
 		nostalgic_gears = new Item().setUnlocalizedName("nostalgic_gears").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":ergographia");
+		salt = new Item().setUnlocalizedName("salt").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":salt");
+		sodium_carbonate = new Item().setUnlocalizedName("sodium_carbonate").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":sodium_carbonate");
 
 		undefined = new ItemCustomLore().setUnlocalizedName("undefined").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":undefined");
 
@@ -2861,6 +2866,7 @@ public class ModItems {
 		crystal_nickel = new Item().setUnlocalizedName("crystal_nickel").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_nickel");
 		crystal_niobium = new Item().setUnlocalizedName("crystal_niobium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_niobium");
 		crystal_zinc = new Item().setUnlocalizedName("crystal_zinc").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_zinc");
+		crystal_salt = new Item().setUnlocalizedName("crystal_salt").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_salt");
 
 		powder_lead = new Item().setUnlocalizedName("powder_lead").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_lead");
 		powder_tantalium = new ItemCustomLore().setUnlocalizedName("powder_tantalium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_tantalium");
@@ -5512,6 +5518,7 @@ public class ModItems {
 		GameRegistry.registerItem(crystal_nickel, crystal_nickel.getUnlocalizedName()); //l like nickel, i dont care, fuck off
 		GameRegistry.registerItem(crystal_niobium, crystal_niobium.getUnlocalizedName()); // the true path to enlightenment is ignoring the little green circle
 		GameRegistry.registerItem(crystal_zinc, crystal_zinc.getUnlocalizedName()); // the true path to enlightenment is ignoring the little green circle
+		GameRegistry.registerItem(crystal_salt, crystal_salt.getUnlocalizedName());
 
 		//Fragments
 		GameRegistry.registerItem(fragment_neodymium, fragment_neodymium.getUnlocalizedName());
@@ -5716,6 +5723,8 @@ public class ModItems {
 		GameRegistry.registerItem(divine_shard, divine_shard.getUnlocalizedName());
 		GameRegistry.registerItem(symbol_guilt, symbol_guilt.getUnlocalizedName());
 		GameRegistry.registerItem(nostalgic_gears, nostalgic_gears.getUnlocalizedName());
+		GameRegistry.registerItem(salt, salt.getUnlocalizedName());
+		GameRegistry.registerItem(sodium_carbonate, sodium_carbonate.getUnlocalizedName());
 
 		//Plant Products
 		GameRegistry.registerItem(plant_item, plant_item.getUnlocalizedName());

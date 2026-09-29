@@ -22,7 +22,7 @@ import net.minecraftforge.fluids.FluidTank;
 
 public abstract class TileEntityMachineBase extends TileEntityLoadedBase implements ISidedInventory {
 
-	public ItemStack slots[];
+	public ItemStack[] slots;
 
 	private String customName;
 

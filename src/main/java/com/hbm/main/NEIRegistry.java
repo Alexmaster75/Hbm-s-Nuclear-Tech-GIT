@@ -63,6 +63,7 @@ public class NEIRegistry {
 		handlers.add(new BedrockDrillHandler());
 		handlers.add(new WaterTableHandler());
 		handlers.add(new OilExtractionHandler());
+		handlers.add(new GrowthChamberHandler());
 
 		// tam69 iq
 		handlers.add(new SludgeProcessorRecipeHandler());

@@ -192,6 +192,16 @@ public class ModBlocks {
 	public static Block ore_tekto;
 	public static Block ore_tekto_empty;
 
+	// Budding Blocks
+	public static Block budding_salt;
+
+	// Buds
+	public static Block salt_cluster;
+	public static Block salt_bud_large;
+	public static Block salt_bud_medium;
+	public static Block salt_bud_small;
+
+	public static Block block_salt;
 	public static Block block_thorium;
 	public static Block block_thorium_fuel;
 	public static Block block_uranium;
@@ -1123,6 +1133,7 @@ public class ModBlocks {
 	public static Block machine_radiator;
 
 	public static Block machine_electrolyser;
+	public static Block machine_growth_chamber;
 
 	public static Block machine_excavator;
 	public static Block machine_ore_slopper;
@@ -1611,7 +1622,18 @@ public class ModBlocks {
 
 		ore_tikite = new BlockDragonProof(Material.rock).setBlockName("ore_tikite").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_tikite_alt");
 
+		// Budding Blocks
+		//todo: Add to Moon worldgen
+		budding_salt = new BlockBuddingSalt(Material.glass).setBlockName("budding_salt").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setResistance(5f).setStepSound(Block.soundTypeGlass);
+
+		// Buds
+		salt_cluster = new BlockBudSalt(Material.glass, 3, 0.3125f, 0.4375f).setBlockName("salt_cluster").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
+		salt_bud_large = new BlockBudSalt(Material.glass, 2, 0.3125f, 0.3125f).setNextStage(salt_cluster).setBlockName("salt_bud_large").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
+		salt_bud_medium = new BlockBudSalt(Material.glass, 1, 0.3125f, 0.25f).setNextStage(salt_bud_large).setBlockName("salt_bud_medium").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
+		salt_bud_small = new BlockBudSalt(Material.glass, 0, 0.25f, 0.1875f).setNextStage(salt_bud_medium).setBlockName("salt_bud_small").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
+
 		// the block ID limit is weeping
+		block_salt = new BlockBase(Material.glass).setBlockName("block_salt").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
 		block_uranium = new BlockHazard().makeBeaconable().setBlockName("block_uranium").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeMetal).setHardness(5.0F).setResistance(50.0F).setBlockTextureName(RefStrings.MODID + ":block_uranium");
 		block_u233 = new BlockHazard().makeBeaconable().setDisplayEffect(ExtDisplayEffect.RADFOG).setBlockName("block_u233").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeMetal).setHardness(5.0F).setResistance(50.0F).setBlockTextureName(RefStrings.MODID + ":block_u233");
 		block_u235 = new BlockHazard().makeBeaconable().setDisplayEffect(ExtDisplayEffect.RADFOG).setBlockName("block_u235").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeMetal).setHardness(5.0F).setResistance(50.0F).setBlockTextureName(RefStrings.MODID + ":block_u235");
@@ -2667,6 +2689,7 @@ public class ModBlocks {
 		machine_compressor_compact = new MachineCompressorCompact().setBlockName("machine_compressor_compact").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
 		machine_electrolyser = new MachineElectrolyser().setBlockName("machine_electrolyser").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
+		machine_growth_chamber = new MachineGrowthChamber().setBlockName("machine_growth_chamber").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab).setBlockTextureName(RefStrings.MODID + ":block_steel_machine");
 
 		machine_autocrafter = new MachineAutocrafter().setBlockName("machine_autocrafter").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
 		machine_funnel = new MachineFunnel().setBlockName("machine_funnel").setHardness(10.0F).setResistance(20.0F).setCreativeTab(MainRegistry.machineTab);
@@ -2978,6 +3001,15 @@ public class ModBlocks {
 		//End Ores
 		GameRegistry.registerBlock(ore_tikite, ore_tikite.getUnlocalizedName());
 
+		//Budding Blocks
+		GameRegistry.registerBlock(budding_salt, budding_salt.getUnlocalizedName());
+
+		//Buds
+		GameRegistry.registerBlock(salt_cluster, salt_cluster.getUnlocalizedName());
+		GameRegistry.registerBlock(salt_bud_large, salt_bud_large.getUnlocalizedName());
+		GameRegistry.registerBlock(salt_bud_medium, salt_bud_medium.getUnlocalizedName());
+		GameRegistry.registerBlock(salt_bud_small, salt_bud_small.getUnlocalizedName());
+
 		//Bedrock ore
 		register(ore_bedrock);
 		register(ore_volcano);
@@ -3017,6 +3049,7 @@ public class ModBlocks {
 		//GameRegistry.registerBlock(stone_deep_cobble, ItemBlockBase.class, stone_deep_cobble.getUnlocalizedName());
 
 		//Blocks
+		GameRegistry.registerBlock(block_salt, block_salt.getUnlocalizedName());
 		GameRegistry.registerBlock(block_uranium, block_uranium.getUnlocalizedName());
 		GameRegistry.registerBlock(block_u233, block_u233.getUnlocalizedName());
 		GameRegistry.registerBlock(block_u235, block_u235.getUnlocalizedName());
@@ -3927,6 +3960,7 @@ public class ModBlocks {
 		register(machine_compressor);
 		register(machine_compressor_compact);
 		GameRegistry.registerBlock(machine_electrolyser, machine_electrolyser.getUnlocalizedName());
+		register(machine_growth_chamber);
 		GameRegistry.registerBlock(machine_waste_drum, machine_waste_drum.getUnlocalizedName());
 		GameRegistry.registerBlock(machine_storage_drum, machine_storage_drum.getUnlocalizedName());
 		GameRegistry.registerBlock(machine_shredder, machine_shredder.getUnlocalizedName());

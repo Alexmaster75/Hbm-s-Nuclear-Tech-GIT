@@ -500,6 +500,9 @@ public class ResourceManager {
 	public static final IModelCustom genome_sequencer = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/machines/genome_sequencer.obj"));
 	public static final IModelCustom dial_a_drug = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/dial_a_drug.obj"));
 
+	// GrowthChamber
+	public static final IModelCustom growth_chamber = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/growth_chamber.obj")).noSmooth().asVBO();
+
 	////Textures TEs
 
 	public static final ResourceLocation universal = new ResourceLocation(RefStrings.MODID, "textures/models/TheGadget3_.png");
@@ -1799,6 +1802,8 @@ public class ResourceManager {
 	public static final ResourceLocation mp_w_15_balefire_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/warheads/mp_w_15_balefire.png");
 	public static final ResourceLocation mp_w_15_turbine_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/warheads/mp_w_15_turbine.png");
 	public static final ResourceLocation mp_w_fairing_tex = new ResourceLocation(RefStrings.MODID, "textures/models/missile_parts/warheads/mp_w_fairing.png");
+
+	public static final ResourceLocation growth_chamber_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/growth_chamber.png");
 
 	//Carts
 	public static final ResourceLocation cart_metal = new ResourceLocation(RefStrings.MODID, "textures/entity/cart_metal.png");

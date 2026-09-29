@@ -120,6 +120,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.model.ModelChicken;
 import net.minecraft.client.particle.EntityCloudFX;
 import net.minecraft.client.particle.*;
+import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderMinecart;
 import net.minecraft.client.renderer.entity.RenderSnowball;
 import net.minecraft.client.renderer.texture.TextureManager;
@@ -537,6 +538,8 @@ public class ClientProxy extends ServerProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityOrrery.class, new RenderOrrery());
 		//NBTStructure
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityWandStructure.class, new RenderWandStructure());
+		//Growth Chamber
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineGrowthChamber.class, new RenderGrowthChamber());
 	}
 
 	@Override
@@ -941,6 +944,8 @@ public class ClientProxy extends ServerProxy {
 		RenderingRegistry.registerBlockHandler(new RenderPribris());
 
 		RenderingRegistry.registerBlockHandler(new RenderBlockWand());
+
+		RenderingRegistry.registerBlockHandler(new RenderBud());
 	}
 
 	@Override

@@ -288,6 +288,7 @@ public class TileMappings {
 		put(TileEntityWandLogic.class, "tileentity_wand_spawner");
 		put(TileEntityWandTandem.class, "tileentity_wand_tandem");
 		put(TileEntityWandStructure.class, "tileentity_wand_structure");
+		put(TileEntityMachineGrowthChamber.class, "tileentity_growth_chamber");
 
 		putNetwork();
 		putBombs();

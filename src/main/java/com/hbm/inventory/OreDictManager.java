@@ -43,6 +43,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
+import org.lwjgl.Sys;
 
 //the more i optimize this, the more it starts looking like gregtech
 @NotableComments
@@ -294,6 +295,7 @@ public class OreDictManager {
 	public static final DictFrame PENTLANDITE = new DictFrame("Pentlandite");
 	public static final DictFrame HOT_SAND = new DictFrame("HotSand");
 	public static final DictFrame LIQUID_GLASS = new DictFrame("LiquidGlass");
+	public static final DictFrame SALT = new DictFrame("Salt");
 
 	/*
 	 * HAZARDS, MISC
@@ -488,6 +490,7 @@ public class OreDictManager {
 		BAKELITE															.ingot(ingot_bakelite)												.dust(powder_bakelite)											.block(block_bakelite);
 		LATEX									.gem(ball_resin)			.ingot(ingot_biorubber);
 		RUBBER																.ingot(ingot_rubber)												.dust(powder_rubber)											.block(block_rubber);
+		SALT		.crystal(crystal_salt)																										.dust(salt);
 		//PET																	.ingot(ingot_pet);
 		PC																	.ingot(ingot_pc);
 		PVC																	.ingot(ingot_pvc)													.dust(powder_pvc);
