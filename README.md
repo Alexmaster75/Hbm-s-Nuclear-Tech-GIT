@@ -22,7 +22,7 @@ The fork is also a mix of serious and nonserious content with joke items scatter
 "i have the memory of a goldfish"
 - NotMega iq
 
-Join to see progress at https://discord.gg/dwpsq9q989 
+Join to see progress at [https://discord.gg/dwpsq9q989 ](https://discord.gg/C4DYg2NUMe)
 You can also see iris-lgtm's other projects/games there.
 
 ## NOTE ON PRs:
@@ -33,17 +33,7 @@ IF another fork dev, such as Mellow, or Bob himself wants one of my features, it
 
 
 
-**This is for 1.7.10!** For 1.12, check out these projects:
-
-* NTM Community Edition (WarFactory): https://github.com/MisterNorwood/Hbm-s-Nuclear-Tech-CE/releases
-* NTM Extended Edition (Alcater): https://github.com/Alcatergit/Hbm-s-Nuclear-Tech-GIT/releases
-* NTM Reloaded: https://github.com/TheOriginalGolem/Hbm-s-Nuclear-Tech-GIT/releases
-
-For further ports, try:
-
-* NTM Remake on 1.18.2: https://codeberg.org/MartinTheDragon/Nuclear-Tech-Mod-Remake/releases
-* HBM Modernized on 1.20.1: https://github.com/Raptor324/HBM-Modernized/releases
-* NTM Neo on 1.21.1: https://github.com/ohiomannnn/HBMsNTM-NEO-EDITION/releases
+**This is for 1.7.10!** If you play other versions, **Fuck you!** I aint porting anything! 
 
 ## Downloading pre-compiled versions from GitHub
 
