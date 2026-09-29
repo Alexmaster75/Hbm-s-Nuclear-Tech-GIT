@@ -28,6 +28,7 @@ import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums.EnumAshType;
 import com.hbm.items.ItemEnums.EnumChunkType;
+import com.hbm.items.ItemEnums.EnumCokeType;
 import com.hbm.items.ItemEnums.EnumPlantType;
 import com.hbm.items.ItemEnums.EnumTarType;
 import com.hbm.items.ModItems;
@@ -98,6 +99,7 @@ public class CrystallizerRecipes extends SerializableRecipe {
 		registerRecipe(new OreDictStack(MIN.ore()),		new CrystallizerRecipe(ModItems.crystal_mineral, baseTime).prod(0.05F));
 
 		registerRecipe(new ComparableStack(ModItems.powder_calcium),	new CrystallizerRecipe(new ItemStack(ModItems.powder_cement, 8), utilityTime).prod(0.1F), new FluidStack(Fluids.REDMUD, 75));
+		registerRecipe(new ComparableStack(DictFrame.fromOne(ModItems.powder_coke, EnumCokeType.HAEMACOKE)),	new CrystallizerRecipe(ModItems.powder_flux, baseTime).prod(0.1F), new FluidStack(Fluids.COLLOID, 500));
 		registerRecipe(new OreDictStack(MALACHITE.ingot()),				new CrystallizerRecipe(ItemScraps.create(new MaterialStack(Mats.MAT_COPPER, MaterialShapes.INGOT.q(1))), 300).prod(0.1F), new FluidStack(Fluids.SULFURIC_ACID, 250));
 
 		registerRecipe(new OreDictStack("oreRareEarth"),	new CrystallizerRecipe(ModItems.crystal_rare, baseTime).prod(0.05F), sulfur);

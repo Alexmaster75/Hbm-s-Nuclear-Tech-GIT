@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.hbm.blocks.ModBlocks;
+import com.hbm.blocks.BlockEnums.EnumStoneType;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.OreDictManager.DictFrame;
@@ -21,6 +22,7 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
+import com.hbm.items.ItemEnums.EnumCokeType;
 import com.hbm.items.ItemEnums.EnumFuelAdditive;
 import com.hbm.items.ItemGenericPart.EnumPartType;
 import com.hbm.items.ModItems;
@@ -114,6 +116,11 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 		this.register(new GenericRecipe("chem.reoil").setupNamed(40, 100).setIcon(ModItems.canister_full, Fluids.RECLAIMED.getID())
 				.inputFluids(new FluidStack(Fluids.SMEAR, 1_000))
 				.outputFluids(new FluidStack(Fluids.RECLAIMED, 800)));
+
+		this.register(new GenericRecipe("chem.haematite").setup(200, 1_000)
+				.inputItems(new ComparableStack(ModItems.powder_coke, 4, EnumCokeType.HAEMACOKE), new ComparableStack(Blocks.cobblestone, 1))
+				.inputFluids(new FluidStack(Fluids.COLLOID, 1_000))
+				.outputItems(DictFrame.fromOne(ModBlocks.stone_resource, EnumStoneType.HEMATITE)));
 
 		this.register(new GenericRecipe("chem.gasoline").setupNamed(40, 100).setIcon(ModItems.canister_full, Fluids.GASOLINE.getID())
 				.inputFluids(new FluidStack(Fluids.NAPHTHA, 1000))

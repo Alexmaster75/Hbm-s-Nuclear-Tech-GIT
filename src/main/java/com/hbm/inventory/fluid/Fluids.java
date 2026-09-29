@@ -152,6 +152,7 @@ public class Fluids {
 	public static FluidType AMMONIA;
 	public static FluidType HYDRAZINE;
 	public static FluidType BLOODGAS;
+	public static FluidType BLOOD_VAPORS;
 	private static FluidType BLOOD_HOT;
 	public static FluidType SOLVENT; //oranic solvent in fact
 	public static FluidType HCL;
@@ -194,6 +195,7 @@ public class Fluids {
 	public static FluidType DIESEL_REFORM;
 	public static FluidType DIESEL_CRACK_REFORM;
 	public static FluidType KEROSENE_REFORM;
+	public static FluidType LUNG_FUEL;
 	public static FluidType REFORMGAS;			//MAPD: propyne, propadiene
 	public static FluidType COLLOID;
 	public static FluidType PHOSGENE;
@@ -662,7 +664,7 @@ public class Fluids {
 		MUSKY_PHEROMONE =	new FluidType("MUSKY_PHEROMONE", 	0x7B5EA7, 1, 0, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x7B5EA7)).addTraits(LIQUID, new FT_Pheromone(3));
 		CURDLING_BLOOD_HOT = new FluidType("CURDLING_BLOOD_HOT", 0x1A0000, 1, 0, 0, EnumSymbol.NONE).addContainers(new CD_Gastank(0x1A0000, 0xFFFFFF)).addTraits(GASEOUS);
 		CURDLING_BLOOD =	new FluidType("CURDLING_BLOOD",		0x3A0000, 1, 0, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x3A0000)).addTraits(LIQUID, new FT_Heatable().setEff(HeatingType.PWR, 1.0D).addStep(400, 1, CURDLING_BLOOD_HOT, 1), new FT_PWRModerator(3.0D));
-		SATANS_BLOOD =		new FluidType("SATANS_BLOOD",		0x6B0000, 2, 0, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x6B0000)).addTraits(LIQUID, new FT_Heatable().setEff(HeatingType.BOILER, 1.0D).addStep(120, 1, CURDLING_BLOOD, 1), new FT_Hellish());
+		SATANS_BLOOD =		new FluidType("SATANS_BLOOD",		0x6B0000, 2, 0, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x6B0000)).addTraits(LIQUID, new FT_Hellish());
 		WORMWOOD =			new FluidType("WORMWOOD",			0x223322, 3, 0, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x223322)).addTraits(LIQUID, new FT_Toxin().addEntry(new FT_Toxin.ToxinDirectDamage(ModDamageSource.acid, 1F, 20, HazardClass.GAS_LUNG, false)), new FT_Hellish());
 		BRIMSTONE =			new FluidType("BRIMSTONE",			0xD4B000, 2, 3, 1, EnumSymbol.NONE).addContainers(new CD_Canister(0xD4B000)).addTraits(LIQUID, new FT_Combustible(FuelGrade.HIGH, 600_000), new FT_Hellish());
 		VERDIGRIS =			new FluidType("VERDIGRIS",			0x3A9E6E, 2, 0, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0x3A9E6E)).addTraits(LIQUID);
@@ -730,6 +732,9 @@ public class Fluids {
 		PUTRYIN = new FluidType("PUTRYIN", 0x7A8C3A, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS);
 		GRAY_GOO = new FluidType("GRAY_GOO", 0x8C8F94, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS);
 		DORMANT_GRAY_GOO = new FluidType("DORMANT_GRAY_GOO", 0x4E5054, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS);
+
+		BLOOD_VAPORS = new FluidType("BLOOD_VAPORS", 0x8A0A0A, 1, 1, 0, EnumSymbol.NONE).addContainers(new CD_Gastank(0x8A0A0A, 0xE0C0C0)).addTraits(GASEOUS, new FT_Flammable(25_000));
+		LUNG_FUEL = new FluidType("LUNG_FUEL", 0xB01B1B, 1, 2, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0xFF2C2C)).addTraits(LIQUID, P_FUEL, new FT_Rocket(321, 1_564_000));
 		CAUSTIC_SODA = new FluidType("CAUSTIC_SODA", 0xE4ECEE, 3, 0, 1, EnumSymbol.ACID).addTraits(LIQUID, VISCOUS, new FT_Corrosive(45));
 		SLAKED_LIME = new FluidType("SLAKED_LIME", 0xE0DDD0, 1, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS);
 
@@ -777,6 +782,7 @@ public class Fluids {
 		//blood
 		metaOrder.add(BLOOD);
 		metaOrder.add(BLOODGAS);
+		metaOrder.add(BLOOD_VAPORS);
 		metaOrder.add(BLOOD_HOT);
 		metaOrder.add(SCUTTERBLOOD);
 		metaOrder.add(SODIUM);
@@ -843,6 +849,7 @@ public class Fluids {
 		metaOrder.add(DIESEL_CRACK_REFORM);
 		metaOrder.add(KEROSENE);
 		metaOrder.add(KEROSENE_REFORM);
+		metaOrder.add(LUNG_FUEL);
 		metaOrder.add(PETROIL);
 		metaOrder.add(PETROIL_LEADED);
 		metaOrder.add(GASOLINE);
@@ -1241,6 +1248,7 @@ public class Fluids {
 		registerCalculatedFuel(DIESEL_REFORM, DIESEL.getTrait(FT_Flammable.class).getHeatEnergy() * complexityReform, 2.5D, FuelGrade.HIGH);
 		registerCalculatedFuel(DIESEL_CRACK_REFORM, DIESEL_CRACK.getTrait(FT_Flammable.class).getHeatEnergy() * complexityReform, 2.5D, FuelGrade.HIGH);
 		registerCalculatedFuel(KEROSENE_REFORM, KEROSENE.getTrait(FT_Flammable.class).getHeatEnergy() * complexityReform, 1.5D, FuelGrade.AERO);
+		registerCalculatedFuel(LUNG_FUEL, KEROSENE_REFORM.getTrait(FT_Flammable.class).getHeatEnergy(), 1.5D, FuelGrade.AERO); 
 		registerCalculatedFuel(NMASSTETRANOL, BALEFIRE.getTrait(FT_Flammable.class).getHeatEnergy() * 1000, 10.5, FuelGrade.HIGH); //0.8
 		registerCalculatedFuel(DICYANOACETYLENE, (baseline / 0.15 * flammabilityHigh * demandHigh * complexityRefinery * complexityCracking) + UNSATURATEDS.getTrait(FT_Flammable.class).getHeatEnergy(), 0, null);
 

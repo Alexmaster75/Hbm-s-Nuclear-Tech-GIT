@@ -28,5 +28,13 @@ public class HaemodialysisRecipes extends GenericRecipes<GenericRecipe> {
 		this.register(new GenericRecipe("haemodialysis.curdling").setup(200, 1_000)
 				.inputFluids(new FluidStack(Fluids.CURDLING_BLOOD, 1_000), new FluidStack(Fluids.HEPARIN, 250), new FluidStack(Fluids.DIALYSATE, 250))
 				.outputFluids(new FluidStack(Fluids.WORMWOOD, 3_000), new FluidStack(Fluids.MORNINGSTARS_FIRE, 1_000)));
+
+		this.register(new GenericRecipe("haemodialysis.satansblood").setup(200, 1_000)
+				.inputFluids(new FluidStack(Fluids.SATANS_BLOOD, 1_000), new FluidStack(Fluids.HEPARIN, 250), new FluidStack(Fluids.DIALYSATE, 250))
+				.outputFluids(new FluidStack(Fluids.CURDLING_BLOOD, 1_000), new FluidStack(Fluids.BLOOD_VAPORS, 100)));
+
+		this.register(new GenericRecipe("haemodialysis.lungfuel").setup(200, 1_000)
+				.inputFluids(new FluidStack(Fluids.BLOOD_VAPORS, 1_000), new FluidStack(Fluids.HEPARIN, 250), new FluidStack(Fluids.DIALYSATE, 250))
+				.outputFluids(new FluidStack(Fluids.LUNG_FUEL, 1_000), new FluidStack(Fluids.HAEMOGLOBIN, 500)));
 	}
 }

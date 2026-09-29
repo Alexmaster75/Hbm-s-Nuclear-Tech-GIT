@@ -274,6 +274,7 @@ public class OreDictManager {
 	public static final DictFrame PETCOKE = new DictFrame("PetCoke");
 	public static final DictFrame LIGCOKE = new DictFrame("LigniteCoke");
 	public static final DictFrame HEMPCOKE = new DictFrame("HempCoke");
+	public static final DictFrame HAEMACOKE = new DictFrame("Haemacoke");
 	public static final DictFrame CINNABAR = new DictFrame("Cinnabar");
 	public static final DictFrame BORAX = new DictFrame("Borax");
 	public static final DictFrame CHLOROCALCITE = new DictFrame("Chlorocalcite");
@@ -528,6 +529,7 @@ public class OreDictManager {
 		PETCOKE							.gem(fromOne(coke, EnumCokeType.PETROLEUM))		.dust(fromOne(powder_coke, EnumCokeType.PETROLEUM))	.block(fromOne(block_coke, EnumCokeType.PETROLEUM));
 		LIGCOKE							.gem(fromOne(coke, EnumCokeType.LIGNITE))		.dust(fromOne(powder_coke, EnumCokeType.LIGNITE))	.block(fromOne(block_coke, EnumCokeType.LIGNITE));
 		HEMPCOKE						.gem(fromOne(coke, EnumCokeType.HEMP))			.dust(fromOne(powder_coke, EnumCokeType.HEMP))		.block(fromOne(block_coke, EnumCokeType.HEMP));
+		HAEMACOKE						.gem(fromOne(coke, EnumCokeType.HAEMACOKE))		.dust(fromOne(powder_coke, EnumCokeType.HAEMACOKE))	.block(fromOne(block_coke, EnumCokeType.HAEMACOKE));
 		CINNABAR	.crystal(cinnebar)	.gem(cinnebar)																					.ore(ore_depth_cinnebar) .oreAll(ore_cinnebar);
 		BORAX																			.dust(powder_borax)								.ore(ore_depth_borax);
 		CHLOROCALCITE																	.dust(powder_chlorocalcite);

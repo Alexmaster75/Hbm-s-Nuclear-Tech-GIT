@@ -27,7 +27,7 @@ public class GUIMachineGrowthChamber extends GuiInfoContainer {
 		this.chamber = te;
 
 		this.xSize = 176;
-		this.ySize = 256;
+		this.ySize = 204;
 	}
 
 	@Override
@@ -57,7 +57,7 @@ public class GUIMachineGrowthChamber extends GuiInfoContainer {
 
 	@Override
 	protected void drawGuiContainerForegroundLayer(int i, int j) {
-		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, this.ySize - 148 + 2, 4210752);
+		this.fontRendererObj.drawString(I18n.format("container.inventory"), 8, 110, 4210752);
 	}
 
 	@Override
@@ -73,8 +73,8 @@ public class GUIMachineGrowthChamber extends GuiInfoContainer {
 		}
 
 		if(chamber.module.progress > 0) {
-			int j = (int) Math.ceil(70 * chamber.module.progress);
-			drawTexturedModalRect(guiLeft + 65, guiTop + 73, 201, 61 + (chamber.module.restrictedMode ? 16 : 0), j, 16);
+			int j = (int) Math.ceil(38 * chamber.module.progress);
+			drawTexturedModalRect(guiLeft + 66, guiTop + 37, 204, 0, j, 14);
 		}
 
 		GenericRecipe recipe = chamber.module.getRecipe();
@@ -101,6 +101,6 @@ public class GUIMachineGrowthChamber extends GuiInfoContainer {
 			GL11.glDisable(GL11.GL_BLEND);
 		}
 
-		chamber.tank.renderTank(guiLeft + 35, guiTop + 63, this.zLevel, 34, 16, 0);
+		chamber.tank.renderTank(guiLeft + 35, guiTop + 79, this.zLevel, 34, 16, 1);
 	}
 }
