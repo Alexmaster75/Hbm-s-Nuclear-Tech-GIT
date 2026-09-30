@@ -3,7 +3,6 @@ package com.hbm.inventory.gui;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.UUID;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -76,27 +75,12 @@ public class GUICloner extends GuiInfoContainer {
 	}
 
 	private void updateProfile() {
-		String uuid = null;
-		String name = null;
 		ItemStack syringe = cloner.slots[TileEntityCloner.SLOT_SYRINGE];
+		String key = syringe == null || !syringe.hasTagCompound() ? "" : syringe.stackTagCompound.getString(ItemMedicalSyringe.KEY_OWNER_UUID);
 
-		if(syringe != null && syringe.hasTagCompound()) {
-			if(syringe.stackTagCompound.hasKey(ItemMedicalSyringe.KEY_OWNER_UUID)) uuid = syringe.stackTagCompound.getString(ItemMedicalSyringe.KEY_OWNER_UUID);
-			if(syringe.stackTagCompound.hasKey(ItemMedicalSyringe.KEY_OWNER_NAME)) name = syringe.stackTagCompound.getString(ItemMedicalSyringe.KEY_OWNER_NAME);
-		}
-
-		String key = uuid + "/" + name;
 		if(key.equals(this.profileKey)) return;
 		this.profileKey = key;
-		this.profile = null;
-
-		if(uuid == null || uuid.isEmpty()) return;
-
-		try {
-			this.profile = new GameProfile(UUID.fromString(uuid), name == null || name.isEmpty() ? uuid : name);
-		} catch(IllegalArgumentException ex) {
-			this.profile = null;
-		}
+		this.profile = SkinCache.owner(syringe);
 	}
 
 	@Override
@@ -105,7 +89,6 @@ public class GUICloner extends GuiInfoContainer {
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 188, guiTop + 19, 16, 34, cloner.getPower(), cloner.getMaxPower());
 		cloner.tank.renderTankInfo(this, mouseX, mouseY, guiLeft + 188, guiTop + 89, 16, 35);
 
-		// donor syringe
 		if(this.isPreviewSlot(this.inventorySlots.getSlot(0), mouseX, mouseY)) this.drawStackPreview(getSyringes(), mouseX, mouseY);
 	}
 

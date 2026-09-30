@@ -3,6 +3,7 @@ package com.hbm.tileentity.machine;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.hbm.blocks.BlockDummyable;
 import com.hbm.entity.mob.EntityHusk;
 import com.hbm.inventory.container.ContainerCloner;
 import com.hbm.inventory.fluid.FluidType;
@@ -18,7 +19,9 @@ import com.hbm.main.MainRegistry;
 import com.hbm.main.NTMSounds;
 import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
+import com.hbm.handler.MultiblockHandlerXR;
 import com.hbm.tileentity.TileEntityMachineBase;
+import com.hbm.util.fauxpointtwelve.DirPos;
 
 import api.hbm.energymk2.IBatteryItem;
 import api.hbm.energymk2.IEnergyReceiverMK2;
@@ -30,6 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -47,6 +51,13 @@ public class TileEntityCloner extends TileEntityMachineBase implements IEnergyRe
 
 	public boolean active = false;
 	public int progress;
+
+	public static final int SPAWN_DELAY = 25;
+	public int spawnDelay = 0;
+	public EntityHusk pendingClone;
+
+	public float prevDoor = 0F;
+	public float door = 0F;
 
 	public FluidTank tank;
 
@@ -78,10 +89,48 @@ public class TileEntityCloner extends TileEntityMachineBase implements IEnergyRe
 		boolean wanted = this.active && this.getSampleUUID() != null && this.getLoadedParts() == ALL_PARTS;
 		if(wanted) this.power = Library.chargeTEFromItems(slots, SLOT_BATTERY, power, maxPower);
 
+		this.prevDoor = this.door;
+
+		if(this.spawnDelay > 0 && this.door < 1F) this.door = Math.min(1F, this.door + 0.05F);
+		if(this.spawnDelay <= 0 && this.door > 0F) this.door = Math.max(0F, this.door - 0.05F);
+
+		if(this.spawnDelay > 0) {
+			this.spawnDelay--;
+
+			if(this.spawnDelay <= 0) {
+				this.spawnDelay = 0;
+
+				if(this.pendingClone != null) {
+					ForgeDirection facing = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+					int[] dim = MultiblockHandlerXR.rotate(((BlockDummyable) this.getBlockType()).getDimensions(), facing);
+					int minX = xCoord - dim[4];
+					int maxX = xCoord + dim[5];
+					int minZ = zCoord - dim[2];
+					int maxZ = zCoord + dim[3];
+
+					double spawnX = xCoord + 0.5D;
+					double spawnZ = zCoord + 0.5D;
+
+					switch(facing) {
+					case NORTH: spawnX = (minX + maxX + 1) / 2.0; spawnZ = minZ - 0.5D; break;
+					case SOUTH: spawnX = (minX + maxX + 1) / 2.0; spawnZ = maxZ + 1.5D; break;
+					case WEST:  spawnX = minX - 0.5D; spawnZ = (minZ + maxZ + 1) / 2.0; break;
+					case EAST:  spawnX = maxX + 1.5D; spawnZ = (minZ + maxZ + 1) / 2.0; break;
+					}
+
+					this.pendingClone.setLocationAndAngles(spawnX, yCoord, spawnZ, 0F, 0F);
+					worldObj.spawnEntityInWorld(this.pendingClone);
+
+					this.pendingClone = null;
+					this.markDirty();
+				}
+			}
+		}
+
 		if(worldObj.getTotalWorldTime() % 20 == 0) {
-			for(ForgeDirection dir : ForgeDirection.VALID_DIRECTIONS) {
-				this.trySubscribe(worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
-				if(tank.getTankType() != Fluids.NONE) this.trySubscribe(tank.getTankType(), worldObj, xCoord + dir.offsetX, yCoord + dir.offsetY, zCoord + dir.offsetZ, dir);
+			for(DirPos pos : getConPos()) {
+				this.trySubscribe(worldObj, pos);
+				if(tank.getTankType() != Fluids.NONE) this.trySubscribe(tank.getTankType(), worldObj, pos);
 			}
 		}
 
@@ -103,6 +152,55 @@ public class TileEntityCloner extends TileEntityMachineBase implements IEnergyRe
 	@Override public FluidTank[] getAllTanks() { return new FluidTank[] { tank }; }
 	@Override public FluidTank[] getReceivingTanks() { return new FluidTank[] { tank }; }
 	@Override public FluidTank[] getSendingTanks() { return FluidTank.EMPTY_ARRAY; }
+
+	@Override
+	public boolean canConnect(ForgeDirection dir) {
+		return dir == ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
+	}
+
+	@Override
+	public boolean canConnect(FluidType type, ForgeDirection dir) {
+		return dir == ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset).getOpposite();
+	}
+
+	public DirPos[] getConPos() {
+		ForgeDirection facing = ForgeDirection.getOrientation(this.getBlockMetadata() - BlockDummyable.offset);
+		int[] d = MultiblockHandlerXR.rotate(((BlockDummyable) this.getBlockType()).getDimensions(), facing);
+
+		int minX = xCoord - d[4];
+		int maxX = xCoord + d[5];
+		int minZ = zCoord - d[2];
+		int maxZ = zCoord + d[3];
+
+		DirPos[] ports = new DirPos[2];
+		for(int i = 0; i < 2; i++) {
+			DirPos port = new DirPos(xCoord, yCoord, zCoord, facing.getOpposite());
+
+			switch(facing) {
+			case NORTH: port = new DirPos(minX + i, yCoord, maxZ + 1, ForgeDirection.SOUTH); break;
+			case SOUTH: port = new DirPos(minX + i, yCoord, minZ - 1, ForgeDirection.NORTH); break;
+			case WEST:  port = new DirPos(maxX + 1, yCoord, minZ + i, ForgeDirection.EAST); break;
+			case EAST:  port = new DirPos(minX - 1, yCoord, minZ + i, ForgeDirection.WEST); break;
+			}
+
+			ports[i] = port;
+		}
+		return ports;
+	}
+
+	AxisAlignedBB bb = null;
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		if(bb == null) bb = AxisAlignedBB.getBoundingBox(xCoord - 1, yCoord, zCoord - 1, xCoord + 2, yCoord + 3, zCoord + 2);
+		return bb;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return 65536.0D;
+	}
 
 	public boolean canProcess() {
 		if(!this.active) return false;
@@ -160,8 +258,8 @@ public class TileEntityCloner extends TileEntityMachineBase implements IEnergyRe
 
 		EntityHusk husk = new EntityHusk(worldObj);
 		husk.setupClone(uuid, syringe.stackTagCompound.getString(ItemMedicalSyringe.KEY_OWNER_NAME), parts, blood);
-		husk.setLocationAndAngles(xCoord + 0.5D, yCoord + 1D, zCoord + 0.5D, 0F, 0F);
-		worldObj.spawnEntityInWorld(husk);
+		this.pendingClone = husk;
+		this.spawnDelay = SPAWN_DELAY;
 
 		syringe.stackTagCompound = null;
 		this.tank.setFill(0);
@@ -177,6 +275,9 @@ public class TileEntityCloner extends TileEntityMachineBase implements IEnergyRe
 		buf.writeLong(maxPower);
 		buf.writeBoolean(active);
 		buf.writeInt(progress);
+		buf.writeInt(spawnDelay);
+		buf.writeFloat(prevDoor);
+		buf.writeFloat(door);
 		tank.serialize(buf);
 	}
 
@@ -187,6 +288,9 @@ public class TileEntityCloner extends TileEntityMachineBase implements IEnergyRe
 		maxPower = buf.readLong();
 		active = buf.readBoolean();
 		progress = buf.readInt();
+		spawnDelay = buf.readInt();
+		prevDoor = buf.readFloat();
+		door = buf.readFloat();
 		tank.deserialize(buf);
 	}
 

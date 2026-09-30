@@ -392,7 +392,6 @@ public class EntityHusk extends EntityLiving {
 
 		Entity attacker = source.getEntity();
 		IChatComponent msg;
-            // this was truly the only way to do this
 		if(source == DamageSource.outOfWorld) {
 			msg = new ChatComponentTranslation("death.attack.outOfWorld", name);
 		} else if(attacker instanceof EntityPlayer) {

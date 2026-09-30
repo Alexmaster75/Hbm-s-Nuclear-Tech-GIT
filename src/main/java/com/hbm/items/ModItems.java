@@ -587,6 +587,8 @@ public class ModItems {
 	//now i cant do anything but sing this stupid song!!!!!!!!!!
 	public static Item crystal_zinc;
 	public static Item crystal_salt;
+	public static Item quartz_crystal;
+	public static Item powder_certus_quartz;
 
 	public static Item nickel_salts;
 
@@ -2867,6 +2869,8 @@ public class ModItems {
 		crystal_niobium = new Item().setUnlocalizedName("crystal_niobium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_niobium");
 		crystal_zinc = new Item().setUnlocalizedName("crystal_zinc").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_zinc");
 		crystal_salt = new Item().setUnlocalizedName("crystal_salt").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_salt");
+		quartz_crystal = new Item().setUnlocalizedName("quartz_crystal").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":quartz_crystal");
+		powder_certus_quartz = new Item().setUnlocalizedName("powder_certus_quartz").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_certus_quartz");
 
 		powder_lead = new Item().setUnlocalizedName("powder_lead").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_lead");
 		powder_tantalium = new ItemCustomLore().setUnlocalizedName("powder_tantalium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_tantalium");
@@ -5519,6 +5523,8 @@ public class ModItems {
 		GameRegistry.registerItem(crystal_niobium, crystal_niobium.getUnlocalizedName()); // the true path to enlightenment is ignoring the little green circle
 		GameRegistry.registerItem(crystal_zinc, crystal_zinc.getUnlocalizedName()); // the true path to enlightenment is ignoring the little green circle
 		GameRegistry.registerItem(crystal_salt, crystal_salt.getUnlocalizedName());
+		GameRegistry.registerItem(quartz_crystal, quartz_crystal.getUnlocalizedName());
+		GameRegistry.registerItem(powder_certus_quartz, powder_certus_quartz.getUnlocalizedName());
 
 		//Fragments
 		GameRegistry.registerItem(fragment_neodymium, fragment_neodymium.getUnlocalizedName());

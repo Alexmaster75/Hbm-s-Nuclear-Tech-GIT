@@ -854,6 +854,7 @@ public class OreDictManager {
 		OreDictionary.registerOre("crystalStarmetal", crystal_starmetal);
 		OreDictionary.registerOre("crystalOsmiridium", crystal_osmiridium);
 		OreDictionary.registerOre("crystalCinnebar", crystal_cinnebar);
+		OreDictionary.registerOre("crystalCertusQuartz", quartz_crystal);
 
 		OreDictionary.registerOre("crystalRedPhosphorus", crystal_phosphorus);
 		OreDictionary.registerOre("crystalSaltpeter", crystal_niter);
@@ -896,6 +897,8 @@ public class OreDictManager {
 		OreDictionary.registerOre("StarmetalCrystal", crystal_starmetal);
 		OreDictionary.registerOre("OsmiridiumCrystal", crystal_osmiridium);
 		OreDictionary.registerOre("CinnebarCrystal", crystal_cinnebar);
+		OreDictionary.registerOre("CertusQuartzCrystal", quartz_crystal);
+		OreDictionary.registerOre("dustCertusQuartz", powder_certus_quartz);
 
 		OreDictionary.registerOre("crystalCleaned", crystal_cleaned);
 		OreDictionary.registerOre("CleanedCrystal", crystal_cleaned);
@@ -906,9 +909,9 @@ public class OreDictManager {
 		OreDictionary.registerOre("crystalCharred", crystal_charred);
 		OreDictionary.registerOre("CharredCrystal", crystal_charred);
 
-		String[] crystalBlockNames = { "Coal", "Iron", "Gold", "Redstone", "Lapis", "Diamond", "Uranium", "Thorium", "Plutonium", "Titanium", "Sulfur", "Niter", "Copper", "Tungsten", "Aluminium", "Fluorite", "Beryllium", "Lead", "Schraranium", "Schrabidium", "Rare", "Phosphorus", "Trixite", "Lithium", "Cobalt", "Mineral", "Nickel", "Niobium", "Zinc", "Osmiridium", "Cinnebar", "Starmetal" };
+		String[] crystalBlockNames = { "Coal", "Iron", "Gold", "Redstone", "Lapis", "Diamond", "Uranium", "Thorium", "Plutonium", "Titanium", "Sulfur", "Niter", "Copper", "Tungsten", "Aluminium", "Fluorite", "Beryllium", "Lead", "Schraranium", "Schrabidium", "Rare", "Phosphorus", "Trixite", "Lithium", "Cobalt", "Mineral", "Nickel", "Niobium", "Zinc", "Osmiridium", "Cinnebar", "Starmetal", "CertusQuartz" };
 		for(int i = 0; i < crystalBlockNames.length; i++) {
-			OreDictionary.registerOre("crystalBlock" + crystalBlockNames[i], i < 16 ? new ItemStack(block_crystal, 1, i) : new ItemStack(block_crystal_2, 1, i - 16));
+			OreDictionary.registerOre("crystalBlock" + crystalBlockNames[i], i < 16 ? new ItemStack(block_crystal, 1, i) : (i < 32 ? new ItemStack(block_crystal_2, 1, i - 16) : new ItemStack(certus_quartz_block, 1, i - 32)));
 		}
 
 		String[] rawOreNames = { "Iron", "Gold", "Copper", "Titanium", "Thorium", "Morkite", "Nickel", "Mineral", "Zinc", "Lithium", "Niobium", "Palladium", "Iodine", "Arsenic", "Cadmium", "Tungsten", "Aluminium", "Lead", "Beryllium", "Silicon", "Australium", "Lanthanium", "Uranium", "Schrabidium" };

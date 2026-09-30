@@ -313,6 +313,7 @@ public class ClientProxy extends ServerProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachinePUREX.class, new RenderPUREX());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineHaemodialysis.class, new RenderHaemodialysis());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineMagneticSeparator.class, new RenderMagneticSeparator());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityCloner.class, new RenderCloner());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineFluidTank.class, new RenderFluidTank());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineBAT9000.class, new RenderBAT9000());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityMachineBigAssTank.class, new RenderBigAssTank());
@@ -425,6 +426,7 @@ public class ClientProxy extends ServerProxy {
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityPistonInserter.class, new RenderPistonInserter());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorPress.class, new RenderConveyorPress());
 		ClientRegistry.bindTileEntitySpecialRenderer(com.hbm.tileentity.machine.TileEntityConveyorSpraypainter.class, new com.hbm.render.tileentity.RenderConveyorSpraypainter());
+		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityConveyorCombinator.class, new RenderConveyorCombinator());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioTelex.class, new RenderTelex());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityRadioAUTOCAL.class, new RenderAUTOCAL());
 		ClientRegistry.bindTileEntitySpecialRenderer(TileEntityGenomeSequencer.class, new RenderGenomeSequencer());

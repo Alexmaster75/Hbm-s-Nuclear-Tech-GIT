@@ -9,10 +9,13 @@ import java.util.UUID;
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.minecraft.MinecraftProfileTexture;
 
+import com.hbm.items.tool.ItemMedicalSyringe;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.SkinManager;
+import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 
 @SideOnly(Side.CLIENT)
@@ -29,6 +32,21 @@ public class SkinCache {
 
 		if(requested.add(id)) request(profile);
 		return null;
+	}
+
+	public static GameProfile owner(ItemStack syringe) {
+		if(syringe == null || !syringe.hasTagCompound()) return null;
+
+		String uuid = syringe.stackTagCompound.getString(ItemMedicalSyringe.KEY_OWNER_UUID);
+		if(uuid.isEmpty()) return null;
+
+		String name = syringe.stackTagCompound.getString(ItemMedicalSyringe.KEY_OWNER_NAME);
+
+		try {
+			return new GameProfile(UUID.fromString(uuid), name.isEmpty() ? uuid : name);
+		} catch(IllegalArgumentException ex) {
+			return null;
+		}
 	}
 
 	private static void request(final GameProfile profile) {

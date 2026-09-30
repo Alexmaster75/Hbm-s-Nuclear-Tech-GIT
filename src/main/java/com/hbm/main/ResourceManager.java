@@ -156,6 +156,7 @@ public class ResourceManager {
 	public static final IModelCustom epress_head = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/epress_head.obj"));
 	public static final IModelCustom conveyor_press = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/machines/conveyor_press.obj"));
 	public static final IModelCustom conveyor_spraypainter = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/machines/conveyor_spraypainter.obj"));
+	public static final IModelCustom conveyor_combinator = AdvancedModelLoader.loadModel(new ResourceLocation(RefStrings.MODID, "models/machines/conveyor_combinator.obj"));
 	public static final IModelCustom ammo_press = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/ammo_press.obj")).asVBO();
 
 	//Annihilator
@@ -175,6 +176,7 @@ public class ResourceManager {
 	public static final IModelCustom mixer = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/mixer.obj")).asVBO();
 	public static final IModelCustom haemodialysis_machine = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/haemodialysis_machine.obj")).asVBO();
 	public static final IModelCustom magnetic_separator = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/magnetic_separator.obj")).asVBO();
+	public static final IModelCustom vat = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/vat.obj")).asVBO();
 
 	//Arc Welder
 	public static final IModelCustom arc_welder = new HFRWavefrontObject(new ResourceLocation(RefStrings.MODID, "models/machines/arc_welder.obj")).noSmooth().asVBO();
@@ -683,6 +685,8 @@ public class ResourceManager {
 	public static final ResourceLocation conveyor_press_belt_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/conveyor_press_belt.png");
 	public static final ResourceLocation conveyor_spraypainter_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/conveyor_spraypainter.png");
 	public static final ResourceLocation conveyor_spraypainter_belt_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/conveyor_spraypainter_belt.png");
+	public static final ResourceLocation conveyor_combinator_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/conveyor_combinator.png");
+	public static final ResourceLocation conveyor_combinator_belt_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/conveyor_combinator_belt.png");
 	public static final ResourceLocation ammo_press_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/ammo_press.png");
 
 	//Annihilator
@@ -716,6 +720,7 @@ public class ResourceManager {
 	public static final ResourceLocation mixer_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/mixer.png");
 	public static final ResourceLocation haemodialysis_machine_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/haemodialysis_machine.png");
 	public static final ResourceLocation magnetic_separator_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/magnetic_separator.png");
+	public static final ResourceLocation vat_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/vat.png");
 
 	//Welder
 	public static final ResourceLocation arc_welder_tex = new ResourceLocation(RefStrings.MODID, "textures/models/machines/arc_welder.png");

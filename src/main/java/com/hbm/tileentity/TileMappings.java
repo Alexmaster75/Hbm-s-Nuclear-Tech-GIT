@@ -172,6 +172,7 @@ public class TileMappings {
 		put(TileEntityMachineEPress.class, "tileentity_electric_press");
 		put(TileEntityConveyorPress.class, "tileentity_conveyor_press");
 		put(com.hbm.tileentity.machine.TileEntityConveyorSpraypainter.class, "tileentity_conveyor_spraypainter");
+		put(TileEntityConveyorCombinator.class, "tileentity_conveyor_combinator");
 		put(TileEntityCoreEmitter.class, "tileentity_v0_emitter");
 		put(TileEntityCoreReceiver.class, "tileentity_v0_receiver");
 		put(TileEntityCoreInjector.class, "tileentity_v0_injector");
