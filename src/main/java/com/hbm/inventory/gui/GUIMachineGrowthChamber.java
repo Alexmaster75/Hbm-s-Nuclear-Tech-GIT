@@ -39,7 +39,7 @@ public class GUIMachineGrowthChamber extends GuiInfoContainer {
 		this.drawElectricityInfo(this, mouseX, mouseY, guiLeft + 152, guiTop + 18, 16, 52, chamber.power, chamber.maxPower);
 
 		if(guiLeft <= mouseX && guiLeft + 18 > mouseX && guiTop < mouseY && guiTop + 18 >= mouseY) {
-			if(this.chamber.module.getRecipeName() != null && AssemblyMachineRecipes.INSTANCE.recipeNameMap.containsKey(this.chamber.module.getRecipeName())) {
+			if(this.chamber.module.getRecipeName() != null && GrowthChamberRecipes.INSTANCE.recipeNameMap.containsKey(this.chamber.module.getRecipeName())) {
 				GenericRecipe recipe = this.chamber.module.getRecipe();
 				GUIElements.drawHoveringTextRecipe(recipe.print(), mouseX, mouseY, this.fontRendererObj, itemRender, this.width, this.height);
 			} else {
@@ -67,7 +67,7 @@ public class GUIMachineGrowthChamber extends GuiInfoContainer {
 		drawTexturedModalRect(guiLeft, guiTop, 0, 0, xSize, ySize);
 
 		if (chamber.power > 0) {
-			int p = (int) (chamber.power * 61 / chamber.maxPower);
+			int p = (int) (chamber.power * 52 / chamber.maxPower);
 			drawTexturedModalRect(guiLeft + 152, guiTop + 70 - p, 176, 52 - p, 16, p);
 			drawTexturedModalRect(guiLeft + 156, guiTop + 4, 176, 52, 9, 12);
 		}

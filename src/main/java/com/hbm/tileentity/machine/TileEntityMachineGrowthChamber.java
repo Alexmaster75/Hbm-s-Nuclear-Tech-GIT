@@ -14,11 +14,14 @@ import com.hbm.items.machine.ItemMachineUpgrade;
 import com.hbm.items.machine.ItemMachineUpgrade.UpgradeType;
 import com.hbm.lib.Library;
 import com.hbm.main.MainRegistry;
+import com.hbm.main.NTMSounds;
 import com.hbm.module.machine.ModuleMachineGrowthChamber;
+import com.hbm.sound.AudioWrapper;
 import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.IUpgradeInfoProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BobMathUtil;
+import com.hbm.util.fauxpointtwelve.DirPos;
 import com.hbm.util.i18n.I18nUtil;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -39,13 +42,29 @@ public class TileEntityMachineGrowthChamber extends TileEntityMachineBase implem
 	public long maxPower = 100_000;
 	public FluidTank tank;
 	public ModuleMachineGrowthChamber module;
+	public boolean didProcess = false;
 
 	public UpgradeManagerNT upgradeManager = new UpgradeManagerNT(this);
+
+	private AudioWrapper audio;
 
 	public TileEntityMachineGrowthChamber() {
 		super(5);
 		this.tank = new FluidTank(Fluids.NONE, 16_000);
 		this.module = new ModuleMachineGrowthChamber(0, this, slots).itemInput(1).itemOutput(4).fluidInput(tank);
+	}
+
+	public DirPos[] getConPos() {
+		return new DirPos[] {
+			new DirPos(xCoord + 2, yCoord, zCoord, Library.POS_X),
+			new DirPos(xCoord - 2, yCoord, zCoord, Library.NEG_X),
+			new DirPos(xCoord, yCoord, zCoord + 2, Library.POS_Z),
+			new DirPos(xCoord, yCoord, zCoord - 2, Library.NEG_Z),
+			new DirPos(xCoord + 2, yCoord + 2, zCoord, Library.POS_X),
+			new DirPos(xCoord - 2, yCoord + 2, zCoord, Library.NEG_X),
+			new DirPos(xCoord, yCoord + 2, zCoord + 2, Library.POS_Z),
+			new DirPos(xCoord, yCoord + 2, zCoord - 2, Library.NEG_Z)
+		};
 	}
 
 	@Override
@@ -70,9 +89,11 @@ public class TileEntityMachineGrowthChamber extends TileEntityMachineBase implem
 
 	@Override
 	public void receiveControl(NBTTagCompound data) {
-		if (data.hasKey("index") && data.hasKey("selection")) {
-			if (data.getInteger("index") == 0 && !module.isRunning()) {
-				module.setRecipe(data.getString("selection"), false);
+		if(data.hasKey("index") && data.hasKey("selection")) {
+			int index = data.getInteger("index");
+			String selection = data.getString("selection");
+			if(index == 0) {
+				this.module.setRecipe(selection, false);
 				this.markChanged();
 			}
 		}
@@ -102,30 +123,50 @@ public class TileEntityMachineGrowthChamber extends TileEntityMachineBase implem
 
 	@Override
 	public void updateEntity() {
-		if (worldObj.isRemote) return;
+		if (!worldObj.isRemote) {
+			GenericRecipe recipe = module.getRecipe();
+			if (recipe != null) this.maxPower = recipe.power * 100;
+			this.maxPower = BobMathUtil.max(this.power, this.maxPower, 100_000);
+			this.power = Library.chargeTEFromItems(slots, 0, power, maxPower);
+			upgradeManager.checkSlots(slots, 2, 3);
 
-		GenericRecipe recipe = module.getRecipe();
-		if (recipe != null) this.maxPower = recipe.power * 100;
-		this.maxPower = BobMathUtil.max(this.power, this.maxPower, 100_000);
-		this.power = Library.chargeTEFromItems(slots, 0, power, maxPower);
-		upgradeManager.checkSlots(slots, 2, 3);
+			for (DirPos pos : getConPos()) {
+				this.trySubscribe(worldObj, pos);
+				if (tank.getTankType() != Fluids.NONE) this.trySubscribe(tank.getTankType(), worldObj, pos);
+			}
 
-		double speed = 1;
-		double pow = 1;
+			double speed = 1;
+			double pow = 1;
 
-		speed += Math.min(upgradeManager.getLevel(UpgradeType.SPEED), 3);
-		speed += Math.min(upgradeManager.getLevel(UpgradeType.OVERDRIVE), 3);
+			speed += Math.min(upgradeManager.getLevel(UpgradeType.SPEED), 3) / 3D;
+			speed += Math.min(upgradeManager.getLevel(UpgradeType.OVERDRIVE), 3);
 
-		pow -= Math.min(upgradeManager.getLevel(UpgradeType.SPEED), 3) * 0.25D;
-		pow += Math.min(upgradeManager.getLevel(UpgradeType.POWER), 3) * 1D;
-		pow += Math.min(upgradeManager.getLevel(UpgradeType.OVERDRIVE), 3) * 10D / 3D;
+			pow -= Math.min(upgradeManager.getLevel(UpgradeType.POWER), 3) * 0.25D;
+			pow += Math.min(upgradeManager.getLevel(UpgradeType.SPEED), 3) * 1D;
+			pow += Math.min(upgradeManager.getLevel(UpgradeType.OVERDRIVE), 3) * 10D / 3D;
 
-		this.module.update(speed, pow, true, null);
+			this.module.update(speed, pow, true, null);
+			this.didProcess = module.didProcess;
+			if (module.markDirty) this.markDirty();
 
-		module.update(1, 1, true, null);
-		if (module.markDirty) this.markDirty();
-
-		this.networkPackNT(15);
+			this.networkPackNT(100);
+		} else {
+			if (this.didProcess && MainRegistry.proxy.me().getDistance(xCoord, yCoord ,zCoord) < 30) {
+				if (audio == null) {
+					audio = createAudioLoop();
+					audio.startSound();
+				} else if (!audio.isPlaying()) {
+					audio = rebootAudio(audio);
+				}
+				audio.keepAlive();
+				audio.updateVolume(getVolume(2f));
+			} else {
+				if (audio != null) {
+					audio.stopSound();
+					audio = null;
+				}
+			}
+		}
 	}
 
 	@Override
@@ -165,6 +206,7 @@ public class TileEntityMachineGrowthChamber extends TileEntityMachineBase implem
 		buf.writeLong(maxPower);
 		tank.serialize(buf);
 		module.serialize(buf);
+		buf.writeBoolean(didProcess);
 	}
 
 	@Override
@@ -174,6 +216,7 @@ public class TileEntityMachineGrowthChamber extends TileEntityMachineBase implem
 		this.maxPower = buf.readLong();
 		tank.deserialize(buf);
 		module.deserialize(buf);
+		this.didProcess = buf.readBoolean();
 	}
 
 	@Override
@@ -210,5 +253,26 @@ public class TileEntityMachineGrowthChamber extends TileEntityMachineBase implem
 		super.setInventorySlotContents(i, itemStack);
 		if (itemStack != null && i >= 2 && i <= 3 && itemStack.getItem() instanceof ItemMachineUpgrade)
 			worldObj.playSoundEffect(xCoord + 0.5, yCoord + 0.5, zCoord + 0.5, "hbm:item.upgradePlug", 1f, 1f);
+	}
+
+	@Override
+	public boolean shouldRenderInPass(int pass) {
+		return pass == 0 || pass == 1;
+	}
+
+	@Override
+	public AudioWrapper createAudioLoop() {
+		return MainRegistry.proxy.getLoopedSound(NTMSounds.GROWTH_CHAMBER_LOOP, xCoord, yCoord, zCoord, 1f, 15f, 1f, 20);
+	}
+
+	@Override
+	public void onChunkUnload() {
+		if (audio != null) { audio.stopSound(); audio = null; }
+	}
+
+	@Override
+	public void invalidate() {
+		super.invalidate();
+		if (audio != null) { audio.stopSound(); audio = null; }
 	}
 }

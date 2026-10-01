@@ -1594,6 +1594,21 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 				new ComparableStack(ModItems.circuit, 6, EnumCircuitType.AERO)
 			)
 		);
+		this.register(new GenericRecipe("ass.growth_chamber").setup(400, 100).outputItems(new ItemStack(ModBlocks.machine_growth_chamber, 1))
+			.inputItems(
+				new OreDictStack(STEEL.plateCast(), 4),
+				new ComparableStack(ModBlocks.glass_boron, 32),
+				new ComparableStack(ModItems.motor, 2),
+				new OreDictStack(NB.ingot(), 6),
+				new ComparableStack(ModBlocks.machine_transformer)
+			)
+			.inputItemsEx(
+				new ComparableStack(ModItems.item_expensive, 4, EnumExpensiveType.STEEL_PLATING),
+				new ComparableStack(ModBlocks.glass_boron, 32),
+				new ComparableStack(ModItems.motor, 2),
+				new OreDictStack(NB.ingot(), 6),
+				new ComparableStack(ModBlocks.machine_transformer)
+			));
 
 		// vanadium drillbits
 		this.register(new GenericRecipe("item.drillbit_steel_vanadium").setup(100, 100).outputItems(new ItemStack(ModItems.drillbit, 1, EnumDrillType.STEEL_VANADIUM.ordinal()))

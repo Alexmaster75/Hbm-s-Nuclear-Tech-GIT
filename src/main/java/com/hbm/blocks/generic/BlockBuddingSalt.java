@@ -5,17 +5,15 @@ import com.hbm.blocks.ModBlocks;
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import java.util.Random;
 
 public class BlockBuddingSalt extends BlockBuddingBase {
 	public BlockBuddingSalt() {
-		super();
-	}
-
-	public BlockBuddingSalt(Material material) {
-		super(material);
+		super(Material.rock);
 	}
 
 	@Override
@@ -30,6 +28,11 @@ public class BlockBuddingSalt extends BlockBuddingBase {
 
 	@Override
 	protected boolean canGrow(World world, int x, int y, int z) {
+		return true;
+	}
+
+	@Override
+	public boolean isSideSolid(IBlockAccess world, int x, int y, int z, ForgeDirection side) {
 		return true;
 	}
 }

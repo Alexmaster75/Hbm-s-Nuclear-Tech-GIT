@@ -1,5 +1,6 @@
 package com.hbm.dim.moon;
 
+import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.config.WorldConfig;
 import com.hbm.dim.CelestialBody;
@@ -9,6 +10,7 @@ import com.hbm.dim.mapgen.MapGenGreg;
 import com.hbm.dim.mapgen.MapgenRavineButBased;
 import com.hbm.world.gen.terrain.MapGenBubble;
 
+import com.hbm.world.gen.terrain.MapGenGeode;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
 import net.minecraft.world.World;
@@ -20,6 +22,7 @@ public class ChunkProviderMoon extends ChunkProviderCelestial {
 
 	private MapGenCrater smallCrater = new MapGenCrater(6);
 	private MapGenCrater largeCrater = new MapGenCrater(64);
+	private MapGenGeode saltGeode = new MapGenGeode(32);
 
 	private MapGenBubble brine = new MapGenBubble(WorldConfig.munBrineSpawn);
 
@@ -42,6 +45,14 @@ public class ChunkProviderMoon extends ChunkProviderCelestial {
 		stoneBlock = ModBlocks.moon_rock;
 		seaBlock = ModBlocks.basalt;
 		seaLevel = 64;
+
+		saltGeode.shell = ModBlocks.basalt;
+		saltGeode.crystal = ModBlocks.block_crystal_3;
+		saltGeode.crystalMeta = (byte) (BlockEnums.EnumCrystalBlockType.SALT.ordinal() - 32);
+		saltGeode.budding = ModBlocks.budding_salt;
+		saltGeode.buds = new Block[] { ModBlocks.salt_bud_small, ModBlocks.salt_bud_medium, ModBlocks.salt_bud_large};
+		saltGeode.setSize(3, 5);
+		saltGeode.setHeight(15, 45);
 	}
 
 	@Override
@@ -64,6 +75,8 @@ public class ChunkProviderMoon extends ChunkProviderCelestial {
 		smallCrater.func_151539_a(this, worldObj, x, z, buffer.blocks);
 		largeCrater.func_151539_a(this, worldObj, x, z, buffer.blocks);
 		brine.func_151539_a(this, worldObj, x, z, buffer.blocks);
+		saltGeode.setMetas(buffer.metas);
+		saltGeode.func_151539_a(this, worldObj, x, z, buffer.blocks);
 
 		return buffer;
 	}

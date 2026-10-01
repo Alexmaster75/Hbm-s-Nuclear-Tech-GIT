@@ -20,6 +20,7 @@ import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.fluid.FluidType;
 import com.hbm.inventory.fluid.Fluids;
+import com.hbm.inventory.fluid.tank.FluidTank;
 import com.hbm.inventory.recipes.loader.SerializableRecipe;
 import com.hbm.items.ItemEnums;
 import com.hbm.items.ModItems;
@@ -170,6 +171,10 @@ public class MixerRecipes extends SerializableRecipe {
 		register(Fluids.INK_GRAY, new MixerRecipe(1_000, 20).setStack1(new FluidStack(Fluids.INK_BLACK, 500)).setStack2(new FluidStack(Fluids.INK_WHITE, 500)));
 		register(Fluids.INK_LIGHT_GRAY, new MixerRecipe(1_000, 20).setStack1(new FluidStack(Fluids.INK_GRAY, 500)).setStack2(new FluidStack(Fluids.INK_WHITE, 500)));
 		register(Fluids.INK_MAGENTA, new MixerRecipe(1_000, 20).setStack1(new FluidStack(Fluids.INK_PURPLE, 500)).setStack2(new FluidStack(Fluids.INK_PINK, 500)));
+
+		register(Fluids.SLAKED_LIME, new MixerRecipe(1000, 30).setStack1(new FluidStack(Fluids.WATER, 1000)).setSolid(new ComparableStack(ModItems.powder_limestone)));
+		register(Fluids.CAUSTIC_SODA, new MixerRecipe(250, 30).setStack1(new FluidStack(Fluids.SLAKED_LIME, 1000)).setSolid(new ComparableStack(ModItems.sodium_carbonate)));
+		register(Fluids.SALT_WATER, new MixerRecipe(1000, 15).setStack1(new FluidStack(Fluids.WATER, 1000)).setSolid(new ComparableStack(ModItems.salt)));
 	}
 
 	public static void register(FluidType type, MixerRecipe... rec) {

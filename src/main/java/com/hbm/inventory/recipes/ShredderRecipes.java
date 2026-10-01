@@ -9,6 +9,7 @@ import java.util.Map.Entry;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.stream.JsonWriter;
+import com.hbm.blocks.BlockEnums;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.BlockEnums.EnumStoneType;
 import com.hbm.blocks.generic.BlockBobble.BobbleType;
@@ -150,12 +151,18 @@ public class ShredderRecipes extends SerializableRecipe {
 		ShredderRecipes.setRecipe(Blocks.quartz_stairs, new ItemStack(ModItems.powder_quartz, 3));
 		ShredderRecipes.setRecipe(new ItemStack(Blocks.stone_slab, 1, 7), new ItemStack(ModItems.powder_quartz, 2));
 		ShredderRecipes.setRecipe(Items.quartz, new ItemStack(ModItems.powder_quartz));
-		ShredderRecipes.setRecipe(ModItems.quartz_crystal, new ItemStack(ModItems.powder_certus_quartz));
-		ShredderRecipes.setRecipe(ModBlocks.certus_quartz_block, new ItemStack(ModItems.powder_certus_quartz, 4));
-		ShredderRecipes.setRecipe(ModBlocks.certus_quartz_cluster, new ItemStack(ModItems.powder_certus_quartz, 2));
-		ShredderRecipes.setRecipe(ModBlocks.certus_quartz_bud_large, new ItemStack(ModItems.powder_certus_quartz, 1));
-		ShredderRecipes.setRecipe(ModBlocks.certus_quartz_bud_medium, new ItemStack(ModItems.powder_certus_quartz, 1));
-		ShredderRecipes.setRecipe(ModBlocks.certus_quartz_bud_small, new ItemStack(ModItems.powder_certus_quartz, 1));
+		ShredderRecipes.setRecipe(ModBlocks.salt_bud_large, new ItemStack(ModItems.salt));
+		ShredderRecipes.setRecipe(ModBlocks.salt_cluster, new ItemStack(ModItems.salt, 3));
+
+		if (Compat.isModLoaded(Compat.MOD_AE2)) {
+			ShredderRecipes.setRecipe(ModItems.quartz_crystal, new ItemStack(ModItems.powder_certus_quartz));
+			ShredderRecipes.setRecipe(DictFrame.fromOne(ModBlocks.block_crystal_3, BlockEnums.EnumCrystalBlockType.CERTUS), new ItemStack(ModItems.powder_certus_quartz, 4));
+			ShredderRecipes.setRecipe(ModBlocks.certus_quartz_cluster, new ItemStack(ModItems.powder_certus_quartz, 2));
+			ShredderRecipes.setRecipe(ModBlocks.certus_quartz_bud_large, new ItemStack(ModItems.powder_certus_quartz, 1));
+			ShredderRecipes.setRecipe(ModBlocks.certus_quartz_bud_medium, new ItemStack(ModItems.powder_certus_quartz, 1));
+			ShredderRecipes.setRecipe(ModBlocks.certus_quartz_bud_small, new ItemStack(ModItems.powder_certus_quartz, 1));
+		}
+
 		ShredderRecipes.setRecipe(Blocks.quartz_ore, new ItemStack(ModItems.powder_quartz, 2));
 		ShredderRecipes.setRecipe(ModBlocks.ore_quartz, new ItemStack(ModItems.powder_quartz, 2));
 		ShredderRecipes.setRecipe(new ItemStack(ModBlocks.ore_fire, 1, OreDictionary.WILDCARD_VALUE), new ItemStack(ModItems.powder_fire, 6));

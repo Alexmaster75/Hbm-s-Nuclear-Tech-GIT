@@ -61,6 +61,7 @@ import com.hbm.items.weapon.sedna.factory.GunFactory;
 import com.hbm.lib.RefStrings;
 import com.hbm.main.MainRegistry;
 import com.hbm.tileentity.machine.rbmk.IRBMKFluxReceiver.NType;
+import com.hbm.util.Compat;
 import com.hbm.util.RTGUtil;
 
 import api.hbm.block.IToolable.ToolType;
@@ -586,7 +587,7 @@ public class ModItems {
 	//but unforutnatley something went so chopped chin wrong
 	//now i cant do anything but sing this stupid song!!!!!!!!!!
 	public static Item crystal_zinc;
-	public static Item crystal_salt;
+	public static Item salt_shard;
 	public static Item quartz_crystal;
 	public static Item powder_certus_quartz;
 
@@ -2868,7 +2869,8 @@ public class ModItems {
 		crystal_nickel = new Item().setUnlocalizedName("crystal_nickel").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_nickel");
 		crystal_niobium = new Item().setUnlocalizedName("crystal_niobium").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_niobium");
 		crystal_zinc = new Item().setUnlocalizedName("crystal_zinc").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_zinc");
-		crystal_salt = new Item().setUnlocalizedName("crystal_salt").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":crystal_salt");
+		salt_shard = new Item().setUnlocalizedName("salt_shard").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":salt_shard");
+
 		quartz_crystal = new Item().setUnlocalizedName("quartz_crystal").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":quartz_crystal");
 		powder_certus_quartz = new Item().setUnlocalizedName("powder_certus_quartz").setCreativeTab(MainRegistry.partsTab).setTextureName(RefStrings.MODID + ":powder_certus_quartz");
 
@@ -5522,9 +5524,12 @@ public class ModItems {
 		GameRegistry.registerItem(crystal_nickel, crystal_nickel.getUnlocalizedName()); //l like nickel, i dont care, fuck off
 		GameRegistry.registerItem(crystal_niobium, crystal_niobium.getUnlocalizedName()); // the true path to enlightenment is ignoring the little green circle
 		GameRegistry.registerItem(crystal_zinc, crystal_zinc.getUnlocalizedName()); // the true path to enlightenment is ignoring the little green circle
-		GameRegistry.registerItem(crystal_salt, crystal_salt.getUnlocalizedName());
-		GameRegistry.registerItem(quartz_crystal, quartz_crystal.getUnlocalizedName());
-		GameRegistry.registerItem(powder_certus_quartz, powder_certus_quartz.getUnlocalizedName());
+		GameRegistry.registerItem(salt_shard, salt_shard.getUnlocalizedName());
+
+		if (Compat.isModLoaded(Compat.MOD_AE2)) {
+			GameRegistry.registerItem(quartz_crystal, quartz_crystal.getUnlocalizedName());
+			GameRegistry.registerItem(powder_certus_quartz, powder_certus_quartz.getUnlocalizedName());
+		}
 
 		//Fragments
 		GameRegistry.registerItem(fragment_neodymium, fragment_neodymium.getUnlocalizedName());

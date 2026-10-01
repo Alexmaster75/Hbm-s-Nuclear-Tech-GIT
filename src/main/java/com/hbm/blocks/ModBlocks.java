@@ -151,6 +151,7 @@ public class ModBlocks {
 	public static Block stone_resource;
 	public static Block block_crystal;
 	public static Block block_crystal_2;
+	public static Block block_crystal_3;
 	public static Block block_raw_ore;
 	public static Block block_raw_ore_2;
 	public static Block stalagmite;
@@ -207,9 +208,6 @@ public class ModBlocks {
 	public static Block certus_quartz_bud_medium;
 	public static Block certus_quartz_bud_small;
 
-	public static Block certus_quartz_block;
-
-	public static Block block_salt;
 	public static Block block_thorium;
 	public static Block block_thorium_fuel;
 	public static Block block_uranium;
@@ -301,6 +299,7 @@ public class ModBlocks {
 	public static Block block_c4;
 	public static Block block_smore;
 	public static Block block_slag;
+	public static Block block_salt;
 	public static Block block_osmiridium;
 	public static Block tin_sand;
 
@@ -1594,6 +1593,7 @@ public class ModBlocks {
 		stone_resource = new BlockResourceStone().setBlockName("stone_resource").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F);
 		block_crystal = new BlockCrystalBlock(0, 16).setBlockName("block_crystal").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setStepSound(ModSoundTypes.crystalBlock).setBlockTextureName(RefStrings.MODID + ":crystal_block");
 		block_crystal_2 = new BlockCrystalBlock(16, 16).setBlockName("block_crystal_2").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setStepSound(ModSoundTypes.crystalBlock).setBlockTextureName(RefStrings.MODID + ":crystal_block");
+		block_crystal_3 = new BlockCrystalBlock(32, 1).setBlockName("block_crystal_3").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setStepSound(ModSoundTypes.crystalBlock).setBlockTextureName(RefStrings.MODID + ":crystal_block");
 		block_raw_ore = new BlockRawOreBlock(0, 16).setBlockName("block_raw_ore").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setStepSound(ModSoundTypes.crystalBlock).setBlockTextureName(RefStrings.MODID + ":block_raw_ore");
 		block_raw_ore_2 = new BlockRawOreBlock(16, 8).setBlockName("block_raw_ore_2").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setStepSound(ModSoundTypes.crystalBlock).setBlockTextureName(RefStrings.MODID + ":block_raw_ore");
 		stalagmite = new BlockStalagmite().setBlockName("stalagmite").setCreativeTab(MainRegistry.blockTab).setHardness(0.5F).setResistance(2.0F);
@@ -1632,14 +1632,13 @@ public class ModBlocks {
 		ore_tikite = new BlockDragonProof(Material.rock).setBlockName("ore_tikite").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":ore_tikite_alt");
 
 		// Budding Blocks
-		//todo: Add to Moon worldgen
-		budding_salt = new BlockBuddingSalt(Material.glass).setBlockName("budding_salt").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setResistance(5f).setStepSound(Block.soundTypeGlass);
+		budding_salt = new BlockBuddingSalt().setBlockName("budding_salt").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setResistance(5f).setStepSound(ModSoundTypes.crystalBlock);
 
 		// Buds
-		salt_cluster = new BlockBudSalt(Material.glass, 3, 0.3125f, 0.4375f).setBlockName("salt_cluster").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
-		salt_bud_large = new BlockBudSalt(Material.glass, 2, 0.3125f, 0.3125f).setNextStage(salt_cluster).setBlockName("salt_bud_large").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
-		salt_bud_medium = new BlockBudSalt(Material.glass, 1, 0.3125f, 0.25f).setNextStage(salt_bud_large).setBlockName("salt_bud_medium").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
-		salt_bud_small = new BlockBudSalt(Material.glass, 0, 0.25f, 0.1875f).setNextStage(salt_bud_medium).setBlockName("salt_bud_small").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
+		salt_cluster = new BlockBudSalt(3, 0.3125f, 0.4375f).setBlockName("salt_cluster").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(ModSoundTypes.crystalBlock);
+		salt_bud_large = new BlockBudSalt(2, 0.3125f, 0.3125f).setNextStage(salt_cluster).setBlockName("salt_bud_large").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(ModSoundTypes.crystalBlock);
+		salt_bud_medium = new BlockBudSalt(1, 0.3125f, 0.25f).setNextStage(salt_bud_large).setBlockName("salt_bud_medium").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(ModSoundTypes.crystalBlock);
+		salt_bud_small = new BlockBudSalt(0, 0.25f, 0.1875f).setNextStage(salt_bud_medium).setBlockName("salt_bud_small").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(ModSoundTypes.crystalBlock);
 
 		budding_certus_quartz = new BlockBuddingCertusQuartz(Material.glass).setBlockName("budding_certus_quartz").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setResistance(5f).setStepSound(Block.soundTypeGlass);
 
@@ -1648,10 +1647,7 @@ public class ModBlocks {
 		certus_quartz_bud_medium = new BlockBudCertusQuartz(Material.glass, 1, 0.3125f, 0.25f).setNextStage(certus_quartz_bud_large).setBlockName("certus_quartz_bud_medium").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
 		certus_quartz_bud_small = new BlockBudCertusQuartz(Material.glass, 0, 0.25f, 0.1875f).setNextStage(certus_quartz_bud_medium).setBlockName("certus_quartz_bud_small").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
 
-		certus_quartz_block = new BlockCrystalBlock(32, 1).setBlockName("block_crystal_3").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setStepSound(ModSoundTypes.crystalBlock).setBlockTextureName(RefStrings.MODID + ":crystal_block");
-
 		// the block ID limit is weeping
-		block_salt = new BlockBase(Material.glass).setBlockName("block_salt").setCreativeTab(MainRegistry.blockTab).setHardness(1.5f).setStepSound(Block.soundTypeGlass);
 		block_uranium = new BlockHazard().makeBeaconable().setBlockName("block_uranium").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeMetal).setHardness(5.0F).setResistance(50.0F).setBlockTextureName(RefStrings.MODID + ":block_uranium");
 		block_u233 = new BlockHazard().makeBeaconable().setDisplayEffect(ExtDisplayEffect.RADFOG).setBlockName("block_u233").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeMetal).setHardness(5.0F).setResistance(50.0F).setBlockTextureName(RefStrings.MODID + ":block_u233");
 		block_u235 = new BlockHazard().makeBeaconable().setDisplayEffect(ExtDisplayEffect.RADFOG).setBlockName("block_u235").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeMetal).setHardness(5.0F).setResistance(50.0F).setBlockTextureName(RefStrings.MODID + ":block_u235");
@@ -1744,6 +1740,7 @@ public class ModBlocks {
 		block_c4 = new BlockPlasticExplosive(Material.tnt).setBlockName("block_c4").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeMetal).setHardness(2.0F).setResistance(2.0F).setBlockTextureName(RefStrings.MODID + ":block_c4");
 		block_smore = new BlockPillar(Material.rock, RefStrings.MODID + ":block_smore_top").setBlockName("block_smore").setCreativeTab(MainRegistry.blockTab).setHardness(15.0F).setResistance(600.0F).setBlockTextureName(RefStrings.MODID + ":block_smore_side");
 		block_slag = new BlockSlag(Material.rock).setBlockName("block_slag").setCreativeTab(MainRegistry.blockTab).setStepSound(Block.soundTypeStone).setHardness(2.0F).setBlockTextureName(RefStrings.MODID + ":block_slag");
+		block_salt = new BlockBase().setBlockName("block_salt").setCreativeTab(MainRegistry.blockTab).setStepSound(ModSoundTypes.crystalBlock).setHardness(1.5f).setResistance(2f).setBlockTextureName(RefStrings.MODID + ":block_salt");
 
 		block_australium = new BlockBeaconable(Material.iron).setBlockName("block_australium").setCreativeTab(MainRegistry.blockTab).setHardness(5.0F).setResistance(10.0F).setBlockTextureName(RefStrings.MODID + ":block_australium");
 
@@ -3030,12 +3027,13 @@ public class ModBlocks {
 		GameRegistry.registerBlock(salt_bud_small, salt_bud_small.getUnlocalizedName());
 
 		//Certus Quartz
-		GameRegistry.registerBlock(budding_certus_quartz, budding_certus_quartz.getUnlocalizedName());
-		GameRegistry.registerBlock(certus_quartz_cluster, certus_quartz_cluster.getUnlocalizedName());
-		GameRegistry.registerBlock(certus_quartz_bud_large, certus_quartz_bud_large.getUnlocalizedName());
-		GameRegistry.registerBlock(certus_quartz_bud_medium, certus_quartz_bud_medium.getUnlocalizedName());
-		GameRegistry.registerBlock(certus_quartz_bud_small, certus_quartz_bud_small.getUnlocalizedName());
-		register(certus_quartz_block);
+		if (Compat.isModLoaded(Compat.MOD_AE2)) {
+			GameRegistry.registerBlock(budding_certus_quartz, budding_certus_quartz.getUnlocalizedName());
+			GameRegistry.registerBlock(certus_quartz_cluster, certus_quartz_cluster.getUnlocalizedName());
+			GameRegistry.registerBlock(certus_quartz_bud_large, certus_quartz_bud_large.getUnlocalizedName());
+			GameRegistry.registerBlock(certus_quartz_bud_medium, certus_quartz_bud_medium.getUnlocalizedName());
+			GameRegistry.registerBlock(certus_quartz_bud_small, certus_quartz_bud_small.getUnlocalizedName());
+		}
 
 		//Bedrock ore
 		register(ore_bedrock);
@@ -3049,6 +3047,7 @@ public class ModBlocks {
 		register(stone_resource);
 		register(block_crystal);
 		register(block_crystal_2);
+		register(block_crystal_3);
 		register(block_raw_ore);
 		register(block_raw_ore_2);
 		register(stalagmite);
@@ -3076,7 +3075,6 @@ public class ModBlocks {
 		//GameRegistry.registerBlock(stone_deep_cobble, ItemBlockBase.class, stone_deep_cobble.getUnlocalizedName());
 
 		//Blocks
-		GameRegistry.registerBlock(block_salt, block_salt.getUnlocalizedName());
 		GameRegistry.registerBlock(block_uranium, block_uranium.getUnlocalizedName());
 		GameRegistry.registerBlock(block_u233, block_u233.getUnlocalizedName());
 		GameRegistry.registerBlock(block_u235, block_u235.getUnlocalizedName());
@@ -3171,6 +3169,7 @@ public class ModBlocks {
 		GameRegistry.registerBlock(block_c4, block_c4.getUnlocalizedName());
 		GameRegistry.registerBlock(block_smore, block_smore.getUnlocalizedName());
 		GameRegistry.registerBlock(block_slag, block_slag.getUnlocalizedName());
+		GameRegistry.registerBlock(block_salt, block_salt.getUnlocalizedName());
 
 		//Deco Blocks
 		GameRegistry.registerBlock(deco_titanium, deco_titanium.getUnlocalizedName());

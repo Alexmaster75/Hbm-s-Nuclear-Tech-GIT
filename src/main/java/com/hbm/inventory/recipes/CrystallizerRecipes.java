@@ -42,6 +42,7 @@ import com.hbm.items.special.ItemBedrockOreNew.BedrockOreGrade;
 import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOre;
 import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOreType;
 import com.hbm.items.special.ItemPlasticScrap.ScrapType;
+import com.hbm.util.Compat;
 import com.hbm.util.Tuple.Pair;
 
 import net.minecraft.block.Block;
@@ -273,11 +274,13 @@ public class CrystallizerRecipes extends SerializableRecipe {
 		registerRecipe(new OreDictStack(NETHERQUARTZ.dust()), new CrystallizerRecipe(new ItemStack(ModItems.ball_dynamite, 4), 20), new FluidStack(Fluids.NITROGLYCERIN, 250));
 
 		/// COMPAT CERTUS QUARTZ ///
-		List<ItemStack> quartz = OreDictionary.getOres("crystalCertusQuartz");
-		if(quartz != null && !quartz.isEmpty()) {
-			ItemStack qItem = quartz.get(0).copy();
-			qItem.stackSize = 12;
-			registerRecipe(new OreDictStack("oreCertusQuartz"), new CrystallizerRecipe(qItem, baseTime));
+		if (Compat.isModLoaded(Compat.MOD_AE2)) {
+			List<ItemStack> quartz = OreDictionary.getOres("crystalCertusQuartz");
+			if (quartz != null && !quartz.isEmpty()) {
+				ItemStack qItem = quartz.get(0).copy();
+				qItem.stackSize = 12;
+				registerRecipe(new OreDictStack("oreCertusQuartz"), new CrystallizerRecipe(qItem, baseTime));
+			}
 		}
 
 		/// COMPAT WHITE PHOSPHORUS DUST ///
