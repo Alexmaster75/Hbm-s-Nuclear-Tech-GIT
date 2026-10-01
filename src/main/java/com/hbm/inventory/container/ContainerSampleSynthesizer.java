@@ -11,11 +11,11 @@ public class ContainerSampleSynthesizer extends ContainerBase {
 
 
 
-		addSlotToContainer(new Slot(machine, 0, 30, 18));
-		addSlotToContainer(new Slot(machine, 1, 81, 24));
-		addSlotToContainer(new Slot(machine, 2, 50, 38));
+		addSlotToContainer(new Slot(machine, 0, 63, 21));
+		addSlotToContainer(new Slot(machine, 1, 36, 44));
+		addSlotToContainer(new Slot(machine, 2, 99, 21));
 
-		addSlotToContainer(new Slot(machine, 3, 134, 72));
+		addSlotToContainer(new Slot(machine, 3, 152, 72));
 
 		playerInv(invPlayer, 8, 125, 183);
 	}
