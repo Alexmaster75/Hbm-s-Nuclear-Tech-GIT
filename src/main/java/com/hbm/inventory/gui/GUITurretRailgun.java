@@ -17,6 +17,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
@@ -62,6 +63,15 @@ public class GUITurretRailgun extends GuiInfoContainer {
 
 		this.drawElectricityInfo(this, x, y, guiLeft + 153, guiTop + 34, 16, 42, railgun.getPower(), railgun.getMaxPower());
 		this.drawElectricityInfo(this, x, y, guiLeft + 7, guiTop + 34, 16, 60, railgun.charge, railgun.maxCharge);
+
+		String[] text = new String[] {
+			"Switch to " + (railgun.graphMode ? EnumChatFormatting.GREEN + "ballistics" : EnumChatFormatting.YELLOW + "orientation") + EnumChatFormatting.RESET + " graph"
+		};
+		this.drawCustomInfoStat(x, y, guiLeft + 7, guiTop + 100, 10, 24, x, y, text);
+		text = new String[] {
+			(yeSure ? "Are you " + (BobMathUtil.getBlink() ? EnumChatFormatting.RED : EnumChatFormatting.YELLOW) + "SURE" + EnumChatFormatting.RESET + "?" : EnumChatFormatting.RED + "Dump currently stored charge")
+		};
+		this.drawCustomInfoStat(x, y, guiLeft + 24, guiTop + 105, 27, 14, x, y, text);
 
 		// draw acceptable ammo
 		if(this.mc.thePlayer.inventory.getItemStack() == null && this.guiLeft + 61 <= x && guiLeft + 61 + 54 > x && guiTop + 103 < y && guiTop + 103 + 18 >= y) {
@@ -172,11 +182,12 @@ public class GUITurretRailgun extends GuiInfoContainer {
 			GL11.glScaled(1D / scale, 1D / scale, 1);
 			this.fontRendererObj.drawString("Target:", (int) (97 * scale), (int) (36 * scale), 0x08ff00);
 			if (railgun.targetVector != null) {
-				this.fontRendererObj.drawString("X: " + (Math.abs(railgun.targetVector.x) > 1000000000 ? BobMathUtil.getShortNumber((long) railgun.targetVector.x) : (int) railgun.targetVector.x), (int) (97 * scale), (int) (43 * scale), 0x08ff00);
-				this.fontRendererObj.drawString("Z: " + (Math.abs(railgun.targetVector.y) > 1000000000 ? BobMathUtil.getShortNumber((long) railgun.targetVector.y) : (int) railgun.targetVector.y), (int) (97 * scale), (int) (49 * scale), 0x08ff00);
+				this.fontRendererObj.drawString("X: " + (Math.abs(railgun.targetVector.x) > 1000000000 ? BobMathUtil.getShortNumber((long) railgun.targetVector.x) : (int) railgun.targetVector.x), (int) (97 * scale), (int) (41 * scale), 0x08ff00);
+				this.fontRendererObj.drawString("Z: " + (Math.abs(railgun.targetVector.y) > 1000000000 ? BobMathUtil.getShortNumber((long) railgun.targetVector.y) : (int) railgun.targetVector.y), (int) (97 * scale), (int) (46 * scale), 0x08ff00);
 			}
+			this.fontRendererObj.drawString("Loaded: " + railgun.SabotsNames(railgun.sabotType), (int) (97 * scale), (int) (53 * scale), 0x08ff00);
 			this.fontRendererObj.drawString("V0: " + BobMathUtil.getShortNumber((long) (railgun.v0 * Math.sqrt((double) railgun.charge / (double) railgun.maxCharge))) + "m/s", (int) (97 * scale), (int) (58 * scale), 0x08ff00);
-			this.fontRendererObj.drawString("Charging: " + (int) (railgun.charge * 100 / railgun.maxCharge) + "%", (int) (97 * scale), (int) (64 * scale), 0x00ff00);
+			this.fontRendererObj.drawString("Charging: " + (int) (railgun.charge * 100 / railgun.maxCharge) + "%", (int) (97 * scale), (int) (65 * scale), 0x00ff00);
 			this.fontRendererObj.drawString("Status: " + railgun.status, (int) (97 * scale), (int) (70 * scale), 0x08ff00);
 
 			// arrows' names for the graph

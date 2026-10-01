@@ -1,0 +1,18 @@
+{
+	"name": "Railgun Sabots",
+	"icon": ["hbm:item.ammo_railgun", 1, 0],
+	"trigger": [
+		["hbm:item.ammo_railgun", 1, 0],
+		["hbm:item.ammo_railgun", 1, 1],
+		["hbm:item.ammo_railgun", 1, 2],
+		["hbm:item.ammo_railgun", 1, 3],
+		["hbm:item.ammo_railgun", 1, 4],
+		["hbm:item.ammo_railgun", 1, 5]
+	],
+	"title": {
+		"en_US": "Railgun Sabots"
+	},
+	"content": {
+		"en_US": "Sabots are propellantless munitions fired by the [[railgun|Railgun Louis]] using electricity. They come in a variaty of options, each with their final launch velocity, drag coefficient and specility:<br>-Tungsten APFDS<br>Basic kinetic penetrator.<br><br>-DU APFSDS<br>More destructive tungsten sabot.<br><br>-Desh APFSDS<br>Normal sabot, but with a twist, the first hit results in a ricochet.<br><br>-Nuclear FSDS<br>Nuclear warhead carrying sabot, everything in a 25 blocks radius is annihilated.<br><br>-Starmetal APFSDS<br>More aerodynamic, hence more power dense and faster sabot.<br><br>-Fluid APFSDS<br>Fluid filled sabot. Upon impact, it releases a mist, with the time depending on the amount of fluid stored."
+	}
+}

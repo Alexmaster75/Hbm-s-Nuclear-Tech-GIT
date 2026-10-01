@@ -2,6 +2,7 @@ package com.hbm.tileentity.turret;
 
 import api.hbm.energymk2.IEnergyReceiverMK2;
 import api.hbm.redstoneoverradio.IRORInteractive;
+import api.hbm.redstoneoverradio.IRORValueProvider;
 import com.hbm.entity.projectile.EntityBulletBeamBase;
 import com.hbm.entity.projectile.EntityRailgunProjectile;
 import com.hbm.handler.CompatHandler;
@@ -20,6 +21,7 @@ import com.hbm.tileentity.IGUIProvider;
 import com.hbm.tileentity.TileEntityMachineBase;
 import com.hbm.util.BobMathUtil;
 import com.hbm.util.BufferUtil;
+import com.hbm.util.fauxpointtwelve.DirPos;
 import cpw.mods.fml.common.Optional;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -33,16 +35,18 @@ import net.minecraft.inventory.Container;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import javax.vecmath.Vector2d;
 import java.util.ArrayList;
 import java.util.List;
 
 @Optional.InterfaceList({@Optional.Interface(iface = "li.cil.oc.api.network.SimpleComponent", modid = "OpenComputers")})
-public class TileEntityTurretRailgun extends TileEntityMachineBase implements IGUIProvider, IEnergyReceiverMK2, IControlReceiver, IRORInteractive, SimpleComponent, CompatHandler.OCComponent {
+public class TileEntityTurretRailgun extends TileEntityMachineBase implements IGUIProvider, IEnergyReceiverMK2, IControlReceiver, IRORInteractive, IRORValueProvider, SimpleComponent, CompatHandler.OCComponent {
 
 	public final long maxPower = 5_000_000L;
 	public long power;
@@ -62,6 +66,7 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 	public boolean charging = false;
 	public boolean calculating = false;
 	public ItemStack sabot = null;
+	public int sabotType;
 
 	// calculator variables
 	// they all get replaced by them ammo's data, so except gravity and mass, they're just for reference
@@ -99,17 +104,67 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		return "container.turretRailgun";
 	}
 
+	AxisAlignedBB bb = null;
+
+	@Override
+	public AxisAlignedBB getRenderBoundingBox() {
+		if(bb == null) bb = AxisAlignedBB.getBoundingBox(
+			xCoord - 3, yCoord - 1, zCoord - 3,
+			xCoord + 3, yCoord + 3, zCoord + 3
+		);
+		return bb;
+	}
+
+	@Override
+	@SideOnly(Side.CLIENT)
+	public double getMaxRenderDistanceSquared() {
+		return 65536.0D;
+	}
+
+	public DirPos[] getConPos() {
+		return new DirPos[] {
+			new DirPos(xCoord + 3, yCoord, zCoord, Library.POS_X),
+			new DirPos(xCoord - 3, yCoord, zCoord, Library.NEG_X),
+			new DirPos(xCoord, yCoord, zCoord + 3, Library.POS_Z),
+			new DirPos(xCoord, yCoord, zCoord - 3, Library.NEG_Z)
+		};
+	}
+
+	public String SabotsNames(int type) {
+		switch (type) {
+			case (ItemAmmoRailgun.TUNGSTEN):
+				return "TUNGSTEN";
+			case (ItemAmmoRailgun.DU):
+				return "DU";
+			case (ItemAmmoRailgun.DESH):
+				return "DESH";
+			case (ItemAmmoRailgun.NUKE):
+				return "NUCLEAR";
+			case (ItemAmmoRailgun.STARMETAL):
+				return "STARMETAL";
+			case (ItemAmmoRailgun.FLUID):
+				return "FLUID";
+			default:
+				return "Empty";
+		}
+	}
+
 	@Override
 	public void updateEntity() {
 		if (!worldObj.isRemote) {
 			this.power = Library.chargeTEFromItems(slots, 0, this.power, this.getMaxPower());
+			for (DirPos dir : getConPos()) this.trySubscribe(worldObj, dir);
+
 			this.status = "IDLE";
+			this.sabotType = -1;
 
 			this.sabot = this.getSabotLoaded();
+			this.chargeReadyAudio = false;
 
 			// unit target vector finding
 			if (this.active && this.power > 0 && this.sabot != null) {
-				ItemAmmoRailgun.RailgunSabot sabotData = ItemAmmoRailgun.itemTypes[this.sabot.getItemDamage()];
+				this.sabotType = this.sabot.getItemDamage();
+				ItemAmmoRailgun.RailgunSabot sabotData = ItemAmmoRailgun.itemTypes[this.sabotType];
 				this.v0 = sabotData.v0;
 				this.bc = sabotData.bc;
 
@@ -118,17 +173,25 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 						this.targetVector.x - xCoord,
 						this.targetVector.y - zCoord
 					);
-					this.targetDirectionVector = new Vector2d(deltaTarget); // feed me straight slop
-					this.targetDirectionVector.normalize();
+					if (deltaTarget.length() > (this.bc != 0.0D ? (this.v0 / this.bc * (0.8D + this.v0 * 0.0001D)) : (this.v0 * this.v0 / this.g))) {
+						// this is a simplification of the max distance any shell can fire, works fine as long as the v0 is somewhat >500 with 0.1 < bc < 0.2
+						// basically if it's bigger it nullifies the target, removing the possibility of the turret shooting at 90°
+						// it's fine like this, but it really needs a generalized way and not this crappy calculation
+						// yeah in case the bc is 0 for some reason, it just uses the max range in a vacuum
+						this.targetVector = null;
+					} else {
+						this.targetDirectionVector = new Vector2d(deltaTarget); // feed me straight slop
+						this.targetDirectionVector.normalize();
 
-					// finding optimal launch angle
-					if (this.calculating) {
-						this.status = "COMPUTING";
-						this.x_target = deltaTarget.length();
-						this.calculating = calculateAngleTrajectory();
-						if (!this.calculating) {
-							this.charging = true; // angle found, commit to charging
-							this.targetRotationYaw = -Math.atan2(targetDirectionVector.y, targetDirectionVector.x);
+						// finding optimal launch angle
+						if (this.calculating) {
+							this.status = "COMPUTING";
+							this.x_target = deltaTarget.length();
+							this.calculating = calculateAngleTrajectory();
+							if (!this.calculating) {
+								this.charging = true; // angle found, commit to charging
+								this.targetRotationYaw = -Math.atan2(targetDirectionVector.y, targetDirectionVector.x);
+							}
 						}
 					}
 				}
@@ -145,7 +208,7 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 
 					// audio shit
 					if (!this.chargeReadyAudio && ((maxCharge - this.charge) / consumption <= 120)) this.chargeReadyAudio = true;
-				} else this.chargeReadyAudio = false;
+				}
 
 				// Oh yea here we go! Big big bullet
 				if (this.charge >= maxCharge) this.fire(this.v0);
@@ -170,14 +233,14 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 
 			audioCharging = playAudio(
 				audioCharging,
-				MainRegistry.proxy.getLoopedSound("hbm:alarm.containerAlarm", xCoord, yCoord, zCoord, 1F, 50F, 1.0F, 20),
+				MainRegistry.proxy.getLoopedSound("hbm:alarm.containerAlarm", xCoord, yCoord, zCoord, 1F, 1000F, 1.0F, 20),
 				this.charging,
 				100F,
 				1F
 			);
 			audioSpoolUp = playAudio(
 				audioSpoolUp,
-				MainRegistry.proxy.getLoopedSound(NTMSounds.NUKE_CHARGE, xCoord, yCoord, zCoord, 1F, 75F, 1.0F, 20),
+				MainRegistry.proxy.getLoopedSound(NTMSounds.NUKE_CHARGE, xCoord, yCoord, zCoord, 1F, 250F, 1.0F, 20),
 				this.chargeReadyAudio,
 				120F,
 				1F
@@ -224,6 +287,7 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		buf.writeBoolean(this.chargeReadyAudio);
 		buf.writeBoolean(this.graphMode);
 		BufferUtil.writeString(buf, this.status);
+		buf.writeInt(this.sabotType);
 
 		// solver
 		buf.writeDouble(this.theta);
@@ -233,6 +297,7 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		buf.writeDouble(this.t_max);
 		buf.writeDouble(this.x_target);
 		buf.writeFloat(this.v0);
+		buf.writeDouble(this.bc);
 	}
 
 	@Override
@@ -252,6 +317,7 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		this.chargeReadyAudio = buf.readBoolean();
 		this.graphMode = buf.readBoolean();
 		this.status = BufferUtil.readString(buf);
+		this.sabotType = buf.readInt();
 
 		this.theta = buf.readDouble();
 		this.dtheta = buf.readDouble();
@@ -260,6 +326,7 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		this.t_max = buf.readDouble();
 		this.x_target = buf.readDouble();
 		this.v0 = buf.readFloat();
+		this.bc = buf.readDouble();
 	}
 
 	@Override
@@ -345,8 +412,31 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 							Integer.parseInt(params[0]),
 							Integer.parseInt(params[1])
 						);
+						return;
 					} catch (NumberFormatException e) {}
-				} else if (dataInput.equals("fire") && this.targetVector != null && this.sabot != null) commit();
+				} else if (dataInput.equals("fire") && this.targetVector != null && this.sabot != null) {
+					commit();
+					return;
+				}
+			}
+			params = dataInput.split(NAME_SEPARATOR);
+			if (params.length > 1) {
+				if ((params[0]).equals("pitch")) {
+					try {
+						this.theta = Math.toRadians(MathHelper.clamp_int(Integer.parseInt(params[1]), -13, 90));
+						this.markChanged();
+					} catch (NumberFormatException e) {
+					}
+					return;
+				}
+				if ((params[0]).equals("yaw")) {
+					try {
+						this.targetRotationYaw = Math.toRadians(Integer.parseInt(params[1]) % 360);
+						this.markChanged();
+					} catch (NumberFormatException e) {
+					}
+					return;
+				}
 			}
 			if (dataInput.equals("abort") && (this.calculating || this.charging)) abort();
 		}
@@ -359,6 +449,16 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		return false;
 	}
 
+	@Override
+	public int[] getAccessibleSlotsFromSide(int meta) {
+		return new int[] { 1, 2, 3 };
+	}
+
+	@Override
+	public boolean canConnect(ForgeDirection dir) {
+		return dir != ForgeDirection.DOWN;
+	}
+
 	// the initial velocity is in m/s
 	private void spawnBullet(BulletConfig bullet, ItemStack projectile, float velocity) {
 
@@ -368,7 +468,7 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 
 		EntityBulletBeamBase proj = new EntityBulletBeamBase(worldObj, bullet, 0F);
 		proj.posX = xCoord + bulletVector.xCoord;
-		proj.posY = yCoord + bulletVector.yCoord + 2;
+		proj.posY = yCoord + bulletVector.yCoord + 2.25;
 		proj.posZ = zCoord + bulletVector.zCoord;
 		proj.setRotationsFromVector(bulletVector);
 		proj.beamLength = MathHelper.clamp_double(velocity/4D, 5D, 50D); // atomize whatever is in-front of the barrel for some blocks
@@ -566,6 +666,12 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		return new Object[] {this.charge, this.maxCharge};
 	}
 
+	@Callback(direct = true)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] getLoadedSabot(Context context, Arguments args) {
+		return new Object[] {SabotsNames(this.sabotType)};
+	}
+
 	@Callback(direct = true, limit = 4)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] setPitch(Context context, Arguments args) {
@@ -592,8 +698,7 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 	@Callback(direct = true, limit = 4)
 	@Optional.Method(modid = "OpenComputers")
 	public Object[] setTarget(Context context, Arguments args) {
-		this.targetVector.x = args.checkDouble(0);
-		this.targetVector.y = args.checkDouble(1);
+		this.targetVector = new Vector2d(args.checkDouble(0), args.checkDouble(1));
 		return new Object[] {};
 	}
 
@@ -604,16 +709,35 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		return new Object[] {};
 	}
 
+	@Callback(direct = true, limit = 4)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] fire(Context context, Arguments args) {
+		this.commit();
+		return new Object[] {};
+	}
+
+	@Callback(direct = true, limit = 4)
+	@Optional.Method(modid = "OpenComputers")
+	public Object[] dumpCharge(Context context, Arguments args) {
+		this.dumpCharge();
+		return new Object[] {};
+	}
+
 	@Override
 	public String[] getFunctionInfo() {
 		return new String[] {
+			PREFIX_VALUE + "pitch",
+			PREFIX_VALUE + "yaw",
+			PREFIX_VALUE + "target",
+			PREFIX_VALUE + "charge",
+			PREFIX_VALUE + "loadedSabot",
 			PREFIX_FUNCTION + "setActive" + NAME_SEPARATOR + "active (0 or 1)",
 			PREFIX_FUNCTION + "pitch" + NAME_SEPARATOR + "angle (-13-90)",
 			PREFIX_FUNCTION + "yaw" + NAME_SEPARATOR + "angle (0-360)",
 			PREFIX_FUNCTION + "enqueue" + NAME_SEPARATOR + "x" + PARAM_SEPARATOR + "z",
 			PREFIX_FUNCTION + "fire",
 			PREFIX_FUNCTION + "abort",
-			PREFIX_FUNCTION + "dumpCharge",
+			PREFIX_FUNCTION + "dump",
 		};
 	}
 
@@ -631,15 +755,24 @@ public class TileEntityTurretRailgun extends TileEntityMachineBase implements IG
 		}
 		if((PREFIX_FUNCTION + "enqueue").equals(name) && params.length > 1) {
 			try {
-				this.targetVector.x = Integer.parseInt(params[0]);
-				this.targetVector.y = Integer.parseInt(params[1]);
+				this.targetVector = new Vector2d(Integer.parseInt(params[0]), Integer.parseInt(params[1]));
 				this.markChanged();
 			} catch(NumberFormatException e) {}
 		}
 		if ((PREFIX_FUNCTION + "fire").equals(name)) commit();
 		if ((PREFIX_FUNCTION + "abort").equals(name)) abort();
-		if ((PREFIX_FUNCTION + "dumpCharge").equals(name)) dumpCharge();
+		if ((PREFIX_FUNCTION + "dump").equals(name)) dumpCharge();
 
+		return null;
+	}
+
+	@Override
+	public String provideRORValue(String name) {
+		if((PREFIX_VALUE + "pitch").equals(name))		return "" + (int) Math.toDegrees(this.rotationPitch);
+		if((PREFIX_VALUE + "yaw").equals(name))			return "" + (int) Math.toDegrees(this.rotationYaw);
+		if((PREFIX_VALUE + "target").equals(name))		return "" + this.targetVector != null ? ((int) this.targetVector.x + ":" + (int) this.targetVector.y) : "Not set";
+		if((PREFIX_VALUE + "charge").equals(name))		return "" + (int) (this.charge * 100 / this.maxCharge);
+		if((PREFIX_VALUE + "loadedSabot").equals(name)) return "" + SabotsNames(this.sabotType);
 		return null;
 	}
 }

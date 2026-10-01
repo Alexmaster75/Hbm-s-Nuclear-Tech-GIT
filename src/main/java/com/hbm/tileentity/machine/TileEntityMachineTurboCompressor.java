@@ -74,8 +74,7 @@ public class TileEntityMachineTurboCompressor extends TileEntityMachineBase impl
 				}
 			}
 
-			// ide complains it can be simplified, too bad it didn't account for slots[0] to be null
-			if (onTicks > 0 && (slots[0] == null ? true : (slots[0].stackSize < maxSoot))) {
+			if (onTicks > 0 && (slots[0] == null || (slots[0].stackSize < maxSoot))) {
 				if (slots[0] != null && slots[0].stackSize > maxSoot / 2)
 					//this.demand *= Math.log10(9.0D * 2.0D * (maxSoot - slots[0].stackSize) / maxSoot + 1); // more linear
 					this.demand *= Math.sqrt(1 - Math.pow(2.0D * (maxSoot - slots[0].stackSize) / maxSoot - 1, 2)); // perfectly goniometric, resists and collapses more
