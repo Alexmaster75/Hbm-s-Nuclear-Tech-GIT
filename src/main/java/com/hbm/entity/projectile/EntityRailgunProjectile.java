@@ -155,6 +155,7 @@ public class EntityRailgunProjectile extends EntityThrowableNT implements IChunk
 			case (ItemAmmoRailgun.NUKE):      return "radar.target.railgun_nuke";
 			case (ItemAmmoRailgun.DESH):      return "radar.target.railgun_desh";
 			case (ItemAmmoRailgun.STARMETAL): return "radar.target.railgun_starmetal";
+			case (ItemAmmoRailgun.FLUID): 	  return "radar.target.railgun_fluid";
 			default: return "Unknown";
 		}
 	}

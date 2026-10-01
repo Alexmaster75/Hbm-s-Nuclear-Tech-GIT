@@ -15,12 +15,12 @@ import org.lwjgl.opengl.GL11;
 public class RenderTurretRailgun extends TileEntitySpecialRenderer implements IItemRendererProvider {
 	@Override
 	public void renderTileEntityAt(TileEntity tile, double x, double y, double z, float interp) {
+		TileEntityTurretRailgun railgun = (TileEntityTurretRailgun) tile;
+
 		GL11.glPushMatrix();
 		GL11.glTranslated(x + 0.5, y, z + 0.5);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glShadeModel(GL11.GL_SMOOTH);
-
-		TileEntityTurretRailgun railgun = (TileEntityTurretRailgun) tile;
 
 		bindTexture(ResourceManager.turret_railgun_tex);
 		ResourceManager.turret_railgun.renderPart("Base");
@@ -28,22 +28,16 @@ public class RenderTurretRailgun extends TileEntitySpecialRenderer implements II
 		double yaw = Math.toDegrees(railgun.lastRotationYaw + (railgun.rotationYaw - railgun.lastRotationYaw) * interp);
 		double pitch = Math.toDegrees(railgun.lastRotationPitch + (railgun.rotationPitch - railgun.lastRotationPitch) * interp);
 
-		GL11.glPushMatrix();
-		GL11.glTranslated(1.75, 0, -1.75);
-		GL11.glRotated(-yaw * 4, 0, 1, 0);
-		GL11.glTranslated(-1.75, 0, 1.75);
-		ResourceManager.turret_railgun.renderPart("Cog");
-		GL11.glPopMatrix();
-
 		GL11.glRotated(yaw, 0, 1, 0);
-		ResourceManager.turret_railgun.renderPart("Carriage");
+		ResourceManager.turret_railgun.renderPart("Mount");
 
-		GL11.glTranslated(0, 2, 0);
+		GL11.glTranslated(0, 2.25, 0);
 		GL11.glRotated(pitch, 0, 0, 1);
-		GL11.glTranslated(0, -2, 0);
+		GL11.glTranslated(0, -2.25, 0);
 		ResourceManager.turret_railgun.renderPart("Barrel");
 
 		if (railgun.charge > 0L) {
+			GL11.glTranslated(0.09375, 0, 0);
 			GL11.glDisable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glDisable(GL11.GL_LIGHTING);
@@ -52,29 +46,14 @@ public class RenderTurretRailgun extends TileEntitySpecialRenderer implements II
 
 			Tessellator tess = Tessellator.instance;
 
-			double dl = 0.9375;
-			double ds = dl * 0.6;
-			double dh = dl * 0.4;
+			double dl = 15D / 29D;
+			double ds = 0.25;
+			double dh = 0.6875;
 
 			tess.startDrawingQuads();
-			tess.setColorRGBA_F(0.4F, 0.9F, 1.0F, (float) (Math.random() * 0.05F) + (float) (0.95D * Math.sqrt((double) railgun.charge / (double) railgun.maxCharge)));
+			tess.setColorRGBA_F(0.4F, 0.9F, 1.0F, (float) Math.log10((double) railgun.charge / (double) railgun.maxCharge  * 9D + 1D) * ((float) (Math.random() * 0.2D + 0.8D)));
 
-			double middle = 2.0;
-
-			tess.addVertex(dl, middle - dh, -ds);
-			tess.addVertex(dl, middle + dh, -ds);
-			tess.addVertex(dl, middle + dh, ds);
-			tess.addVertex(dl, middle - dh, ds);
-
-			tess.addVertex(-dl, middle - dh, -ds);
-			tess.addVertex(-dl, middle + dh, -ds);
-			tess.addVertex(-dl, middle + dh, ds);
-			tess.addVertex(-dl, middle - dh, ds);
-
-			tess.addVertex(-dl, middle - dh, ds);
-			tess.addVertex(-dl, middle + dh, ds);
-			tess.addVertex(dl, middle + dh, ds);
-			tess.addVertex(dl, middle - dh, ds);
+			double middle = 2.25;
 
 			tess.addVertex(-dl, middle - dh, -ds);
 			tess.addVertex(-dl, middle + dh, -ds);
@@ -86,10 +65,26 @@ public class RenderTurretRailgun extends TileEntitySpecialRenderer implements II
 			tess.addVertex(dl, middle + dh, ds);
 			tess.addVertex(dl, middle + dh, -ds);
 
+			tess.addVertex(dl, middle - dh, -ds);
+			tess.addVertex(dl, middle + dh, -ds);
+			tess.addVertex(dl, middle + dh, ds);
+			tess.addVertex(dl, middle - dh, ds);
+
+
 			tess.addVertex(-dl, middle - dh, -ds);
 			tess.addVertex(-dl, middle - dh, ds);
+			tess.addVertex(-dl, middle + dh, ds);
+			tess.addVertex(-dl, middle + dh, -ds);
+
+			tess.addVertex(-dl, middle - dh, ds);
 			tess.addVertex(dl, middle - dh, ds);
+			tess.addVertex(dl, middle + dh, ds);
+			tess.addVertex(-dl, middle + dh, ds);
+
+			tess.addVertex(-dl, middle - dh, -ds);
 			tess.addVertex(dl, middle - dh, -ds);
+			tess.addVertex(dl, middle - dh, ds);
+			tess.addVertex(-dl, middle - dh, ds);
 
 			tess.draw();
 
@@ -114,19 +109,18 @@ public class RenderTurretRailgun extends TileEntitySpecialRenderer implements II
 
 			public void renderInventory() {
 				GL11.glTranslated(0, -1.5, 0);
-				GL11.glScaled(3, 3, 3);
+				GL11.glScaled(4, 4, 4);
 			}
 			public void renderCommonWithStack(ItemStack item) {
-				GL11.glScaled(0.5, 0.5, 0.5);
+				GL11.glScaled(0.6, 0.6, 0.6);
 				GL11.glShadeModel(GL11.GL_SMOOTH);
 				bindTexture(ResourceManager.turret_railgun_tex);
 
 				ResourceManager.turret_railgun.renderPart("Base");
-				ResourceManager.turret_railgun.renderPart("Cog");
-				ResourceManager.turret_railgun.renderPart("Carriage");
-				GL11.glTranslated(0, 2, 0);
+				ResourceManager.turret_railgun.renderPart("Mount");
+				GL11.glTranslated(0, 2.25, 0);
 				GL11.glRotated(45, 0, 0, 1);
-				GL11.glTranslated(0, -2, 0);
+				GL11.glTranslated(0, -2.25, 0);
 				ResourceManager.turret_railgun.renderPart("Barrel");
 
 				GL11.glShadeModel(GL11.GL_FLAT);

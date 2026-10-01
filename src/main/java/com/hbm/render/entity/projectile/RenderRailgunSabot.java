@@ -15,7 +15,7 @@ public class RenderRailgunSabot extends Render {
 		GL11.glRotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * f1 - 90.0F, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * f1 - 90, 0.0F, 0.0F, 1.0F);
 
-		float scale = 4F;
+		float scale = 1.5F;
 		GL11.glScalef(scale, scale, scale);
 
 		this.bindEntityTexture(entity);
@@ -27,9 +27,7 @@ public class RenderRailgunSabot extends Render {
 		EntityRailgunProjectile sabot = (EntityRailgunProjectile) entity;
 		ResourceManager.railgun_sabot.renderPart("Sabot");
 		if (!sabot.sabotSeparation) {
-			ResourceManager.railgun_sabot.renderPart("Jacket1");
-			ResourceManager.railgun_sabot.renderPart("Jacket2");
-			ResourceManager.railgun_sabot.renderPart("Jacket3");
+			ResourceManager.railgun_sabot.renderPart("Jacket");
 		}
 		GL11.glShadeModel(GL11.GL_FLAT);
 		if(fog) GL11.glEnable(GL11.GL_FOG);

@@ -1,0 +1,13 @@
+{
+	"name": "Railgun Louis",
+	"icon": ["hbm:tile.turret_railgun", 1, 0],
+	"trigger": [
+		["hbm:tile.turret_railgun", 1, 0]
+	],
+	"title": {
+		"en_US": "Railgun Louis"
+	},
+	"content": {
+		"en_US": "The railgun is a powerful weapon, capable of launching supersonic projectiles at long range by discharging high amounts of current in a short amount of time, resulting in a devastating force.<br><br>Its ammo are [[sabots|Railgun Sabots]], propellantless munitions.<br><br>The operation of the railgun can be relatively complicated at first, but it's pretty straightforward. Prerequisites are a strong enough power source (250 KHE/t recommended), a distant target to shoot at, and optionally some [[RoR|Redstone over Radio]] controls.<br>First of all, activate the railgun, with some energy stored, you will see the main displays booting up. The right is for overview data, like target's coordinates, launch speed and status.<br>The left display instead is for specific information, switchable using the green selector in the bottom left side, these being the orientation and ballistics graph, respectively, turret's yaw compared to the target (yellow = barrel, red = target) and the integrated ballistic calculator simulation graph.<br>The big red DUMP button is responsible for a quick discharge, resulting in immediate firing, with the consequence of having a lower exit velocity, be careful.<br><br>In order to operate the railgun, it's necessary to input commands with the terminal, here's a list of them:<br>- X:Z -> Respective X & Z coordinates of the target<br>- fire -> Starts the firing sequence<br>- abort -> Stops all operations<br>- pitch!value -> Sets the pitch value (degrees)<br>- yaw!value -> Sets the yaw value (degrees)<br><br>Please note that pitch & yaw only work while aligning"
+	}
+}

@@ -827,6 +827,8 @@ public class AssemblyMachineRecipes extends GenericRecipes<GenericRecipe> {
 				.inputItems(new OreDictStack(STAINLESS.plate(), 3), new OreDictStack(DESH.block(), 2), new OreDictStack(W.bolt(), 16)));
 		this.register(new GenericRecipe("ass.railgunstarmetal").setup(200, 100).outputItems(new ItemStack(ModItems.ammo_railgun, 1, ItemAmmoRailgun.STARMETAL))
 				.inputItems(new OreDictStack(STAINLESS.plate(), 3), new OreDictStack(STAR.block(), 2), new OreDictStack(W.bolt(), 16)));
+		this.register(new GenericRecipe("ass.railgunfluid").setup(200, 100).outputItems(new ItemStack(ModItems.ammo_railgun, 1, ItemAmmoRailgun.FLUID))
+				.inputItems(new OreDictStack(STAINLESS.plate(), 3), new OreDictStack(W.block(), 2), new OreDictStack(W.bolt(), 16), new ComparableStack(ModItems.fluid_tank_lead_empty, 1)));
 
 		// missile parts
 		this.register(new GenericRecipe("ass.missileassembly").setup(200, 100).outputItems(new ItemStack(ModItems.missile_assembly, 1))
