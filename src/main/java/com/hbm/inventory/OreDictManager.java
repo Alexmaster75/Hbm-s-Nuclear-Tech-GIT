@@ -1,19 +1,8 @@
 package com.hbm.inventory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-
-//i love you, tam.
-import static com.hbm.items.ModItems.*;
-import static com.hbm.blocks.ModBlocks.*;
-import static com.hbm.inventory.OreDictManager.DictFrame.*;
-import static com.hbm.inventory.material.MaterialShapes.*;
-
+import com.hbm.blocks.BlockEnums.EnumStoneType;
 import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.generic.BlockOreBasalt.EnumBasaltOreType;
-import com.hbm.blocks.BlockEnums.EnumStoneType;
 import com.hbm.crafting.MineralRecipes;
 import com.hbm.hazard.HazardData;
 import com.hbm.hazard.HazardEntry;
@@ -25,16 +14,11 @@ import com.hbm.inventory.material.MaterialShapes;
 import com.hbm.inventory.material.Mats;
 import com.hbm.inventory.material.NTMMaterial;
 import com.hbm.inventory.material.NTMMaterial.SmeltingBehavior;
+import com.hbm.items.ItemEnums.*;
 import com.hbm.items.ModItems;
-import com.hbm.items.ItemEnums.EnumAshType;
-import com.hbm.items.ItemEnums.EnumBriquetteType;
-import com.hbm.items.ItemEnums.EnumChunkType;
-import com.hbm.items.ItemEnums.EnumCokeType;
-import com.hbm.items.ItemEnums.EnumTarType;
 import com.hbm.items.special.ItemBedrockOre.EnumBedrockOre;
 import com.hbm.main.MainRegistry;
 import com.hbm.util.Compat;
-
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import net.minecraft.block.Block;
 import net.minecraft.init.Blocks;
@@ -43,7 +27,19 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.OreDictionary.OreRegisterEvent;
-import org.lwjgl.Sys;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+
+import static com.hbm.blocks.ModBlocks.*;
+import static com.hbm.inventory.OreDictManager.DictFrame.fromAll;
+import static com.hbm.inventory.OreDictManager.DictFrame.fromOne;
+import static com.hbm.inventory.material.MaterialShapes.*;
+import static com.hbm.items.ModItems.*;
+
+//i love you, tam.
 
 //the more i optimize this, the more it starts looking like gregtech
 @NotableComments
@@ -491,7 +487,7 @@ public class OreDictManager {
 		BAKELITE															.ingot(ingot_bakelite)												.dust(powder_bakelite)											.block(block_bakelite);
 		LATEX									.gem(ball_resin)			.ingot(ingot_biorubber);
 		RUBBER																.ingot(ingot_rubber)												.dust(powder_rubber)											.block(block_rubber);
-		SALT		.crystal(crystal_salt)																										.dust(salt);
+		SALT		.crystal(salt_cluster)									.ingot(salt_shard)												.dust(salt);
 		//PET																	.ingot(ingot_pet);
 		PC																	.ingot(ingot_pc);
 		PVC																	.ingot(ingot_pvc)													.dust(powder_pvc);
@@ -854,7 +850,6 @@ public class OreDictManager {
 		OreDictionary.registerOre("crystalStarmetal", crystal_starmetal);
 		OreDictionary.registerOre("crystalOsmiridium", crystal_osmiridium);
 		OreDictionary.registerOre("crystalCinnebar", crystal_cinnebar);
-		OreDictionary.registerOre("crystalCertusQuartz", quartz_crystal);
 
 		OreDictionary.registerOre("crystalRedPhosphorus", crystal_phosphorus);
 		OreDictionary.registerOre("crystalSaltpeter", crystal_niter);
@@ -897,8 +892,12 @@ public class OreDictManager {
 		OreDictionary.registerOre("StarmetalCrystal", crystal_starmetal);
 		OreDictionary.registerOre("OsmiridiumCrystal", crystal_osmiridium);
 		OreDictionary.registerOre("CinnebarCrystal", crystal_cinnebar);
-		OreDictionary.registerOre("CertusQuartzCrystal", quartz_crystal);
-		OreDictionary.registerOre("dustCertusQuartz", powder_certus_quartz);
+		OreDictionary.registerOre("SaltCrystal", salt_cluster);
+		if (Compat.isModLoaded(Compat.MOD_AE2)) {
+			OreDictionary.registerOre("CertusQuartzCrystal", quartz_crystal);
+			OreDictionary.registerOre("dustCertusQuartz", powder_certus_quartz);
+			OreDictionary.registerOre("crystalCertusQuartz", quartz_crystal);
+		}
 
 		OreDictionary.registerOre("crystalCleaned", crystal_cleaned);
 		OreDictionary.registerOre("CleanedCrystal", crystal_cleaned);
@@ -909,9 +908,9 @@ public class OreDictManager {
 		OreDictionary.registerOre("crystalCharred", crystal_charred);
 		OreDictionary.registerOre("CharredCrystal", crystal_charred);
 
-		String[] crystalBlockNames = { "Coal", "Iron", "Gold", "Redstone", "Lapis", "Diamond", "Uranium", "Thorium", "Plutonium", "Titanium", "Sulfur", "Niter", "Copper", "Tungsten", "Aluminium", "Fluorite", "Beryllium", "Lead", "Schraranium", "Schrabidium", "Rare", "Phosphorus", "Trixite", "Lithium", "Cobalt", "Mineral", "Nickel", "Niobium", "Zinc", "Osmiridium", "Cinnebar", "Starmetal", "CertusQuartz" };
+		String[] crystalBlockNames = { "Coal", "Iron", "Gold", "Redstone", "Lapis", "Diamond", "Uranium", "Thorium", "Plutonium", "Titanium", "Sulfur", "Niter", "Copper", "Tungsten", "Aluminium", "Fluorite", "Beryllium", "Lead", "Schraranium", "Schrabidium", "Rare", "Phosphorus", "Trixite", "Lithium", "Cobalt", "Mineral", "Nickel", "Niobium", "Zinc", "Osmiridium", "Cinnebar", "Starmetal", "Salt", "CertusQuartz" };
 		for(int i = 0; i < crystalBlockNames.length; i++) {
-			OreDictionary.registerOre("crystalBlock" + crystalBlockNames[i], i < 16 ? new ItemStack(block_crystal, 1, i) : (i < 32 ? new ItemStack(block_crystal_2, 1, i - 16) : new ItemStack(certus_quartz_block, 1, i - 32)));
+			OreDictionary.registerOre("crystalBlock" + crystalBlockNames[i], i < 16 ? new ItemStack(block_crystal, 1, i) : (i < 32 ? new ItemStack(block_crystal_2, 1, i - 16) : new ItemStack(block_crystal_3, 1, i - 32)));
 		}
 
 		String[] rawOreNames = { "Iron", "Gold", "Copper", "Titanium", "Thorium", "Morkite", "Nickel", "Mineral", "Zinc", "Lithium", "Niobium", "Palladium", "Iodine", "Arsenic", "Cadmium", "Tungsten", "Aluminium", "Lead", "Beryllium", "Silicon", "Australium", "Lanthanium", "Uranium", "Schrabidium" };

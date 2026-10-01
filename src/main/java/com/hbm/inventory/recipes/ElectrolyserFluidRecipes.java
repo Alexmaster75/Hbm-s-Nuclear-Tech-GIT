@@ -43,7 +43,7 @@ public class ElectrolyserFluidRecipes extends SerializableRecipe {
 
 		recipes.put(Fluids.MONAZITE_SLOP, new ElectrolysisRecipe(250, new FluidStack(Fluids.NONE, 0), new FluidStack(Fluids.CHLORINE, 250), new ItemStack(ModItems.powder_thorium, 1), new ItemStack(ModItems.powder_desh_mix, 1)));
 		recipes.put(Fluids.TICL4, new ElectrolysisRecipe(1000, new FluidStack(Fluids.NONE, 0), new FluidStack(Fluids.CHLORINE, 500), new ItemStack(ModItems.powder_titanium, 4)));
-
+		recipes.put(Fluids.BRINE, new ElectrolysisRecipe(500, new FluidStack(Fluids.CHLORINE, 100), new FluidStack(Fluids.CAUSTIC_SODA, 450), 35));
 	}
 
 	public static HashMap getRecipes() {

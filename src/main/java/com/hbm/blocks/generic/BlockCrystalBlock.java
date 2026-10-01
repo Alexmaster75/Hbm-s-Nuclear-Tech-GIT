@@ -11,7 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 
 public class BlockCrystalBlock extends BlockEnumMulti {
-// bro uses two block IDs
+// bro uses three block IDs
 	public final int offset;
 	public final int count;
 

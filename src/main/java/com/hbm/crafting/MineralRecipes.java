@@ -61,6 +61,7 @@ public class MineralRecipes {
 		add1To9Pair(ModBlocks.block_cdalloy, ModItems.ingot_cdalloy);
 
 		add1To9Pair(new ItemStack(ModBlocks.block_slag), new ItemStack(ModItems.ingot_raw, 9, MAT_SLAG.id));
+		add1To9Pair(new ItemStack(ModBlocks.block_salt), new ItemStack(ModItems.salt, 9));
 
 		for(int i = 0; i < EnumCokeType.values().length; i++) {
 			add1To9PairSameMeta(Item.getItemFromBlock(ModBlocks.block_coke), ModItems.coke, i);

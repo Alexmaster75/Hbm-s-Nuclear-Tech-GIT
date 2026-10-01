@@ -351,6 +351,9 @@ public class Fluids {
 	public static FluidType DORMANT_GRAY_GOO;
 	public static FluidType CAUSTIC_SODA;
 	public static FluidType SLAKED_LIME;
+	public static FluidType SALT_WATER;
+	public static FluidType FERTILIZER;
+	public static FluidType COMPOST;
 
 	/* Legacy names for compatibility purposes */
 	@Deprecated public static FluidType ACID;	//JAOPCA uses this, apparently
@@ -737,6 +740,9 @@ public class Fluids {
 		LUNG_FUEL = new FluidType("LUNG_FUEL", 0xB01B1B, 1, 2, 0, EnumSymbol.NONE).addContainers(new CD_Canister(0xFF2C2C)).addTraits(LIQUID, P_FUEL, new FT_Rocket(321, 1_564_000));
 		CAUSTIC_SODA = new FluidType("CAUSTIC_SODA", 0xE4ECEE, 3, 0, 1, EnumSymbol.ACID).addTraits(LIQUID, VISCOUS, new FT_Corrosive(45));
 		SLAKED_LIME = new FluidType("SLAKED_LIME", 0xE0DDD0, 1, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS);
+		SALT_WATER = new FluidType("SALT_WATER",0x3333FF, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, UNSIPHONABLE);
+		FERTILIZER = new FluidType("FERTILIZER", 0x808853, 2, 0, 3, EnumSymbol.OXIDIZER).addTraits(LIQUID);
+		COMPOST = new FluidType("COMPOST", 0x4F3F17, 0, 0, 0, EnumSymbol.NONE).addTraits(LIQUID, VISCOUS, UNSIPHONABLE);
 
 		File folder = MainRegistry.configHbmDir;
 		File customTypes = new File(folder.getAbsolutePath() + File.separatorChar + "hbmFluidTypes.json");
@@ -1083,6 +1089,9 @@ public class Fluids {
 		metaOrder.add(DORMANT_GRAY_GOO);
 		metaOrder.add(CAUSTIC_SODA);
 		metaOrder.add(SLAKED_LIME);
+		metaOrder.add(SALT_WATER);
+		metaOrder.add(FERTILIZER);
+		metaOrder.add(COMPOST);
 
 		//ANY INTERNAL RENAMING MUST BE REFLECTED HERE - DON'T FORGET TO CHANGE: LANG FILES + TYPE'S STRING ID + NAME OF TANK/GUI TEXTURE FILES!
 		// V

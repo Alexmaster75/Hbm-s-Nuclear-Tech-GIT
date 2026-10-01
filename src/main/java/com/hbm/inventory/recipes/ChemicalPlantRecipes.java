@@ -1,13 +1,7 @@
 package com.hbm.inventory.recipes;
 
-import static com.hbm.inventory.OreDictManager.*;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import com.hbm.blocks.ModBlocks;
 import com.hbm.blocks.BlockEnums.EnumStoneType;
+import com.hbm.blocks.ModBlocks;
 import com.hbm.config.GeneralConfig;
 import com.hbm.inventory.FluidStack;
 import com.hbm.inventory.OreDictManager.DictFrame;
@@ -15,25 +9,23 @@ import com.hbm.inventory.RecipesCommon.AStack;
 import com.hbm.inventory.RecipesCommon.ComparableStack;
 import com.hbm.inventory.RecipesCommon.OreDictStack;
 import com.hbm.inventory.fluid.Fluids;
-import com.hbm.inventory.fluid.FluidType;
-import com.hbm.inventory.fluid.trait.FT_Ink;
-import com.hbm.inventory.material.Mats;
-import com.hbm.inventory.material.MaterialShapes;
-import com.hbm.inventory.material.Mats.MaterialStack;
 import com.hbm.inventory.recipes.loader.GenericRecipe;
 import com.hbm.inventory.recipes.loader.GenericRecipes;
 import com.hbm.items.ItemEnums.EnumCokeType;
 import com.hbm.items.ItemEnums.EnumFuelAdditive;
 import com.hbm.items.ItemGenericPart.EnumPartType;
 import com.hbm.items.ModItems;
-import com.hbm.items.machine.ItemFluidIcon;
-import com.hbm.items.machine.ItemScraps;
 import com.hbm.items.machine.ItemBatteryPack.EnumBatteryPack;
-import com.hbm.items.machine.ItemChemicalDye.EnumChemDye;
-
+import com.hbm.items.machine.ItemFluidIcon;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static com.hbm.inventory.OreDictManager.*;
 
 public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 
@@ -615,6 +607,18 @@ public class ChemicalPlantRecipes extends GenericRecipes<GenericRecipe> {
 			.inputFluids(new FluidStack(Fluids.PISS, 100, 1), new FluidStack(Fluids.WATER, 2000, 1), new FluidStack(Fluids.DILUTED_BUURMIC_ACID, 10, 1))
 			.outputFluids(new FluidStack(Fluids.PISS, 2000))
 		);
+		this.register(new GenericRecipe("chem.brine_production").setup(150, 2000).setIcon(ModItems.fluid_icon, Fluids.BRINE.getID())
+			.inputFluids(new FluidStack(Fluids.SALT_WATER, 16_000), new FluidStack(Fluids.CAUSTIC_SODA, 500))
+			.inputItems(new ComparableStack(ModItems.sodium_carbonate, 5))
+			.outputFluids(new FluidStack(Fluids.BRINE, 8000), new FluidStack(Fluids.CARBONDIOXIDE, 5000))
+			.outputItems(new ItemStack(ModItems.powder_calcium, 5)));
+		this.register(new GenericRecipe("chem.sodium_carbonate_recycling").setup(50, 1000).setIcon(ModItems.sodium_carbonate)
+			.inputFluids(new FluidStack(Fluids.CAUSTIC_SODA, 1000), new FluidStack(Fluids.CARBONDIOXIDE, 1000))
+			.outputItems(new ItemStack(ModItems.sodium_carbonate, 1)));
+		this.register(new GenericRecipe("chem.sodium_carbonate").setup(150, 1500).setIcon(ModItems.sodium_carbonate)
+			.inputFluids(new FluidStack(Fluids.AMMONIA, 1000))
+			.inputItems(new ComparableStack(ModItems.salt, 1), new ComparableStack(ModItems.powder_limestone))
+			.outputItems(new ItemStack(ModItems.sodium_carbonate)));
 	}
 
 	public static HashMap getRecipes() {

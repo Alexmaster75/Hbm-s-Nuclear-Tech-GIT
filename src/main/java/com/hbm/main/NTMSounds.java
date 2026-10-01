@@ -42,7 +42,7 @@ public class NTMSounds {
 
 	/// MAGNETIC ///
 	public static final String MAGNETIC = "hbm:magnetic";
-	
+
 	/// FIRING ///
 	public static final String GUN_LOCKON = "hbm:weapon.fire.lockon";
 	public static final String GUN_SMACK = "hbm:weapon.fire.smack"; // hitting people with the butt of the gun
@@ -129,6 +129,7 @@ public class NTMSounds {
 	public static final String HEPHAESTUS_LOOP = "hbm:block.hephaestusRunning";
 	public static final String STEAM_ENGINE_HIT = "hbm:block.steamEngineOperate";
 	public static final String REACTOR_GEIGER_LOOP = "hbm:block.reactorLoop";
+	public static final String GROWTH_CHAMBER_LOOP = "hbm:block.growthChamberOperation";
 
 	/// MISC ///
 	public static final String TECH_BOOP = "hbm:item.techBoop"; // boop

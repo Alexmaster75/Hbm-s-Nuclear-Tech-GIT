@@ -59,6 +59,7 @@ public class BlockEnums {
 		OSMIRIDIUM,
 		CINNEBAR,
 		STARMETAL,
+		SALT,
 		CERTUS
 	}
 

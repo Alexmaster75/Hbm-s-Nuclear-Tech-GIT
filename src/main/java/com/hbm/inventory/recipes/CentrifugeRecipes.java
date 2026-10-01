@@ -32,6 +32,7 @@ import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOre;
 import com.hbm.items.special.ItemBedrockOreNew.CelestialBedrockOreType;
 import com.hbm.items.special.ItemByproduct.EnumByproduct;
 import com.hbm.main.MainRegistry;
+import com.hbm.util.Compat;
 import com.hbm.util.ItemStackUtil;
 
 import net.minecraft.init.Blocks;
@@ -356,17 +357,19 @@ public class CentrifugeRecipes extends SerializableRecipe {
 			recipes.put(new ComparableStack(ItemBedrockOreNew.make(BedrockOreGrade.RAD_WASHED, type)), new ItemStack[] {ItemBedrockOreNew.extract(type.byproductRad, 1), ItemBedrockOreNew.make(BedrockOreGrade.CRUMBS, type)});
 		}
 
-		List<ItemStack> quartz = OreDictionary.getOres("crystalCertusQuartz");
+		if (Compat.isModLoaded(Compat.MOD_AE2)) {
+			List<ItemStack> quartz = OreDictionary.getOres("crystalCertusQuartz");
 
-		if(quartz != null && !quartz.isEmpty()) {
-			ItemStack qItem = quartz.get(0).copy();
-			qItem.stackSize = 2;
+			if (quartz != null && !quartz.isEmpty()) {
+				ItemStack qItem = quartz.get(0).copy();
+				qItem.stackSize = 2;
 
-			recipes.put(new OreDictStack("oreCertusQuartz"), new ItemStack[] {
+				recipes.put(new OreDictStack("oreCertusQuartz"), new ItemStack[]{
 					qItem.copy(),
 					qItem.copy(),
 					qItem.copy(),
-					qItem.copy() });
+					qItem.copy()});
+			}
 		}
 
 		recipes.put(new ComparableStack(Items.blaze_rod), new ItemStack[] {new ItemStack(Items.blaze_powder, 1), new ItemStack(Items.blaze_powder, 1), new ItemStack(ModItems.powder_fire, 1), new ItemStack(ModItems.powder_fire, 1) });
@@ -402,7 +405,8 @@ public class CentrifugeRecipes extends SerializableRecipe {
 		recipes.put(new OreDictStack(NB.crystal()), new ItemStack[] { new ItemStack(ModItems.powder_niobium, 2), new ItemStack(ModItems.powder_niobium, 2), new ItemStack(ModItems.powder_iron, 2), new ItemStack(ModItems.nugget_hafnium, 1) }); //THERE WE GO
 		recipes.put(new OreDictStack(ZI.crystal()), new ItemStack[] { new ItemStack(ModItems.powder_zinc, 2), new ItemStack(ModItems.powder_zinc, 2), new ItemStack(ModItems.sulfur, 2), new ItemStack(ModItems.powder_aluminium, 1) });
 		recipes.put(new ComparableStack(ModItems.nickel_salts), new ItemStack[] { new ItemStack(ModItems.powder_iron, 2), new ItemStack(ModItems.powder_nickel, 2), new ItemStack(ModItems.powder_sodium, 1), new ItemStack(ModItems.sulfur, 1) });
-
+		recipes.put(new ComparableStack(ModBlocks.salt_bud_large), new ItemStack[] { new ItemStack(ModItems.salt_shard, 1), new ItemStack(ModItems.salt_shard, 1) });
+		recipes.put(new ComparableStack(ModBlocks.salt_cluster), new ItemStack[] { new ItemStack(ModItems.salt_shard, 3), new ItemStack(ModItems.salt_shard, 3), new ItemStack(ModItems.salt, 5) });
 	}
 
 	@Override

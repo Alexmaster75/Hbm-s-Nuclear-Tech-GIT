@@ -8,13 +8,13 @@ import net.minecraft.item.Item;
 import java.util.Random;
 
 public class BlockBudSalt extends BlockBudBase {
-	public BlockBudSalt(Material material, int stage, float halfWidth, float height) {
-		super(material, stage, halfWidth, height);
+	public BlockBudSalt(int stage, float halfWidth, float height) {
+		super(Material.rock, stage, halfWidth, height);
 	}
 
 	@Override
 	public Item getItemDropped(int meta, Random rand, int fortune) {
-		return stage >= 2 ? ModItems.crystal_salt : null;
+		return stage >= 2 ? ModItems.salt_shard : null;
 	}
 
 	@Override
