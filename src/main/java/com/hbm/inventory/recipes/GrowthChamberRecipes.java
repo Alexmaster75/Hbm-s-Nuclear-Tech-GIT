@@ -66,34 +66,69 @@ public class GrowthChamberRecipes extends GenericRecipes<GenericRecipe> {
 		}
 
 		//Plants
-		this.register(new GenericRecipe("growth.hemp").setup(100, 50)
+			this.register(new GenericRecipe("growth.hemp.fertilizer").setup(100, 50)
 			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.WEED))
-			.inputFluids(new FluidStack(Fluids.WATER, 1000))
-			.outputItems(new ItemStack(ModBlocks.plant_flower, 3, EnumFlowerType.WEED.ordinal())));
-		this.register(new GenericRecipe("growth.nightshade").setup(100, 50)
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 250))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 5, EnumFlowerType.WEED.ordinal())));
+		this.register(new GenericRecipe("growth.hemp.compost").setup(100, 50)
+			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.WEED))
+			.inputFluids(new FluidStack(Fluids.COMPOST, 2000))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 2, EnumFlowerType.WEED.ordinal())));
+
+		this.register(new GenericRecipe("growth.nightshade.fertilizer").setup(100, 50)
 			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.NIGHTSHADE))
-			.inputFluids(new FluidStack(Fluids.WATER, 1000))
-			.outputItems(new ItemStack(ModBlocks.plant_flower, 3, EnumFlowerType.NIGHTSHADE.ordinal())));
-		this.register(new GenericRecipe("growth.foxglove").setup(100, 50)
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 250))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 5, EnumFlowerType.NIGHTSHADE.ordinal())));
+		this.register(new GenericRecipe("growth.nightshade.compost").setup(100, 50)
+			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.NIGHTSHADE))
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 2000))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 2, EnumFlowerType.NIGHTSHADE.ordinal())));
+
+		this.register(new GenericRecipe("growth.foxglove.fertilizer").setup(100, 50)
 			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.FOXGLOVE))
-			.inputFluids(new FluidStack(Fluids.WATER, 1000))
-			.outputItems(new ItemStack(ModBlocks.plant_flower, 3, EnumFlowerType.FOXGLOVE.ordinal())));
-		this.register(new GenericRecipe("growth.tabacco").setup(100, 50)
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 250))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 5, EnumFlowerType.FOXGLOVE.ordinal())));
+		this.register(new GenericRecipe("growth.foxglove.compost").setup(100, 50)
+			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.FOXGLOVE))
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 2000))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 2, EnumFlowerType.FOXGLOVE.ordinal())));
+
+		this.register(new GenericRecipe("growth.tabacco.fertilizer").setup(100, 50)
 			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.TOBACCO))
-			.inputFluids(new FluidStack(Fluids.WATER, 1000))
-			.outputItems(new ItemStack(ModBlocks.plant_flower, 3, EnumFlowerType.TOBACCO.ordinal())));
-		this.register(new GenericRecipe("growth.strawberry").setup(100, 50)
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 250))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 5, EnumFlowerType.TOBACCO.ordinal())));
+		this.register(new GenericRecipe("growth.tabacco.compost").setup(100, 50)
+			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.TOBACCO))
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 2000))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 2, EnumFlowerType.TOBACCO.ordinal())));
+
+		this.register(new GenericRecipe("growth.strawberry.fertilizer").setup(100, 50)
 			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.STRAWBERRY))
-			.inputFluids(new FluidStack(Fluids.WATER, 1000))
-			.outputItems(new ItemStack(ModBlocks.plant_flower, 3, EnumFlowerType.STRAWBERRY.ordinal())));
-		this.register(new GenericRecipe("growth.mint").setup(100, 50)
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 250))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 5, EnumFlowerType.STRAWBERRY.ordinal())));
+		this.register(new GenericRecipe("growth.strawberry.compost").setup(100, 50)
+			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.STRAWBERRY))
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 2000))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 2, EnumFlowerType.STRAWBERRY.ordinal())));
+
+		this.register(new GenericRecipe("growth.mint.fertilizer").setup(100, 50)
 			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.MINT))
-			.inputFluids(new FluidStack(Fluids.WATER, 1000))
-			.outputItems(new ItemStack(ModBlocks.plant_flower, 3, EnumFlowerType.MINT.ordinal())));
-		this.register(new GenericRecipe("growth.cd0").setup(100, 50)
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 250))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 5, EnumFlowerType.MINT.ordinal())));
+		this.register(new GenericRecipe("growth.mint.compost").setup(100, 50)
+			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.MINT))
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 2000))
+			.outputItems(new ItemStack(ModBlocks.plant_flower, 2, EnumFlowerType.MINT.ordinal())));
+
+		this.register(new GenericRecipe("growth.cd0.fertilizer").setup(100, 50)
 			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.CD0))
-			.inputFluids(new FluidStack(Fluids.WATER, 1000))
-			.outputItems(DictFrame.fromOne(ModBlocks.plant_flower, EnumFlowerType.CD0, 3)));
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 250))
+			.outputItems(DictFrame.fromOne(ModBlocks.plant_flower, EnumFlowerType.CD0, 5)));
+		this.register(new GenericRecipe("growth.cd0.compost").setup(100, 50)
+			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.CD0))
+			.inputFluids(new FluidStack(Fluids.FERTILIZER, 2000))
+			.outputItems(DictFrame.fromOne(ModBlocks.plant_flower, EnumFlowerType.CD0, 2)));
+
 		this.register(new GenericRecipe("growth.mustard_willow").setup(100, 50)
 			.inputItems(new ComparableStack(ModBlocks.plant_flower, 1, EnumFlowerType.CD0))
 			.inputFluids(new FluidStack(Fluids.OIL, 500))

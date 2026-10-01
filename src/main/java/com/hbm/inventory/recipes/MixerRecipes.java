@@ -29,6 +29,7 @@ import com.hbm.items.machine.ItemFluidIcon;
 
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraftforge.fluids.Fluid;
 import net.minecraftforge.oredict.OreDictionary;
 
 public class MixerRecipes extends SerializableRecipe {
@@ -175,6 +176,8 @@ public class MixerRecipes extends SerializableRecipe {
 		register(Fluids.SLAKED_LIME, new MixerRecipe(1000, 30).setStack1(new FluidStack(Fluids.WATER, 1000)).setSolid(new ComparableStack(ModItems.powder_limestone)));
 		register(Fluids.CAUSTIC_SODA, new MixerRecipe(250, 30).setStack1(new FluidStack(Fluids.SLAKED_LIME, 1000)).setSolid(new ComparableStack(ModItems.sodium_carbonate)));
 		register(Fluids.SALT_WATER, new MixerRecipe(1000, 15).setStack1(new FluidStack(Fluids.WATER, 1000)).setSolid(new ComparableStack(ModItems.salt)));
+		register(Fluids.FERTILIZER, new MixerRecipe(1000, 20).setStack1(new FluidStack(Fluids.WATER, 1000)).setSolid(new ComparableStack(ModItems.powder_fertilizer)));
+		register(Fluids.COMPOST, new MixerRecipe(1000, 50).setStack1(new FluidStack(Fluids.BIOGAS, 2000)).setSolid(new ComparableStack(ModItems.biomass)));
 	}
 
 	public static void register(FluidType type, MixerRecipe... rec) {
